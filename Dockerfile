@@ -1,0 +1,29 @@
+FROM hargrave81/devagent
+
+ENV DS_BRANCH=master
+
+RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/DarkstarProject/darkstar.git/ /darkstar && \
+  cd /darkstar && \
+  sh autogen.sh && \
+  ./configure --enable-debug=gdb && \
+  make -j8 && \
+  apt-get autoremove -y build-essential autoconf pkg-config software-properties-common && \
+  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /darkstar/src && \
+  rm -rf /darkstar/sql
+RUN git clone http://github.com/Hargrave81/phoenixconfig.git/ /darkstar/confx && \
+    mv /darkstar/confx /darkstar/conf
+COPY docker-supervisord.conf etc/docker-supervisord.conf
+COPY docker-entrypoint.sh /usr/local/bin/
+
+# add darkstar user and fix permissions
+RUN groupadd -r darkstar && \
+  useradd -g darkstar -ms /bin/bash darkstar && \
+  chown -R darkstar:darkstar /darkstar && \
+  chmod a+x /usr/local/bin/docker-entrypoint.sh
+
+USER darkstar
+EXPOSE 54230 54230/udp 54231 54001 54002
+WORKDIR /darkstar
+
+CMD ["docker-entrypoint.sh"]

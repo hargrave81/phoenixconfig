@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-deployment
+  labels:
+    app: ds-search
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ds-search
+  template:
+    metadata:
+      labels:
+        app: ds-search
+    spec:
+      containers:
+      - name: ds-search
+        image: hargrave81/phoenixbase        
+        env:
+        - name: MYSQL_HOST
+          value: phoenixdb
+        - name: MYSQL_LOGIN
+          value: 
+        - name: MYSQL_DATABASE
+          value: dspdb
+        - name: MYSQL_PASSWORD
+          value: 
+        - name: SERVERNAME
+          value: PhoenixProject
+        - name: APP
+          value: AUCTION
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-service
+spec:
+  selector:
+    app: ds-search  
+  ports:
+    - name: searchport
+      port: 54002      
+      protocol: TCP
+  sessionAffinity: ClientIP   
+  loadBalancerIP: 104.46.119.123
+  type: LoadBalancer

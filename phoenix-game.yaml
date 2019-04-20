@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-deployment
+  labels:
+    app: ds-game
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ds-game
+  template:
+    metadata:
+      labels:
+        app: ds-game
+    spec:
+      containers:
+      - name: ds-game
+        image: hargrave81/phoenixbase
+        env:
+        - name: MYSQL_HOST
+          value: phoenixdb
+        - name: MYSQL_LOGIN
+          value: 
+        - name: MYSQL_DATABASE
+          value: dspdb
+        - name: MYSQL_PASSWORD
+          value: 
+        - name: SERVERNAME
+          value: PhoenixProject
+        - name: APP
+          value: GAME
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-service
+spec:
+  selector:
+    app: ds-game  
+  ports:
+    - name: stream
+      port: 54230         
+      protocol: UDP     
+  sessionAffinity: ClientIP 
+  loadBalancerIP: 104.46.124.243
+  type: LoadBalancer

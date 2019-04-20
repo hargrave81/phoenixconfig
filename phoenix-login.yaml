@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-deployment
+  labels:
+    app: ds-login
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ds-login
+  template:
+    metadata:
+      labels:
+        app: ds-login
+    spec:
+      containers:
+      - name: ds-login
+        image: hargrave81/phoenixbase
+        env:
+        - name: MYSQL_HOST
+          value: phoenixdb
+        - name: MYSQL_LOGIN
+          value: 
+        - name: MYSQL_DATABASE
+          value: dspdb
+        - name: MYSQL_PASSWORD
+          value: 
+        - name: SERVERNAME
+          value: PhoenixProject
+        - name: APP
+          value: LOGIN
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-service  
+spec:
+  selector:
+    app: ds-login
+  ports:
+    - name: lobbydata
+      port: 54230
+      protocol: TCP
+    - name: authport
+      port: 54231
+      protocol: TCP
+    - name: lobbyview
+      port: 54001
+      protocol: TCP  
+    - name: message
+      port: 54003
+      protocol: TCP    
+  sessionAffinity: ClientIP      
+  loadBalancerIP: 104.46.119.123
+  type: LoadBalancer
