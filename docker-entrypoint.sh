@@ -30,11 +30,11 @@ function modConfig() {
 
 modConfig
 
-if [ "$APP" == "LOGIN" ]; then
+if [ $APP = "LOGIN" ]; then
   exec /darkstar/dsconnect
-elif [ "$APP" == "AUCTION" ]; then 
+elif [ $APP = "AUCTION" ]; then 
   exec /darkstar/dssearch
-elif [ "$APP" == "GAME" ]; then
+elif [ $APP = "GAME" ]; then
   exec /darkstar/dsgame
 else
   exec /usr/local/bin/supervisord

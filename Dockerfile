@@ -1,26 +1,24 @@
-FROM hargrave81/devagent
+FROM hargrave81/phoenixbase
 
 ENV DS_BRANCH=master
 
-RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/DarkstarProject/darkstar.git/ /darkstar && \
-  cd /darkstar && \
-  sh autogen.sh && \
-  ./configure --enable-debug=gdb && \
-  make -j8 && \
-  apt-get autoremove -y build-essential autoconf pkg-config software-properties-common && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /darkstar/src && \
-  rm -rf /darkstar/sql
-RUN git clone http://github.com/Hargrave81/phoenixconfig.git/ /darkstar/confx && \
-    mv /darkstar/confx /darkstar/conf
-COPY docker-supervisord.conf etc/docker-supervisord.conf
+RUN apt-get install rsync && \
+    git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
+    rm -rf /darkstar/conf && \
+    mv /configuration /darkstar/conf && \
+    rsync -aI /darkstar/conf/scripts /darkstar/scripts && \
+    rm -rf /darkstar/conf/scripts && \    
+    rm /darkstar/*.o && \
+    rm -rf /darkstar/win32 && \
+    git clone --depth=1 -b ${DS_BRANCH} https://github.com/DarkstarProject/xiNavmeshes.git /darkstar/navmeshes && \
+    echo "done" && \
+    chown -R darkstar:darkstar /darkstar/conf
+
+COPY docker-supervisord.conf etc/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/
 
-# add darkstar user and fix permissions
-RUN groupadd -r darkstar && \
-  useradd -g darkstar -ms /bin/bash darkstar && \
-  chown -R darkstar:darkstar /darkstar && \
-  chmod a+x /usr/local/bin/docker-entrypoint.sh
+RUN chmod a+x /usr/local/bin/docker-entrypoint.sh
+
 
 USER darkstar
 EXPOSE 54230 54230/udp 54231 54001 54002
