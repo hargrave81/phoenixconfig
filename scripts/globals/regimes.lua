@@ -1048,6 +1048,7 @@ dsp.regime.bookOnEventUpdate = function(player, option, regimeType)
 end
 
 dsp.regime.bookOnEventFinish = function(player, option, regimeType)
+    target:addStatusEffect(dsp.effect.DEDICATION,400,0,43200,0,3000)
     local zoneId = player:getZoneID()
     local msgOffset = zones[zoneId].text.REGIME_REGISTERED
     local tabs = player:getCurrency("valor_point")
@@ -1154,39 +1155,32 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
 
         elseif act == "HASTE" then
             player:delStatusEffectSilent(dsp.effect.HASTE)
-            player:addStatusEffect(dsp.effect.HASTE, 1000, 0, 600)
-
+            player:addStatusEffect(dsp.effect.HASTE, 1000, 0, 600)            
         elseif act == "DRIED_MEAT" then
-            player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 1, 0, 1800)
-            player:addStatusEffectEx(dsp.effect.ABYSSEA_STR,dsp.effect.STR_BOOST, 3, 0, 0)
-            player:addStatusEffectEx(dsp.effect.BLAZE_SPIKES,0,2,0,0)
-            player:addStatusEffectEx(dsp.effect.DEDICTION,0,2,0,0)
+            player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 1, 0, 1800)            
+            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.STR_BOOST,3,0,3600,0,0)
         elseif act == "SALTED_FISH" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 2, 0, 1800)
-            player:addStatusEffectEx(dsp.effect.ABYSSEA_DEF,dsp.effect.DEF_BOOST, 10, 0, 0)            
-            player:addStatusEffectEx(dsp.effect.ICE_SPIKES,0,2,0,0)
-            player:addStatusEffectEx(dsp.effect.DEDICTION,0,4,0,0)
+            player:addStatusEffect(dsp.effect.ICE_SPIKES,2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.DEF_BOOST,3,0,3600,0,0)          
         elseif act == "HARD_COOKIE" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 3, 0, 1800)
-            player:addStatusEffectEx(dsp.effect.ABYSSEA_INT,dsp.effect.INT_BOOST, 3, 0, 0)
-            pet:addStatusEffectEx(dsp.effect.ABYSSEA_STR,dsp.effect.STR_BOOST, 4, 0, 0)
-            player:addStatusEffectEx(dsp.effect.SHOCK_SPIKES,0,2,0,0)
-            player:addStatusEffectEx(dsp.effect.DEDICTION,0,100,0,0)
+            player:addStatusEffect(dsp.effect.SHOCK_SPIKES,2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.INT_BOOST,3,0,3600,0,0)            
+            pet:addStatusEffect(dsp.effect.STR_BOOST,4,0,3600,0,0)
         elseif act == "INSTANT_NOODLES" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 4, 0, 1800)
-            player:addStatusEffectEx(dsp.effect.ABYSSEA_HP,dsp.effect.HP_BOOST, 40, 0, 0)
-            player:addStatusEffectEx(dsp.effect.ICE_SPIKES,0,2,0,0)
-            player:addStatusEffectEx(dsp.effect.DEDICTION,0,200,0,0)
+            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.DEX_BOOST,3,0,3600,0,0)            
         elseif act == "DRIED_AGARICUS" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 5, 0, 1800)
-            player:addStatusEffectEx(dsp.effect.ABYSSEA_MND,dsp.effect.MND_BOOST, 4, 0, 0)
-            player:addStatusEffectEx(dsp.effect.SHOCK_SPIKES,0,2,0,0)
-            player:addStatusEffectEx(dsp.effect.DEDICTION,0,1000,0,0)
+            player:addStatusEffect(dsp.effect.SHOCK_SPIKES,2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.MND_BOOST,4,0,3600,0,0)                        
         elseif act == "INSTANT_RICE" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 6, 0, 1800)
-            player:addStatusEffectEx(dsp.effect.ABYSSEA_CHR,dsp.effect.CHR_BOOST, 3, 0, 0)
-            player:addStatusEffectEx(dsp.effect.BLAZE_SPIKES,0,2,0,0)
-            player:addStatusEffectEx(dsp.effect.DEDICTION,0,2000,0,0)
+            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.CHR_BOOST,3,0,3600,0,0)            
         end
 
     -- select a training regime
