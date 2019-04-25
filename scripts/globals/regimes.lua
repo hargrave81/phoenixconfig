@@ -1048,7 +1048,7 @@ dsp.regime.bookOnEventUpdate = function(player, option, regimeType)
 end
 
 dsp.regime.bookOnEventFinish = function(player, option, regimeType)
-    target:addStatusEffect(dsp.effect.DEDICATION,400,0,43200,0,3000)
+    player:addStatusEffect(dsp.effect.DEDICATION,300,0,43200,0,3000)
     local zoneId = player:getZoneID()
     local msgOffset = zones[zoneId].text.REGIME_REGISTERED
     local tabs = player:getCurrency("valor_point")
