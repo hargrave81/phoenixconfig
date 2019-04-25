@@ -27,12 +27,12 @@ local startingNationInfo =
 
 local startingJobGear =
 {
-    [dsp.job.WAR] = {16534},       -- onion sword
-    [dsp.job.MNK] = {13184},       -- white belt
-    [dsp.job.WHM] = {17068, 4608}, -- onion rod, scroll of cure
-    [dsp.job.BLM] = {17104, 4607}, -- onion staff, scroll of stone
-    [dsp.job.RDM] = {16482, 4606}, -- onion dagger, scroll of dia
-    [dsp.job.THF] = {16483},       -- onion knife
+    [dsp.job.WAR] = {16534,21742,11009,15456},       -- onion sword
+    [dsp.job.MNK] = {13184,20514,11009,15456},       -- white belt
+    [dsp.job.WHM] = {17068, 4608,21860,11009,13216}, -- onion rod, scroll of cure
+    [dsp.job.BLM] = {17104, 4607,22065,11009,13216}, -- onion staff, scroll of stone
+    [dsp.job.RDM] = {16482, 4606,20674,11009,13216}, -- onion dagger, scroll of dia
+    [dsp.job.THF] = {16483,20573,11009,15456},       -- onion knife
 }
 
 -----------------------------------
