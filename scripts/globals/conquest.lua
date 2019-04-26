@@ -615,8 +615,8 @@ local overseerInvCommon =
     [32933] = {cp =   500, lvl =  1, item = 15761},             -- chariot_band
     [32934] = {cp =  1000, lvl =  1, item = 15762},             -- empress_band
     [32935] = {cp =  2000, lvl =  1, item = 15763},             -- emperor_band
-    [32936] = {cp =  5000, lvl =  1, item = 28540},             -- warp_ring
-    [32941] = {cp = 20000, lvl =  1, item =  6380, rank = 10},  -- refined_chair_set
+    [32936] = {cp =   500, lvl =  1, item = 28540},             -- warp_ring
+    [32941] = {cp = 10000, lvl =  1, item =  6380, rank = 7},  -- refined_chair_set
 }
 
 local overseerInvNation =

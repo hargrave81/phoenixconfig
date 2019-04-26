@@ -65,7 +65,7 @@ function afterZoneIn(player)
     if (ENABLE_COP_ZONE_CAP == 1) then
         local LVLcap = player:getVar("PSOXJA_RESTRICTION_LVL");
         if (LVLcap > 0) then -- LV cap depends on entrance
-            player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION,LVLcap,0,0);
+            player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION,LVLcap+5,0,0);
         end
     end
 end;

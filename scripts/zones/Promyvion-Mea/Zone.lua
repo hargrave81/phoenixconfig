@@ -49,7 +49,7 @@ end
 
 function afterZoneIn(player)
     if ENABLE_COP_ZONE_CAP == 1 then
-        player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 30, 0, 0)
+        player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 35, 0, 0)
     end
 end
 
