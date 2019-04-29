@@ -9,7 +9,7 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
     rm -rf /darkstar/scripts && \
     mv /configuration/scripts /darkstar/scripts && \
     mv /configuration /darkstar/conf && \                
-    echo "donbfrqzr" && \
+    echo "donbfqrqzr" && \
     chown -R darkstar:darkstar /darkstar/conf
 
 USER darkstar
