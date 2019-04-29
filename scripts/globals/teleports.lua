@@ -510,7 +510,7 @@ end
 dsp.teleport.explorerMoogleOnTrigger = function(player, event)
     local accept = 0
 
-    if player:getGil() < 50 then
+    if player:getGil() < 300 then
         accept = 1
     end
 
@@ -522,7 +522,7 @@ dsp.teleport.explorerMoogleOnTrigger = function(player, event)
 end
 
 dsp.teleport.explorerMoogleOnEventFinish = function(player, csid, option, event)
-    local price = 50
+    local price = 300
 
     if csid == event then
         if option == 1 and player:delGil(price) then

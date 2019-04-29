@@ -42,7 +42,7 @@ function onBcnmLeave(player,instance,leavecode)
     end
 
     if (ENABLE_COP_ZONE_CAP == 1) then -- restore level cap on exit if the setting is enabled
-        player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 55, 0, 0);
+        player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 50, 0, 0);
     end;
 end;
 
@@ -60,7 +60,7 @@ function onEventFinish(player,csid,option)
             player:setVar('StormsOfFate',3);
             player:addTitle(dsp.title.CONQUEROR_OF_FATE);
             if (ENABLE_COP_ZONE_CAP == 1) then -- restore level cap on exit if the setting is enabled
-                player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 55, 0, 0);
+                player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 50, 0, 0);
             end;
         end
     end

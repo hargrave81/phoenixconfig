@@ -22,11 +22,11 @@ function onZoneIn(player, prevZone)
         player:setPos(-93.268, 0, 170.749, 162) -- Floor 1 {R}
     end
 
-    if player:getCurrentMission(COP) == BELOW_THE_ARKS and player:getVar("PromathiaStatus") == 2 then
-        player:completeMission(COP, BELOW_THE_ARKS)
-        player:addMission(COP, THE_MOTHERCRYSTALS)
+    if player:getCurrentMission(COP) == dsp.mission.id.cop.BELOW_THE_ARKS and player:getVar("PromathiaStatus") == 2 then
+        player:completeMission(COP, dsp.mission.id.cop.BELOW_THE_ARKS)
+        player:addMission(COP, dsp.mission.id.cop.THE_MOTHERCRYSTALS)
         player:setVar("PromathiaStatus", 0)
-    elseif player:getCurrentMission(COP) == THE_MOTHERCRYSTALS then
+    elseif player:getCurrentMission(COP) == dsp.mission.id.cop.THE_MOTHERCRYSTALS then
         if player:hasKeyItem(dsp.ki.LIGHT_OF_HOLLA) and player:hasKeyItem(dsp.ki.LIGHT_OF_DEM) then
             if player:getVar("cslastpromy") == 1 then
                 player:setVar("cslastpromy", 0)
@@ -49,7 +49,7 @@ end
 
 function afterZoneIn(player)
     if ENABLE_COP_ZONE_CAP == 1 then
-        player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 35, 0, 0)
+        player:addStatusEffect(dsp.effect.LEVEL_RESTRICTION, 30, 0, 0)
     end
 end
 
