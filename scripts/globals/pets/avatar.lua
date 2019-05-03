@@ -12,7 +12,7 @@ function onMobDeath(mob, player, isKiller)
 end;
 
 function onPetRoam(pet)
-    
+
 end;
 
 function onPetEngage(pet,delay)
@@ -53,14 +53,14 @@ function getGearMod(master)
 end
 
 function getWeatherMod(avatar)
-    if(player:getWeather() == WEATHER_ICE || player:getWeather() == dsp.weather.BLIZZARDS)
+    if player:getWeather() == WEATHER_ICE or player:getWeather() == dsp.weather.BLIZZARDS then
       return 6
     end
     return 0
 end
 
 function getDayMod(avatar)
-    if(VanadielDayElement() == dsp.day.ICEDAY)
+    if VanadielDayElement() == dsp.day.ICEDAY then
        return 6
     end
     return 0
