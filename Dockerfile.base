@@ -2,7 +2,9 @@ FROM hargrave81/devagent
 
 ENV DS_BRANCH=master
 
-RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/DarkstarProject/darkstar.git/ /darkstar && \
+ARG CACHEBUST=1 
+
+RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/hargrave81/darkstar.git/ /darkstar && \
   cd /darkstar && \
   sh autogen.sh && \
   ./configure --enable-debug=gdb && \
