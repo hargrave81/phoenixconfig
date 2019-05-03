@@ -545,9 +545,9 @@ local crystals =
 
 local expRings =
 {
-    [15761] = {cp=350, charges=7},
-    [15762] = {cp=700, charges=7},
-    [15763] = {cp=600, charges=3},
+    [15761] = {cp=50, charges=7},
+    [15762] = {cp=100, charges=7},
+    [15763] = {cp=75, charges=3},
 }
 
 local function conquestRanking()
@@ -612,9 +612,9 @@ local overseerInvCommon =
     [32929] = {cp =    10, lvl =  1, item =  4181},             -- scroll_of_instant_warp
     [32930] = {cp =  2500, lvl =  1, item = 15542},             -- return_ring
     [32931] = {cp =  9000, lvl =  1, item = 15541},             -- homing_ring
-    [32933] = {cp =   500, lvl =  1, item = 15761},             -- chariot_band
-    [32934] = {cp =  1000, lvl =  1, item = 15762},             -- empress_band
-    [32935] = {cp =  2000, lvl =  1, item = 15763},             -- emperor_band
+    [32933] = {cp =    50, lvl =  1, item = 15761},             -- chariot_band
+    [32934] = {cp =   100, lvl =  1, item = 15762},             -- empress_band
+    [32935] = {cp =   200, lvl =  1, item = 15763},             -- emperor_band
     [32936] = {cp =  5000, lvl =  1, item = 28540},             -- warp_ring
     [32941] = {cp = 20000, lvl =  1, item =  6380, rank = 10},  -- refined_chair_set
 }
