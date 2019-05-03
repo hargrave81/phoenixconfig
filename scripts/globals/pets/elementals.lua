@@ -31,6 +31,7 @@ end
 
 mob:addListener("ATTACK", "PET_ELEMENT_ENGAGE", function(mob, target, action)
     if (mob:getFamily() == 11) then
+        master:PrintToPlayer("Your pet is looking to do "..action.." !");
         local master = mob:getMaster()
         local smnSkill = getSummoningSkillOverCap(mob)
         -- decide if we are going to cast on start or not
