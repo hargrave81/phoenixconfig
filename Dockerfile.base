@@ -22,9 +22,11 @@ RUN groupadd -r darkstar && \
 
 RUN apt-get install rsync && \
     git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
-    yes | cp -rf /configuration/scripts /darkstar/scripts && \
-    yes | cp -rf /configuration /darkstar/conf && \                
-    rm -rf /configuration && \       
+    rsync -avh /configuration/scripts/* /darkstar/scripts && \
+    rm -rf /configuration/scripts && \    
+    rsync -avh /configuration/* /darkstar/conf && \                   
+    rm -rf /configuration && \    
+    echo "done" && \          
     rm /darkstar/*.o && \
     rm -rf /darkstar/win32 && \
     git clone --depth=1 -b ${DS_BRANCH} https://github.com/DarkstarProject/xiNavmeshes.git /darkstar/navmeshes && \

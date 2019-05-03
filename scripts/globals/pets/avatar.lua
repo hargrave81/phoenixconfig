@@ -5,13 +5,21 @@ require("scripts/globals/monstertpmoves")
 require("scripts/globals/status")
 require("scripts/globals/msg")
 require("scripts/globals/utils")
+require("scripts/globals/weather")
+
+function onMobDeath(mob, player, isKiller)
+
+end;
 
 function onPetRoam(pet)
+    
 end;
 
 function onPetEngage(pet,delay)
-    if (pet:getFamily() == 11) then        
-        local master = pet:getMaster()
+    local master = pet:getMaster()
+    master:PrintToPlayer("Pet Engaged");
+    if (pet:getFamily() == 11) then
+        master:PrintToPlayer("Elemental Detected");
         local smnSkill = getSummoningSkillOverCap(pet)
         delay = getTimeCost(pet)
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
@@ -29,7 +37,10 @@ end;
 
 
 function onPetFight(pet,target,delay)
-    if (pet:getFamily() == 11) then        
+    local master = pet:getMaster()
+    master:PrintToPlayer("Pet Engaged");
+    if (pet:getFamily() == 11) then     
+        master:PrintToPlayer("Elemental Detected");   
         delay = getTimeCost(pet)
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
         -- TODO add astral flow reduction
@@ -42,10 +53,16 @@ function getGearMod(master)
 end
 
 function getWeatherMod(avatar)
+    if(player:getWeather() == WEATHER_ICE || player:getWeather() == dsp.weather.BLIZZARDS)
+      return 6
+    end
     return 0
 end
 
 function getDayMod(avatar)
+    if(VanadielDayElement() == dsp.day.ICEDAY)
+       return 6
+    end
     return 0
 end
 
