@@ -17,7 +17,8 @@ end;
 
 function onPetEngage(pet,delay)
     local master = pet:getMaster()
-    master:PrintToPlayer("Pet Engaged");
+    master:PrintToPlayer("Pet Engaged Base Delay = "..delay);
+    master:PrintToPlayer("Family - "..pet:getFamily());
     if (pet:getFamily() == 11) then
         master:PrintToPlayer("Elemental Detected");
         local smnSkill = getSummoningSkillOverCap(pet)
@@ -37,8 +38,7 @@ end;
 
 
 function onPetFight(pet,target,delay)
-    local master = pet:getMaster()
-    master:PrintToPlayer("Pet Engaged");
+    local master = pet:getMaster()    
     if (pet:getFamily() == 11) then     
         master:PrintToPlayer("Elemental Detected");   
         delay = getTimeCost(pet)
