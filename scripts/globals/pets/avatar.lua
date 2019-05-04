@@ -60,7 +60,7 @@ end;
 
 function getGearMod(master)
     -- Summoner's spats
-    local leg = player:getEquipID(dsp.slot.LEGS);
+    local leg = master:getEquipID(dsp.slot.LEGS);
     if leg == 15131 or leg == 15594 then
         return -5000
     end    
