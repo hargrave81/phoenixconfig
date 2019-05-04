@@ -24,7 +24,7 @@ function onPetEngage(pet,delay)
         master:PrintToPlayer("Elemental Detected > d="..delay.." s="..smnSkill);        
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
         master:PrintToPlayer("Mods > d="..delay.."");
-        if player:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
+        if master:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
             delay = 1
         elseif smnSkill > 0 then
             master:PrintToPlayer("You might cast on start");
@@ -48,7 +48,7 @@ function onPetFight(pet,target,delay)
         master:PrintToPlayer("Elemental Detected > d="..delay.."");        
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
         master:PrintToPlayer("Mods > d="..delay.."");
-        if player:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
+        if master:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
             delay = delay - 5000
         end
     end
