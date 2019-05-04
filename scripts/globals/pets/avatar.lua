@@ -83,71 +83,72 @@ end;
 
 function getWeatherMod(avatar)
     local element = avatar:getPetElement()
+    local summoner = avatar:getMaster()
     local ms = -2000
     local sms = -6000 -- Retail does not have this effect, double weather gives faster casting
-    if player:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.ICE_DAMAGE then
+    if summoner:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.ICE_DAMAGE then
       return ms
-    elseif player:getWeather() == dsp.weather.BLIZZARDS and (element == dsp.subEffect.ICE_DAMAGE or element == dsp.subEffect.FIRE_DAMAGE) then
+    elseif summoner:getWeather() == dsp.weather.BLIZZARDS and (element == dsp.subEffect.ICE_DAMAGE or element == dsp.subEffect.FIRE_DAMAGE) then
       return sms
-    elseif player:getWeather() == dsp.weather.WIND and element == dsp.subEffect.WIND_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.WIND and element == dsp.subEffect.WIND_DAMAGE then
       return ms
-    elseif player:getWeather() == dsp.weather.GALES and (element == dsp.subEffect.WIND_DAMAGE or element == dsp.subEffect.ICE_DAMAGE) then
+    elseif summoner:getWeather() == dsp.weather.GALES and (element == dsp.subEffect.WIND_DAMAGE or element == dsp.subEffect.ICE_DAMAGE) then
       return sms
-    elseif player:getWeather() == dsp.weather.DUST_STORM and element == dsp.subEffect.EARTH_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.DUST_STORM and element == dsp.subEffect.EARTH_DAMAGE then
         return ms
-    elseif player:getWeather() == dsp.weather.SAND_STORM and (element == dsp.subEffect.EARTH_DAMAGE or element == dsp.subEffect.WIND_DAMAGE) then
+    elseif summoner:getWeather() == dsp.weather.SAND_STORM and (element == dsp.subEffect.EARTH_DAMAGE or element == dsp.subEffect.WIND_DAMAGE) then
         return sms
-    elseif player:getWeather() == dsp.weather.THUNDER and element == dsp.subEffect.LIGHTNING_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.THUNDER and element == dsp.subEffect.LIGHTNING_DAMAGE then
         return ms
-    elseif player:getWeather() == dsp.weather.THUNDERSTORMS and (element == dsp.subEffect.LIGHTNING_DAMAGE or element == dsp.subEffect.EARTH_DAMAGE) then
+    elseif summoner:getWeather() == dsp.weather.THUNDERSTORMS and (element == dsp.subEffect.LIGHTNING_DAMAGE or element == dsp.subEffect.EARTH_DAMAGE) then
         return sms
-    elseif player:getWeather() == dsp.weather.RAIN and element == dsp.subEffect.WATER_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.RAIN and element == dsp.subEffect.WATER_DAMAGE then
         return ms
-    elseif player:getWeather() == dsp.weather.SQUALL and element == (dsp.subEffect.WATER_DAMAGE or element == dsp.subEffect.LIGHTNING_DAMAGE) then
+    elseif summoner:getWeather() == dsp.weather.SQUALL and element == (dsp.subEffect.WATER_DAMAGE or element == dsp.subEffect.LIGHTNING_DAMAGE) then
         return sms
-    elseif player:getWeather() == dsp.weather.HOT_SPELL and element == dsp.subEffect.FIRE_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.HOT_SPELL and element == dsp.subEffect.FIRE_DAMAGE then
         return ms
-    elseif player:getWeather() == dsp.weather.HEAT_WAVE and element == (dsp.subEffect.FIRE_DAMAGE or element == dsp.subEffect.WATER_DAMAGE) then
+    elseif summoner:getWeather() == dsp.weather.HEAT_WAVE and element == (dsp.subEffect.FIRE_DAMAGE or element == dsp.subEffect.WATER_DAMAGE) then
         return sms
-    elseif player:getWeather() == dsp.weather.AURORAS and element == dsp.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.AURORAS and element == dsp.subEffect.LIGHT_DAMAGE then
         return ms
-    elseif player:getWeather() == dsp.weather.STELLAR_GLARE and element == dsp.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.STELLAR_GLARE and element == dsp.subEffect.LIGHT_DAMAGE then
         return sms
-    elseif player:getWeather() == dsp.weather.GLOOM and element == dsp.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.GLOOM and element == dsp.subEffect.DARKNESS_DAMAGE then
         return ms
-    elseif player:getWeather() == dsp.weather.DARKNESS and element == dsp.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.DARKNESS and element == dsp.subEffect.DARKNESS_DAMAGE then
         return sms
-    elseif player:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.WIND_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.WIND_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.BLIZZARDS and element == dsp.subEffect.WIND_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.BLIZZARDS and element == dsp.subEffect.WIND_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.WIND and element == dsp.subEffect.EARTH_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.WIND and element == dsp.subEffect.EARTH_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.GALES and element == dsp.subEffect.EARTH_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.GALES and element == dsp.subEffect.EARTH_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.DUST_STORM and element == dsp.subEffect.LIGHTNING_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.DUST_STORM and element == dsp.subEffect.LIGHTNING_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.SAND_STORM and element == dsp.subEffect.LIGHTNING_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.SAND_STORM and element == dsp.subEffect.LIGHTNING_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.THUNDER and element == dsp.subEffect.WATER_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.THUNDER and element == dsp.subEffect.WATER_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.THUNDERSTORMS and element == dsp.subEffect.WATER_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.THUNDERSTORMS and element == dsp.subEffect.WATER_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.RAIN and element == dsp.subEffect.FIRE_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.RAIN and element == dsp.subEffect.FIRE_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.SQUALL and element == dsp.subEffect.FIRE_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.SQUALL and element == dsp.subEffect.FIRE_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.HOT_SPELL and element == dsp.subEffect.ICE_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.HOT_SPELL and element == dsp.subEffect.ICE_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.HEAT_WAVE and element == dsp.subEffect.ICE_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.HEAT_WAVE and element == dsp.subEffect.ICE_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.AURORAS and element == dsp.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.AURORAS and element == dsp.subEffect.DARKNESS_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.STELLAR_GLARE and element == dsp.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.STELLAR_GLARE and element == dsp.subEffect.DARKNESS_DAMAGE then
         return sms * - 1
-    elseif player:getWeather() == dsp.weather.GLOOM and element == dsp.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.GLOOM and element == dsp.subEffect.LIGHT_DAMAGE then
         return ms * - 1
-    elseif player:getWeather() == dsp.weather.DARKNESS and element == dsp.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == dsp.weather.DARKNESS and element == dsp.subEffect.LIGHT_DAMAGE then
         return sms * - 1
     end
     return 0
