@@ -83,21 +83,21 @@ end;
 
 function getElement(avatar)
     --avatar:getPetElement()     this doesn't return anything but zer0
-    if (pet:getFamily() == 99) then             
+    if (avatar:getFamily() == 99) then             
         return dsp.subEffect.WIND_DAMAGE
-    elseif (pet:getFamily() == 100) then
+    elseif (avatar:getFamily() == 100) then
         return dsp.subEffect.DARKNESS_DAMAGE             
-    elseif (pet:getFamily() == 101) then             
+    elseif (avatar:getFamily() == 101) then             
         return dsp.subEffect.EARTH_DAMAGE
-    elseif (pet:getFamily() == 102) then             
+    elseif (avatar:getFamily() == 102) then             
         return dsp.subEffect.FIRE_DAMAGE
-    elseif (pet:getFamily() == 103) then             
+    elseif (avatar:getFamily() == 103) then             
         return dsp.subEffect.ICE_DAMAGE
-    elseif (pet:getFamily() == 104) then             
+    elseif (avatar:getFamily() == 104) then             
         return dsp.subEffect.LIGHT_DAMAGE
-    elseif (pet:getFamily() == 105) then             
+    elseif (avatar:getFamily() == 105) then             
         return dsp.subEffect.LIGHTNING_DAMAGE
-    elseif (pet:getFamily() == 106) then             
+    elseif (avatar:getFamily() == 106) then             
         return dsp.subEffect.WATER_DAMAGE
     end
 end;
