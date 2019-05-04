@@ -18,25 +18,26 @@ end;
 function onPetEngage(pet,delay)
     local master = pet:getMaster()    
     local spellDelay = delay
-    if (pet:getSystem() == 11) then
-        master:PrintToPlayer("Elemental Detected");
+    if (pet:getSystem() == 11) then        
         local smnSkill = getSummoningSkillOverCap(pet)
         delay = getTimeCost(pet)
+        master:PrintToPlayer("Elemental Detected > d="..delay.." s="..smnSkill);        
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
+        master:PrintToPlayer("Mods > d="..delay.."");
         if player:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
-            delay = spellDelay / 2
-        else if(smnSkill > 0) then
+            delay = 1
+        else if smnSkill > 0 then
             master:PrintToPlayer("You might cast on start");
             -- we have a chance right on engage near instantly
-            if(math.random(0,99) < 25) then
-                delay = spellDelay / 2
+            if math.random(0,99) < 25 then
+                delay = 1
             end
         end
     end
     if delay < 0 then
         delay = 0
     end
-  return delay
+    return delay
 end;
 
 
@@ -44,7 +45,9 @@ function onPetFight(pet,target,delay)
     local master = pet:getMaster()   
     if (pet:getSystem() == 11) then             
         delay = getTimeCost(pet)
+        master:PrintToPlayer("Elemental Detected > d="..delay.." s="..smnSkill);        
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
+        master:PrintToPlayer("Mods > d="..delay.."");
         if player:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
             delay = delay - 5000
         end
@@ -52,7 +55,7 @@ function onPetFight(pet,target,delay)
     if delay < 0 then
         delay = 0
     end
-  return delay
+    return delay
 end;
 
 function getGearMod(master)
@@ -134,7 +137,7 @@ function getWeatherMod(avatar)
         return sms * - 1
     end
     return 0
-end
+end;
 
 function getDayMod(avatar)
     local element = avatar:getPetElement()
@@ -143,48 +146,48 @@ function getDayMod(avatar)
        return ms
     else if VanadielDayElement() == dsp.day.ICEDAY and element == dsp.subEffect.WIND_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.WINDSDAY and element == dsp.subEffect.WIND_DAMAGE then
+    else if VanadielDayElement() == dsp.day.WINDSDAY and element == dsp.subEffect.WIND_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.WINDSDAY and element == dsp.subEffect.EARTH_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.EARTHSDAY and element == dsp.subEffect.EARTH_DAMAGE then
+    else if VanadielDayElement() == dsp.day.EARTHSDAY and element == dsp.subEffect.EARTH_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.EARTHSDAY and element == dsp.subEffect.LIGHTNING_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.LIGHTNINGDAY and element == dsp.subEffect.LIGHTNING_DAMAGE then
+    else if VanadielDayElement() == dsp.day.LIGHTNINGDAY and element == dsp.subEffect.LIGHTNING_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.LIGHTNINGDAY and element == dsp.subEffect.WATER_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.WATERSDAY and element == dsp.subEffect.WATER_DAMAGE then
+    else if VanadielDayElement() == dsp.day.WATERSDAY and element == dsp.subEffect.WATER_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.WATERSDAY and element == dsp.subEffect.FIRE_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.FIRESDAY and element == dsp.subEffect.FIRE_DAMAGE then
+    else if VanadielDayElement() == dsp.day.FIRESDAY and element == dsp.subEffect.FIRE_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.FIRESDAY and element == dsp.subEffect.ICE_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.LIGHTSDAY and element == dsp.subEffect.LIGHT_DAMAGE then
+    else if VanadielDayElement() == dsp.day.LIGHTSDAY and element == dsp.subEffect.LIGHT_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.LIGHTSDAY and element == dsp.subEffect.DARKNESS_DAMAGE then
        return ms * - 1
-    if VanadielDayElement() == dsp.day.DARKSDAY and element == dsp.subEffect.DARKNESS_DAMAGE then
+    else if VanadielDayElement() == dsp.day.DARKSDAY and element == dsp.subEffect.DARKNESS_DAMAGE then
        return ms
     else if VanadielDayElement() == dsp.day.DARKSDAY and element == dsp.subEffect.LIGHT_DAMAGE then
        return ms * - 1    
     end
     return 0
-end
+end;
 
 function getSummoningSkillOverCap(avatar)
     local summoner = avatar:getMaster()
     local summoningSkill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
     local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
     return math.max(summoningSkill - maxSkill, 0)
-end
+end;
 
 function getTimeCost(avatar)
     local summoner = avatar:getMaster()
     local summoningSkill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
     local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
     return 45 - (summoningSkill - maxSkill)/3
-end
+end;
