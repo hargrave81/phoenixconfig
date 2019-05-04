@@ -81,8 +81,29 @@ function getTimeCost(avatar)
     return 45000 - ((summoningSkill - maxSkill)/3) * 1000
 end;
 
+function getElement(avatar)
+    --avatar:getPetElement()     this doesn't return anything but zer0
+    if (pet:getFamily() == 99) then             
+        return dsp.subEffect.WIND_DAMAGE
+    elseif (pet:getFamily() == 100) then
+        return dsp.subEffect.DARKNESS_DAMAGE             
+    elseif (pet:getFamily() == 101) then             
+        return dsp.subEffect.EARTH_DAMAGE
+    elseif (pet:getFamily() == 102) then             
+        return dsp.subEffect.FIRE_DAMAGE
+    elseif (pet:getFamily() == 103) then             
+        return dsp.subEffect.ICE_DAMAGE
+    elseif (pet:getFamily() == 104) then             
+        return dsp.subEffect.LIGHT_DAMAGE
+    elseif (pet:getFamily() == 105) then             
+        return dsp.subEffect.LIGHTNING_DAMAGE
+    elseif (pet:getFamily() == 106) then             
+        return dsp.subEffect.WATER_DAMAGE
+    end
+end;
+
 function getWeatherMod(avatar)
-    local element = avatar:getPetElement()
+    local element = getElement(avatar)
     local summoner = avatar:getMaster()
     local ms = -2000
     local sms = -6000 -- Retail does not have this effect, double weather gives faster casting
@@ -156,7 +177,7 @@ function getWeatherMod(avatar)
 end;
 
 function getDayMod(avatar)
-    local element = avatar:getPetElement()
+    local element = getElement(avatar)
     local ms = -3000    
     local summoner = avatar:getMaster()
     summoner:PrintToPlayer("DayMod > w="..VanadielDayElement().."   e="..element);
