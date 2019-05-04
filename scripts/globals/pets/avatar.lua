@@ -45,7 +45,7 @@ function onPetFight(pet,target,delay)
     local master = pet:getMaster()   
     if (pet:getSystem() == 11) then             
         delay = getTimeCost(pet)
-        master:PrintToPlayer("Elemental Detected > d="..delay.." s="..smnSkill);        
+        master:PrintToPlayer("Elemental Detected > d="..delay.."");        
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
         master:PrintToPlayer("Mods > d="..delay.."");
         if player:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
