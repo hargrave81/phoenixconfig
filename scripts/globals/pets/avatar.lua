@@ -86,6 +86,7 @@ function getWeatherMod(avatar)
     local summoner = avatar:getMaster()
     local ms = -2000
     local sms = -6000 -- Retail does not have this effect, double weather gives faster casting
+    summoner:PrintToPlayer("WeatherMod > w="..summoner:getWeather().."   e="..element);
     if summoner:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.ICE_DAMAGE then
       return ms
     elseif summoner:getWeather() == dsp.weather.BLIZZARDS and (element == dsp.subEffect.ICE_DAMAGE or element == dsp.subEffect.FIRE_DAMAGE) then
@@ -157,6 +158,8 @@ end;
 function getDayMod(avatar)
     local element = avatar:getPetElement()
     local ms = -3000    
+    local summoner = avatar:getMaster()
+    summoner:PrintToPlayer("DayMod > w="..VanadielDayElement().."   e="..element);
     if VanadielDayElement() == dsp.day.ICEDAY and element == dsp.subEffect.ICE_DAMAGE then
        return ms
     elseif VanadielDayElement() == dsp.day.ICEDAY and element == dsp.subEffect.WIND_DAMAGE then
