@@ -78,7 +78,7 @@ function getTimeCost(avatar)
     local summoner = avatar:getMaster()
     local summoningSkill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
     local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
-    return 45 - (summoningSkill - maxSkill)/3
+    return 45000 - ((summoningSkill - maxSkill)/3) * 1000
 end;
 
 function getWeatherMod(avatar)
