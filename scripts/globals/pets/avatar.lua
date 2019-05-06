@@ -58,8 +58,7 @@ function onPetRoam(pet, msSinceLastCast)
         local level = pet:getMainLvl()
         local fastCast  = getTimeCost(pet)
         fastCast = fastCast + getGearMod(master) + getWeatherMod(pet) + getDayMod(pet)    
-        if msSinceLastCast > fastCast / 2 then -- light spirit casts twice as frequent
-            master:PrintToPlayer("Lets bust a move");
+        if msSinceLastCast > fastCast / 2 then -- light spirit casts twice as frequent            
             -- decide if we want to buff the master with something
             -- does master need healing?
             -- does his friends?
@@ -70,6 +69,7 @@ function onPetRoam(pet, msSinceLastCast)
             local masterHP2 = master:getHPP() < 90
             local partyHP = false
             local party = master:getParty()
+            master:PrintToPlayer("Lets bust a move l="..level.." hp1="..masterHP1.."  hp2="..masterHP2);
             for _,member in ipairs(party) do
                 if member:getHPP() < 50 then
                     summoner:PrintToPlayer("Group Weak");
@@ -106,7 +106,8 @@ function onPetRoam(pet, msSinceLastCast)
     return false
 end;
 
-function buffPlayer(player,pet,level)     
+function buffPlayer(player,pet,level)    
+    master:PrintToPlayer("Looking to buff "..player.getName().." l="..level); 
     if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect
         master:PrintToPlayer("protecting");
         master:PrintToPlayer("Protect");
