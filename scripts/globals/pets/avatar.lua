@@ -112,7 +112,7 @@ function onPetRoam(pet, msSinceLastCast)
 end;
 
 function buffPlayer(player,pet,level)    
-    player:PrintToPlayer("Looking to buff "..player.getName().." l="..level); 
+    player:PrintToPlayer("Looking to buff "..player:getName().." l="..level); 
     if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect
         player:PrintToPlayer("protecting");        
         pet:castSpell(level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43, player:getID())
