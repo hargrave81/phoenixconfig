@@ -52,7 +52,7 @@ end;
 
 -- return true if you are casting a spell, otherwise return false
 function onPetRoam(pet, msSinceLastCast)
-    if (pet:getSystem() == 11) then      -- elemental spirit         
+    if (pet:getFamily() == 104) then      -- light spirit         
         local master = pet:getMaster()
         master:PrintToPlayer("Bored for d="..msSinceLastCast);
         local level = pet:getMainLvl()
