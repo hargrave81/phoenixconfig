@@ -59,6 +59,7 @@ function onPetRoam(pet, msSinceLastCast)
         local fastCast  = getTimeCost(pet)
         fastCast = fastCast + getGearMod(master) + getWeatherMod(pet) + getDayMod(pet)    
         if msSinceLastCast > fastCast / 2 then -- light spirit casts twice as frequent
+            master:PrintToPlayer("Lets bust a move");
             -- decide if we want to buff the master with something
             -- does master need healing?
             -- does his friends?
@@ -77,21 +78,26 @@ function onPetRoam(pet, msSinceLastCast)
                 end
             end      
             if masterHP1 and partyHP and level > 15 then --curaga
+                master:PrintToPlayer("Cure All You");
                 pet:castSpell(level >= 91 and 11 or level >= 71 and 10 or level >= 51 and 9 or level >= 31 and 8 or 7, master:getID())
                 return true
             elseif masterHP1 then --cure
+                master:PrintToPlayer("Cure You");
                 pet:castSpell(level >= 80 and 6 or level >= 61 and 5 or level >= 41 and 4 or level >= 21 and 3 or level >= 11 and 2 or 1, master:getID())
                 return true
             end
             local casted = buffPlayer(master,pet,level)
             if casted == true then return true end
             for _,member in ipairs(party) do
+                master:PrintToPlayer("Member Attempt");
                 if math.random(0,99) < 50 then -- pick a player somewhat at random
+                    master:PrintToPlayer("Member Match");
                     casted = buffPlayer(member,pet,level)
                     if casted == true then return true end
                 end
             end       
             if masterHP2 then -- low cure
+                master:PrintToPlayer("Nothing Better to do");
                 pet:castSpell(level >= 30 and 3 or level >= 20 and 2 or 1, master:getID())
                 return true
             end                       
@@ -102,18 +108,24 @@ end;
 
 function buffPlayer(player,pet,level)     
     if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect
+        master:PrintToPlayer("protecting");
+        master:PrintToPlayer("Protect");
         pet:castSpell(level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43, player:getID())
         return true
     end
-    if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- protect
+    if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- shell
+        master:PrintToPlayer("shelling");
+        master:PrintToPlayer("Shell");
         pet:castSpell(level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48, player:getID())
         return true
     end
     if not player:hasStatusEffect(dsp.effect.HASTE) and level >= 40 then -- haste
+        master:PrintToPlayer("Haste");
         pet:castSpell(57, player:getID())
         return true
     end
-    if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- protect
+    if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- regen
+        master:PrintToPlayer("Regen");
         pet:castSpell(level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108, player:getID())
         return true
     end
