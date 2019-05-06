@@ -66,8 +66,8 @@ function onPetRoam(pet, msSinceLastCast)
             -- does master need speeding up?
             -- lets regen master    
             master:PrintToPlayer("Lets bust a move ..");
-            local masterHP1 = master:getHPP() < 70
-            local masterHP2 = master:getHPP() < 90
+            local masterHP1 = master:getHPP() < 70 and true or false
+            local masterHP2 = master:getHPP() < 90 and true or false
             master:PrintToPlayer("Lets bust a move l="..level.." hp1="..masterHP1.."  hp2="..masterHP2);
             local partyHP = false
             local party = master:getParty()
