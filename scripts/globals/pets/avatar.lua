@@ -68,7 +68,7 @@ function onPetRoam(pet, msSinceLastCast)
             local masterHP1 = master:getHPP() < 70
             local masterHP2 = master:getHPP() < 90
             local partyHP = false
-            local party = player:getParty()
+            local party = master:getParty()
             for _,member in ipairs(party) do
                 if member:getHPP() < 50 then
                     summoner:PrintToPlayer("Group Weak");
