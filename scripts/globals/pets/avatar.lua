@@ -11,43 +11,34 @@ function onMobDeath(mob, player, isKiller)
 
 end;
 
-function onPetRoam(pet)
-
-end;
-
+-- on engage, return the delay reduction based on skill to cast on battle start
 function onPetEngage(pet,delay)
+    -- return incoming delay value to return to legacy/monster mode
     local master = pet:getMaster()    
-    local spellDelay = delay
-    if (pet:getSystem() == 11) then        
+    local fastCast = 0
+    if (pet:getSystem() == 11) then      -- elemental spirit   
         local smnSkill = getSummoningSkillOverCap(pet)
-        delay = getTimeCost(pet)
-        master:PrintToPlayer("Elemental Detected > d="..delay.." s="..smnSkill);        
-        delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
-        master:PrintToPlayer("Mods > d="..delay.."");
+        fastCast  = getTimeCost(pet)
+        fastCast  = fastCast + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
         if master:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
-            delay = 1
-        elseif smnSkill > 0 then
-            master:PrintToPlayer("You might cast on start");
-            -- we have a chance right on engage near instantly
+            delay = fastCast -- this will make the reduction the entire delay
+        elseif smnSkill > 0 then            
+            -- randomly cast on fight start
             if math.random(0,99) < 25 then
-                delay = 1
+                delay = fastCast
             end
         end
-    end
-    if delay < 0 then
-        delay = 0
     end
     return delay
 end;
 
-
+-- on each fight round, adjust delay to match smn skill
 function onPetFight(pet,target,delay)
+    -- return the value provided in delay to resume legacy monster mode
     local master = pet:getMaster()   
-    if (pet:getSystem() == 11) then             
-        delay = getTimeCost(pet)
-        master:PrintToPlayer("Elemental Detected > d="..delay.."");        
-        delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
-        master:PrintToPlayer("Mods > d="..delay.."");
+    if (pet:getSystem() == 11) then         -- elemental spirit
+        delay = getTimeCost(pet) -- base 45s and adjusted based on skill        
+        delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)        
         if master:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
             delay = delay - 5000
         end
@@ -56,6 +47,71 @@ function onPetFight(pet,target,delay)
         delay = 0
     end
     return delay
+end;
+
+
+-- return true if you are casting a spell, otherwise return false
+function onPetRoam(pet, msSinceLastCast)
+    if (pet:getSystem() == 11) then      -- elemental spirit 
+        local master = pet:getMaster()
+        local level = pet:getMainLvl()
+        local fastCast  = getTimeCost(pet)
+        fastCast = fastCast + getGearMod(master) + getWeatherMod(pet) + getDayMod(pet)    
+        if msSinceLastCast < fastCast / 2 then -- light spirit casts twice as frequent
+            -- decide if we want to buff the master with something
+            -- does master need healing?
+            -- does his friends?
+            -- does master need shielding?
+            -- does master need speeding up?
+            -- lets regen master    
+            local masterHP1 = master.getHPP() < 70
+            local masterHP2 = master.getHPP() < 90
+            local partyHP = false
+            local party = player:getParty()
+            for _,member in ipairs(party) do
+                if member:getHPP() < 50 then
+                    partyHP = true
+                    break
+                end
+            end      
+            if masterHP1 and partyHP and level > 15 then --curaga
+                pet:castSpell(level >= 91 and 11 or level >= 71 and 10 or level >= 51 and 9 or level >= 31 and 8 or 7, master:getID())
+                return true
+            elseif masterHP1 then --cure
+                pet:castSpell(level >= 80 and 6 or level >= 61 and 5 or level >= 41 and 4 or level >= 21 and 3 or level >= 11 and 2 or 1, master:getID())
+                return true
+            end
+            local casted = buffPlayer(master,pet,level)
+            if casted == true then return true end
+            for _,member in ipairs(party) do
+                if math.random(0,99) < 50 then -- pick a player somewhat at random
+                    casted = buffPlayer(member,pet,level)
+                    if casted == true then return true end
+                end
+            end                              
+        end        
+    end
+    return false
+end;
+
+function buffPlayer(player,pet,level)     
+    if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect
+        pet:castSpell(level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43, player:getID())
+        return true
+    end
+    if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- protect
+        pet:castSpell(level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48, player:getID())
+        return true
+    end
+    if not player:hasStatusEffect(dsp.effect.HASTE) and level >= 40 then -- haste
+        pet:castSpell(57, player:getID())
+        return true
+    end
+    if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- protect
+        pet:castSpell(level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108, player:getID())
+        return true
+    end
+    return false
 end;
 
 function getGearMod(master)
@@ -78,6 +134,7 @@ function getTimeCost(avatar)
     local summoner = avatar:getMaster()
     local summoningSkill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
     local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
+    -- 45 s +/- 1 second for every 3 skill over or under cap
     return 45000 - ((summoningSkill - maxSkill)/3) * 1000
 end;
 
