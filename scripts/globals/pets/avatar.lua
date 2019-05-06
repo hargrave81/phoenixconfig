@@ -71,7 +71,7 @@ function onPetRoam(pet, msSinceLastCast)
             master:PrintToPlayer("bool vals");
             if master:getHPP() < 70 then masterHP1 = true end;
             if master:getHPP() < 90 then masterHP2 = true end;
-            master:PrintToPlayer("Lets bust a move l="..level.." hp1="..string.format("bool: %t",masterHP1).."  hp2="..string.format("bool: %t",masterHP2));
+            master:PrintToPlayer("Lets bust a move l="..level.." hp1="..(masterHP1 and 'true' or 'false').."  hp2="..(masterHP2 and 'true' or 'false'));
             local partyHP = false
             local party = master:getParty()
             master:PrintToPlayer("Test the Party");
