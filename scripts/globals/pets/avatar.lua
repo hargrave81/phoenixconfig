@@ -13,7 +13,7 @@ end;
 
 -- on engage, return the delay reduction based on skill to cast on battle start
 function onPetEngage(pet,delay)
-    -- return incoming delay value to return to legacy/monster mode
+    -- return incoming delay value to return to legacy/monster mode    
     local master = pet:getMaster()    
     local fastCast = 0
     if (pet:getSystem() == 11) then      -- elemental spirit   
@@ -53,11 +53,12 @@ end;
 -- return true if you are casting a spell, otherwise return false
 function onPetRoam(pet, msSinceLastCast)
     if (pet:getSystem() == 11) then      -- elemental spirit 
+        summoner:PrintToPlayer("Bored for d="..msSinceLastCast);
         local master = pet:getMaster()
         local level = pet:getMainLvl()
         local fastCast  = getTimeCost(pet)
         fastCast = fastCast + getGearMod(master) + getWeatherMod(pet) + getDayMod(pet)    
-        if msSinceLastCast < fastCast / 2 then -- light spirit casts twice as frequent
+        if msSinceLastCast > fastCast / 2 then -- light spirit casts twice as frequent
             -- decide if we want to buff the master with something
             -- does master need healing?
             -- does his friends?
@@ -70,6 +71,7 @@ function onPetRoam(pet, msSinceLastCast)
             local party = player:getParty()
             for _,member in ipairs(party) do
                 if member:getHPP() < 50 then
+                    summoner:PrintToPlayer("Group Weak");
                     partyHP = true
                     break
                 end
@@ -88,7 +90,11 @@ function onPetRoam(pet, msSinceLastCast)
                     casted = buffPlayer(member,pet,level)
                     if casted == true then return true end
                 end
-            end                              
+            end       
+            if masterHP2 then -- low cure
+                pet:castSpell(level >= 30 and 3 or level >= 20 and 2 or 1, master:getID())
+                return true
+            end                       
         end        
     end
     return false
@@ -163,8 +169,7 @@ function getWeatherMod(avatar)
     local element = getElement(avatar)
     local summoner = avatar:getMaster()
     local ms = -2000
-    local sms = -6000 -- Retail does not have this effect, double weather gives faster casting
-    summoner:PrintToPlayer("WeatherMod > w="..summoner:getWeather().."   e="..element);
+    local sms = -2000 -- can increase this if you want stronger double weather effect    
     if summoner:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.ICE_DAMAGE then
       return ms
     elseif summoner:getWeather() == dsp.weather.BLIZZARDS and (element == dsp.subEffect.ICE_DAMAGE or element == dsp.subEffect.FIRE_DAMAGE) then
@@ -236,8 +241,7 @@ end;
 function getDayMod(avatar)
     local element = getElement(avatar)
     local ms = -3000    
-    local summoner = avatar:getMaster()
-    summoner:PrintToPlayer("DayMod > w="..VanadielDayElement().."   e="..element);
+    local summoner = avatar:getMaster()    
     if VanadielDayElement() == dsp.day.ICEDAY and element == dsp.subEffect.ICE_DAMAGE then
        return ms
     elseif VanadielDayElement() == dsp.day.ICEDAY and element == dsp.subEffect.WIND_DAMAGE then
