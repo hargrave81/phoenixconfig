@@ -114,24 +114,22 @@ end;
 function buffPlayer(player,pet,level)    
     player:PrintToPlayer("Looking to buff "..player.getName().." l="..level); 
     if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect
-        master:PrintToPlayer("protecting");
-        master:PrintToPlayer("Protect");
+        player:PrintToPlayer("protecting");        
         pet:castSpell(level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43, player:getID())
         return true
     end
     if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- shell
-        master:PrintToPlayer("shelling");
-        master:PrintToPlayer("Shell");
+        player:PrintToPlayer("shelling");        
         pet:castSpell(level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48, player:getID())
         return true
     end
     if not player:hasStatusEffect(dsp.effect.HASTE) and level >= 40 then -- haste
-        master:PrintToPlayer("Haste");
+        player:PrintToPlayer("Haste");
         pet:castSpell(57, player:getID())
         return true
     end
     if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- regen
-        master:PrintToPlayer("Regen");
+        player:PrintToPlayer("Regen");
         pet:castSpell(level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108, player:getID())
         return true
     end
