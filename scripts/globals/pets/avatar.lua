@@ -52,9 +52,9 @@ end;
 
 -- return true if you are casting a spell, otherwise return false
 function onPetRoam(pet, msSinceLastCast)
-    if (pet:getSystem() == 11) then      -- elemental spirit 
-        summoner:PrintToPlayer("Bored for d="..msSinceLastCast);
+    if (pet:getSystem() == 11) then      -- elemental spirit         
         local master = pet:getMaster()
+        master:PrintToPlayer("Bored for d="..msSinceLastCast);
         local level = pet:getMainLvl()
         local fastCast  = getTimeCost(pet)
         fastCast = fastCast + getGearMod(master) + getWeatherMod(pet) + getDayMod(pet)    
