@@ -65,8 +65,8 @@ function onPetRoam(pet, msSinceLastCast)
             -- does master need shielding?
             -- does master need speeding up?
             -- lets regen master    
-            local masterHP1 = master.getHPP() < 70
-            local masterHP2 = master.getHPP() < 90
+            local masterHP1 = master:getHPP() < 70
+            local masterHP2 = master:getHPP() < 90
             local partyHP = false
             local party = player:getParty()
             for _,member in ipairs(party) do
