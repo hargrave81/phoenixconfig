@@ -65,11 +65,13 @@ function onPetRoam(pet, msSinceLastCast)
             -- does master need shielding?
             -- does master need speeding up?
             -- lets regen master    
+            master:PrintToPlayer("Lets bust a move ..");
             local masterHP1 = master:getHPP() < 70
             local masterHP2 = master:getHPP() < 90
+            master:PrintToPlayer("Lets bust a move l="..level.." hp1="..masterHP1.."  hp2="..masterHP2);
             local partyHP = false
             local party = master:getParty()
-            master:PrintToPlayer("Lets bust a move l="..level.." hp1="..masterHP1.."  hp2="..masterHP2);
+            master:PrintToPlayer("Test the Party");
             for _,member in ipairs(party) do
                 if member:getHPP() < 50 then
                     summoner:PrintToPlayer("Group Weak");
