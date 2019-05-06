@@ -65,9 +65,12 @@ function onPetRoam(pet, msSinceLastCast)
             -- does master need shielding?
             -- does master need speeding up?
             -- lets regen master    
-            master:PrintToPlayer("Lets bust a move ..");
-            local masterHP1 = master:getHPP() < 70 and true or false
-            local masterHP2 = master:getHPP() < 90 and true or false
+            master:PrintToPlayer("Lets bust a move");
+            local masterHP1 = false
+            local masterHP2 = false
+            master:PrintToPlayer("bool vals");
+            if master:getHPP() < 70 then masterHP1 = true end;
+            if master:getHPP() < 90 then masterHP2 = true end;
             master:PrintToPlayer("Lets bust a move l="..level.." hp1="..masterHP1.."  hp2="..masterHP2);
             local partyHP = false
             local party = master:getParty()
