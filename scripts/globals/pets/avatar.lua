@@ -54,7 +54,6 @@ end;
 function onPetRoam(pet, msSinceLastCast)
     if (pet:getFamily() == 104) then      -- light spirit         
         local master = pet:getMaster()
-        master:PrintToPlayer("Bored for d="..msSinceLastCast);
         local level = pet:getMainLvl()
         local fastCast  = getTimeCost(pet)
         fastCast = fastCast + getGearMod(master) + getWeatherMod(pet) + getDayMod(pet)    
@@ -64,46 +63,36 @@ function onPetRoam(pet, msSinceLastCast)
             -- does his friends?
             -- does master need shielding?
             -- does master need speeding up?
-            -- lets regen master    
-            master:PrintToPlayer("Lets bust a move");
+            -- lets regen master                
             local masterHP1 = false
-            local masterHP2 = false
-            master:PrintToPlayer("bool vals");
+            local masterHP2 = false            
             if master:getHPP() < 70 then masterHP1 = true end;
-            if master:getHPP() < 90 then masterHP2 = true end;
-            master:PrintToPlayer("Lets bust a move l="..level.." hp1="..(masterHP1 and 'true' or 'false').."  hp2="..(masterHP2 and 'true' or 'false'));
+            if master:getHPP() < 90 then masterHP2 = true end;            
             local partyHP = false
-            local party = master:getParty()
-            master:PrintToPlayer("Test the Party");
+            local party = master:getParty()            
             for _,member in ipairs(party) do
-                if member:getHPP() < 50 then
-                    summoner:PrintToPlayer("Group Weak");
+                if member:getHPP() < 50 then                    
                     partyHP = true
                     break
                 end
             end      
-            if masterHP1 and partyHP and level > 15 then --curaga
-                master:PrintToPlayer("Cure All You");
-                pet:castSpell(level >= 91 and 11 or level >= 71 and 10 or level >= 51 and 9 or level >= 31 and 8 or 7, master:getID())
+            if masterHP1 and partyHP and level > 15 then --curaga                
+                pet:castSpell(level >= 91 and 11 or level >= 71 and 10 or level >= 51 and 9 or level >= 31 and 8 or 7, master)
                 return true
-            elseif masterHP1 then --cure
-                master:PrintToPlayer("Cure You");
-                pet:castSpell(level >= 80 and 6 or level >= 61 and 5 or level >= 41 and 4 or level >= 21 and 3 or level >= 11 and 2 or 1, master:getID())
+            elseif masterHP1 then --cure                
+                pet:castSpell(level >= 80 and 6 or level >= 61 and 5 or level >= 41 and 4 or level >= 21 and 3 or level >= 11 and 2 or 1, master)
                 return true
             end
             local casted = buffPlayer(master,pet,level)
             if casted == true then return true end
-            for _,member in ipairs(party) do
-                master:PrintToPlayer("Member Attempt");
-                if math.random(0,99) < 50 then -- pick a player somewhat at random
-                    master:PrintToPlayer("Member Match");
+            for _,member in ipairs(party) do                
+                if math.random(0,99) < 50 then -- pick a player somewhat at random                    
                     casted = buffPlayer(member,pet,level)
                     if casted == true then return true end
                 end
             end       
-            if masterHP2 then -- low cure
-                master:PrintToPlayer("Nothing Better to do");
-                pet:castSpell(level >= 30 and 3 or level >= 20 and 2 or 1, master:getID())
+            if masterHP2 then -- low cure                
+                pet:castSpell(level >= 30 and 3 or level >= 20 and 2 or 1, master)
                 return true
             end                       
         end        
@@ -111,29 +100,22 @@ function onPetRoam(pet, msSinceLastCast)
     return false
 end;
 
-function buffPlayer(player,pet,level)    
-    player:PrintToPlayer("Looking to buff "..player:getName().." l="..level);     
+function buffPlayer(player,pet,level)        
     if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect        
-        local sp = level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43
-        player:PrintToPlayer("Protect sp="..sp.."  id="..player:getID()); 
-        pet:castSpell(43, player)
-        player:PrintToPlayer("Cast 43"); 
-        --pet:castSpell(sp, player:getID())
+        local sp = level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43                
+        pet:castSpell(sp, player)
         return true
     end
-    if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- shell
-        player:PrintToPlayer("shelling");        
-        pet:castSpell(level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48, player:getID())
+    if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- shell        
+        pet:castSpell(level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48, player)
         return true
     end
-    if not player:hasStatusEffect(dsp.effect.HASTE) and level >= 40 then -- haste
-        player:PrintToPlayer("Haste");
-        pet:castSpell(57, player:getID())
+    if not player:hasStatusEffect(dsp.effect.HASTE) and level >= 40 then -- haste        
+        pet:castSpell(57, player)
         return true
     end
-    if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- regen
-        player:PrintToPlayer("Regen");
-        pet:castSpell(level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108, player:getID())
+    if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- regen        
+        pet:castSpell(level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108, player)
         return true
     end
     return false
