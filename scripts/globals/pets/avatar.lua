@@ -64,10 +64,8 @@ function onPetRoam(pet, msSinceLastCast)
             -- does master need shielding?
             -- does master need speeding up?
             -- lets regen master                
-            local masterHP1 = false
-            local masterHP2 = false            
-            if master:getHPP() < 70 then masterHP1 = true end;
-            if master:getHPP() < 90 then masterHP2 = true end;            
+            local masterHP1 = master:getHPP() < 70
+            local masterHP2 = master:getHPP() < 90            
             local partyHP = false
             local party = master:getParty()            
             for _,member in ipairs(party) do
@@ -85,12 +83,20 @@ function onPetRoam(pet, msSinceLastCast)
             end
             local casted = buffPlayer(master,pet,level)
             if casted == true then return true end
+            if partyHP then -- cure                
+                for _,member in ipairs(party) do
+                    if member:getHPP() < 50 then                    
+                        pet:castSpell(level >= 80 and 6 or level >= 61 and 5 or level >= 41 and 4 or level >= 21 and 3 or level >= 11 and 2 or 1, member)
+                        return true
+                    end
+                end      
+            end                       
             for _,member in ipairs(party) do                
                 if math.random(0,99) < 50 then -- pick a player somewhat at random                    
                     casted = buffPlayer(member,pet,level)
                     if casted == true then return true end
                 end
-            end       
+            end
             if masterHP2 then -- low cure                
                 pet:castSpell(level >= 30 and 3 or level >= 20 and 2 or 1, master)
                 return true
@@ -142,7 +148,7 @@ function getTimeCost(avatar)
     local summoningSkill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
     local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
     -- 45 s +/- 1 second for every 3 skill over or under cap
-    return 45000 - ((summoningSkill - maxSkill)/3) * 1000
+    return 35000 - ((summoningSkill - maxSkill)/3) * 1000
 end;
 
 function getElement(avatar)
@@ -170,7 +176,7 @@ function getWeatherMod(avatar)
     local element = getElement(avatar)
     local summoner = avatar:getMaster()
     local ms = -2000
-    local sms = -2000 -- can increase this if you want stronger double weather effect    
+    local sms = -6000 -- can increase this if you want stronger double weather effect    
     if summoner:getWeather() == dsp.weather.SNOW and element == dsp.subEffect.ICE_DAMAGE then
       return ms
     elseif summoner:getWeather() == dsp.weather.BLIZZARDS and (element == dsp.subEffect.ICE_DAMAGE or element == dsp.subEffect.FIRE_DAMAGE) then

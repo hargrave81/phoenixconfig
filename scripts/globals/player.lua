@@ -51,7 +51,7 @@ local function CharCreate(player)
             player:addItem(v)
             player:equipItem(v)
         end
-    end
+    end    
 
     -- add job-specific starting gear
     for _, v in pairs(startingJobGear[player:getMainJob()]) do
@@ -133,7 +133,7 @@ local function CharCreate(player)
 
     player:addItem(536) -- adventurer coupon
     player:addTitle(dsp.title.NEW_ADVENTURER)
-    player:setVar("MoghouseExplication", 4) -- needs Moghouse intro
+    --player:setVar("MoghouseExplication", 4) -- needs Moghouse intro
     player:setNewPlayer(true) -- apply new player flag
 end
 
@@ -147,6 +147,9 @@ function onGameIn(player, firstLogin, zoning)
         -- things checked ONLY during logon go here
         if firstLogin then
             CharCreate(player)
+        end
+        if player:getName() == {"Xertus","Xertaru","Gracie"} and not player:hasKeyItem(3081) then
+            player:addKeyItem(3081) -- fenrir whistle
         end
     else
         -- things checked ONLY during zone in go here

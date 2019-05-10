@@ -43,8 +43,8 @@ RESTRICT_CONTENT = 1;
 -- CHARACTER CONFIG
 INITIAL_LEVEL_CAP = 50; -- The initial level cap for new players.  There seems to be a hardcap of 255.
 MAX_LEVEL = 75; -- Level max of the server, lowers the attainable cap by disabling Limit Break quests.
-NORMAL_MOB_MAX_LEVEL_RANGE_MIN = 84; -- Lower Bound of Max Level Range for Normal Mobs (0 = Uncapped)
-NORMAL_MOB_MAX_LEVEL_RANGE_MAX = 88; -- Upper Bound of Max Level Range for Normal Mobs (0 = Uncapped)
+NORMAL_MOB_MAX_LEVEL_RANGE_MIN = 86; -- Lower Bound of Max Level Range for Normal Mobs (0 = Uncapped)
+NORMAL_MOB_MAX_LEVEL_RANGE_MAX = 92; -- Upper Bound of Max Level Range for Normal Mobs (0 = Uncapped)
 START_GIL = 500; -- Amount of gil given to newly created characters.
 START_INVENTORY = 80; -- Starting inventory and satchel size.  Ignores values < 30.  Do not set above 80!
 OPENING_CUTSCENE_ENABLE = 0; -- Set to 1 to enable opening cutscenes, 0 to disable.
@@ -143,13 +143,13 @@ ENABLE_COP_ZONE_CAP = 1; -- enable or disable lvl cap
 TIMEZONE_OFFSET = -5.0; -- Offset from UTC used to determine when "JP Midnight" is for the server.  Default is JST (+9.0).
 ALLOW_MULTIPLE_EXP_RINGS = 0; -- Set to 1 to remove ownership restrictions on the Chariot/Empress/Emperor Band trio.
 BYPASS_EXP_RING_ONE_PER_WEEK = 1; -- -- Set to 1 to bypass the limit of one ring per Conquest Tally Week.
-NUMBER_OF_DM_EARRINGS = 1; -- Number of earrings players can simultaneously own from Divine Might before scripts start blocking them (Default: 1)
+NUMBER_OF_DM_EARRINGS = 2; -- Number of earrings players can simultaneously own from Divine Might before scripts start blocking them (Default: 1)
 HOMEPOINT_TELEPORT = 1; -- Enables the homepoint teleport system
 DIG_ABUNDANCE_BONUS = 450; -- Increase chance of digging up an item (450  = item digup chance +45)
 DIG_FATIGUE = 1; -- Set to 0 to disable Dig Fatigue
 DIG_GRANT_BURROW = 1; -- Set to 1 to grant burrow ability
 DIG_GRANT_BORE = 1; -- Set to 1 to grant bore ability
-ENM_COOLDOWN = 120;  -- Number of hours before a player can obtain same KI for ENMs (default: 5 days)
+ENM_COOLDOWN = 12;  -- Number of hours before a player can obtain same KI for ENMs (default: 5 days)
 FORCE_SPAWN_QM_RESET_TIME = 90; -- Number of seconds the ??? remains hidden for after the despawning of the mob it force spawns.
 
 -- LIMBUS
