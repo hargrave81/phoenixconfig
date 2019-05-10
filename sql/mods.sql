@@ -1,3 +1,22 @@
+-- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
+--
+-- Host: localhost    Database: dspdb
+-- ------------------------------------------------------
+-- Server version	5.6.21-log
+
+/*
+use dspdb ;
+CREATE TABLE account_ip_record (
+  login_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  accid int(10) NOT NULL,
+  charid int(10) NOT NULL,
+  client_ip tinytext NOT NULL,
+  PRIMARY KEY (login_time,accid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
+
+UPDATE zone_settings set zoneip = '52.147.170.105'
+WHERE zoneip = '127.0.0.1'
 --
 -- Updating data of table item_mods
 --
