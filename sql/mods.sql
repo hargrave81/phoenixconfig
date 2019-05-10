@@ -52,3 +52,7 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 (14062, 346, 2), -- custom carbuncle mitts
 (15456, 259, 5), -- custom dash sash
 (17049, 30, 15); -- custom maple wand
+
+UPDATE mob_family_system -- ENHANCE  fenrir 
+ SET ACC = 5, EVA = 5, HP = 180
+ WHERE familyid = 36 and systemid = 5
