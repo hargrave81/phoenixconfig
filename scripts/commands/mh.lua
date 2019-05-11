@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
--- func: ah
--- desc: opens the Auction House menu anywhere in the world
+-- func: mh
+-- desc: opens the Mog House menu anywhere in any city
 ---------------------------------------------------------------------------------------------------
 require("scripts/globals/zone")
 
