@@ -75,3 +75,11 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
  WHERE familyid = 36 and systemid = 5
+
+
+LOCK TABLES mob_pools WRITE;
+
+INSERT INTO mob_pools VALUES 
+ (6500,'Hurkan','Hurkan',460,0x0000140A00000000000000000000000000000000,1,1,7,540,2,0,0,0,1,0,0,0,1,129,0,0,0,1,0,460);
+
+UNLOCK TABLES;

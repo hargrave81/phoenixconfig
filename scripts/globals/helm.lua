@@ -429,7 +429,7 @@ local helmInfo =
                     { 100,   769}, -- Colored Rock
                     { 470,  1888}, -- Silica
                     { 150, 3922}, -- Rhodium Ore
-                    { 20, 4020}, -- Rhodium Ore
+                    { 20, 4020}, -- Titanium Ore
                 },
                 points =
                 {
@@ -1279,7 +1279,7 @@ local helmInfo =
             {
                 drops =
                 {
-                    {3260,   768}, -- Flint Stone
+                    {1260,   768}, -- Flint Stone
                     {1520,   643}, -- Iron Ore
                     { 430,  1108}, -- Sulfur
                     { 650, 17316}, -- Bomb Arm
@@ -1291,8 +1291,8 @@ local helmInfo =
                     { 100,   739}, -- Orichalcum Ore
                     { 220,   769}, -- Colored Rock
                     { 320,  1255}, -- Colored Ore
-                    {  50, 3918}, -- Midrium Ore
-                    {  50, 3920}, -- Vanadium Ore                                        
+                    {  50,  3918}, -- Midrium Ore
+                    {  50,  3920}, -- Vanadium Ore                                        
                 },
                 points =
                 {
