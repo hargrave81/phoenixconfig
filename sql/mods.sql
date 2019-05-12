@@ -30,10 +30,15 @@ UPDATE item_mods SET value = 2 WHERE itemId = 13496 AND modId = 12; -- custom wi
 UPDATE item_mods SET value = 6 WHERE itemId = 13497 AND modId = 2; -- custom bastokan ring
 UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 9; -- custom bastokan ring
 UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 10; -- custom bastokan ring
-UPDATE item_weapon SET [DMG] = 8, [DELAY] = 222 WHERE itemId = 20674; -- aern sword
-UPDATE item_weapon SET [DMG] = 4, [DELAY] = 150 WHERE itemId = 20674; -- aern dagger
-UPDATE item_mods SET value = 
-
+UPDATE item_weapon SET DMG = 8, DELAY = 222 WHERE itemId = 20674; -- aern sword
+UPDATE item_weapon SET DMG = 4, DELAY = 150 WHERE itemId = 20573; -- aern dagger
+UPDATE item_weapon SET DMG = 4, DELAY = 555 WHERE itemId = 20514; -- aphelion knuckles
+INSERT INTO item_mods values (20674,25,4); -- acc +4
+INSERT INTO item_mods values (20573,25,4); -- acc +4
+INSERT INTO item_mods values (20514,25,4); -- acc +4
+INSERT INTO item_mods values (20674,73,4); -- store TP +4
+INSERT INTO item_mods values (20573,73,4); -- store TP +4
+INSERT INTO item_mods values (20514,73,4); -- store TP +4
 --
 -- Inserting data into table item_mods
 --
@@ -73,7 +78,7 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 (13497, 303, 2), -- custom bastokan ring TH2
 (14062, 346, 2), -- custom carbuncle mitts
 (15456, 259, 5), -- custom dash sash
-(17049, 30, 15); -- custom maple wand
+(17049, 30, 3); -- custom maple wand
 
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
