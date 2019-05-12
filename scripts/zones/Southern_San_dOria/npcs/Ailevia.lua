@@ -40,7 +40,7 @@ function onEventFinish(player,csid,option)
     if (csid == 655) then
         player:addGil(GIL_RATE*5000);
         player:tradeComplete();        
-        onCoupon(player);
+        onCoupon(player,ID.text.ITEM_OBTAINED);
         player:messageSpecial(ID.text.GIL_OBTAINED,GIL_RATE*5000);
     end
 end;

@@ -11,7 +11,7 @@ function onTrade(player,npc,trade)
     if (trade:getItemCount() == 1 and trade:hasItemQty(536,1) == true) then
         player:startEvent(10012,GIL_RATE*5000);
         player:addGil(GIL_RATE*5000);
-        onCoupon(player);
+        onCoupon(player,ID.text.ITEM_OBTAINED);
         player:tradeComplete();
     end
 end;
