@@ -1171,7 +1171,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
         elseif act == "SALTED_FISH" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 2, 0, 1800)
             player:addStatusEffect(dsp.effect.ICE_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.DEF_BOOST,3,0,3600,0,0)          
+            player:addStatusEffect(dsp.effect.DEF_BOOST,5,0,3600,0,0)          
         elseif act == "HARD_COOKIE" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 3, 0, 1800)
             player:addStatusEffect(dsp.effect.SHOCK_SPIKES,2,0,1800,0,0)
