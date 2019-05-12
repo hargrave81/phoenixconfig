@@ -64,6 +64,10 @@ function onTrigger(player,npc)
         if not player:hasKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT) then
             player:addKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT)
         end  
+        if not player:hasKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_SANDORIA) then
+            player:addKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_SANDORIA)
+        end
+        player:addMission(0, 14)
         player:setVar("SandyMissionFast",0)        
     else
         if player:getNation() == 0 and player:getRank() < 5 then

@@ -63,7 +63,11 @@ function onTrigger(player,npc)
         end
         if not player:hasKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT) then
             player:addKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT)
-        end  
+        end
+        if not player:hasKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_BASTOK) then
+            player:addKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_BASTOK)
+        end
+        player:addMission(1, 14)
         player:setVar("BastokMissionFast",0)        
     else
         if player:getNation() == 1 and player:getRank() < 5 then

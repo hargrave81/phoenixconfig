@@ -36,8 +36,7 @@ function onTrigger(player,npc)
             player:completeMission(2, i)
             i = i + 1
         end
-        player:setRank(5);
-        player:setRank(5);
+        player:setRank(5);        
         if not player:hasKeyItem(dsp.keyItem.AIRSHIP_PASS) then
             player:addKeyItem(dsp.keyItem.AIRSHIP_PASS)
         end
@@ -68,6 +67,10 @@ function onTrigger(player,npc)
         if not player:hasKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT) then
             player:addKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT)
         end        
+        if not player:hasKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_WINDURST) then
+            player:addKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_WINDURST)
+        end
+        player:addMission(2, 14)
         player:setVar("WindyMissionFast",0)        
     else
         if player:getNation() == 2 and player:getRank() < 5 then
