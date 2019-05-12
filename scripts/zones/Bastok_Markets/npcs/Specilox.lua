@@ -24,8 +24,7 @@ function onTrigger(player,npc)
         17318,  20,    -- wooden arrow        
     }
     local giftReady = vanaDay() > player:getVar("LastGoblinGift")
-    if giftReady then
-        player:setVar("LastGoblinGift",vanaDay())
+    if giftReady then        
         -- randomly give a gift
         local gift = 4120;
         local max = {26, 21,23};
@@ -126,7 +125,7 @@ function onTrigger(player,npc)
         elseif factor1 > 82 then
             factor2 = 1;
         end
-        master:PrintToPlayer("Rolling Dice  1="..factor1.."  2="..factor2);
+        player:PrintToPlayer("Rolling Dice  1="..factor1.."  2="..factor2);
         if factor2 == 3 then
             if player:getRace() == dsp.race.MITHRA then
                 gift = mith;
@@ -146,17 +145,20 @@ function onTrigger(player,npc)
                 gift = galk;
             end
         else
-            local factor3 = math.random(0,max[factor2]-1);
-            if factor2 == 0 then
-                gift = gearA[factor3];
-            elseif factor2 == 1 then
-                gift = gearB[factor3];
-            else
-                gift = gearC[factor3];
+            if factor2 ~= nil then
+                local factor3 = math.random(0,max[factor2]-1);
+                if factor2 == 0 then
+                    gift = gearA[factor3];
+                elseif factor2 == 1 then
+                    gift = gearB[factor3];
+                else
+                    gift = gearC[factor3];
+                end
             end
         end
         player.addItem(gift);
         player:messageSpecial(ID.text.ITEM_OBTAINED, gift);
+        player:setVar("LastGoblinGift",vanaDay())
     end    
     player:showText(npc,ID.text.OLWYN_SHOP_DIALOG)
     dsp.shop.nation(player, stock, dsp.nation.BASTOK)
