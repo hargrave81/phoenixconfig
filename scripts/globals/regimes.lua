@@ -1363,7 +1363,7 @@ dsp.regime.checkRegime = function(player, mob, regimeId, index, regimeType)
     end
 
     -- award XP every page completion
-    player:addExp(reward)
+    player:addExp(reward*.7)
 
     -- repeating regimes
     if player:getVar("[regime]repeat") == 1 then
