@@ -70,11 +70,13 @@ function onTrigger(player,npc)
         player:addMission(0, 14)
         player:setVar("SandyMissionFast",0)        
     else
-        if player:getNation() == 0 and player:getRank() < 5 then
+        if player:getNation() == 0 and player:getRank() < 5 and player:getMainLvl() >= 30 then
             player:PrintToPlayer("Talk to me one more time and I'll auto rank you up!")
             player:setVar("SandyMissionFast",1)
+        elseif player:getMainLvl() < 30 then
+            player:PrintToPlayer("Go get some more experience first bub!")
         else
-            player:PrintToPlayer("You are already so epic!")
+            player:PrintToPlayer("You are already so epic or you belong to another nation!")        
         end        
     end
 end
