@@ -197,11 +197,11 @@ local regimeInfo = {
                 event = 28,
                 page =
                 {
-                    { 9,0,0,0,20,21, 1080, 21},
-                    { 8,1,0,0,20,22, 1140, 22},
-                    { 7,2,0,0,21,23, 1200, 23},
-                    { 6,3,0,0,22,25, 1260, 24},
-                    { 5,4,1,0,22,25, 1320, 60},
+                    { 9,0,0,0,20,21, 1380, 21},
+                    { 8,1,0,0,20,22, 1540, 22},
+                    { 7,2,0,0,21,23, 1700, 23},
+                    { 6,3,0,0,22,25, 1860, 24},
+                    { 5,4,1,0,22,25, 1920, 60},
                 },
             },
             [dsp.zone.ROLANBERRY_FIELDS] =
@@ -305,11 +305,11 @@ local regimeInfo = {
                 event = 51,
                 page =
                 {
-                    { 7,1,0,0,15,19, 950, 32},
-                    { 6,2,0,0,15,23, 1000, 33},
-                    { 5,3,0,0,20,24, 1100, 34},
-                    { 4,4,0,0,21,24, 1300, 35},
-                    { 4,3,0,0,22,27, 1400, 62},
+                    { 7,1,0,0,15,19, 1250, 32},
+                    { 6,2,0,0,15,23, 1400, 33},
+                    { 5,3,0,0,20,24, 1700, 34},
+                    { 4,4,0,0,21,24, 1800, 35},
+                    { 4,3,0,0,22,27, 1900, 62},
                 },
             },
             [dsp.zone.MERIPHATAUD_MOUNTAINS] =
@@ -365,11 +365,11 @@ local regimeInfo = {
                 event = 61,
                 page =
                 {
-                    { 4,5,0,0,30,35, 1700,124},
-                    { 7,4,0,0,32,37, 1800,125},
-                    {10,0,0,0,34,36, 1900,126},
-                    { 4,6,0,0,34,38, 2000,127},
-                    { 4,6,0,0,34,41, 2100,128},
+                    { 4,5,0,0,30,35, 2400,124},
+                    { 7,4,0,0,32,37, 2700,125},
+                    {10,0,0,0,34,36, 2800,126},
+                    { 4,6,0,0,34,38, 3000,127},
+                    { 4,6,0,0,34,41, 3200,128},
                 },
             },
             [dsp.zone.YHOATOR_JUNGLE] =
@@ -377,11 +377,11 @@ local regimeInfo = {
                 event = 61,
                 page =
                 {
-                    { 3,6,0,0,35,39, 1900,129},
-                    { 3,6,0,0,35,40, 2000,130},
-                    {10,0,0,0,40,44, 2100,131},
-                    { 7,3,0,0,40,46, 2200,132},
-                    {10,0,0,0,45,49,2400,133},
+                    { 3,6,0,0,35,39, 2500,129},
+                    { 3,6,0,0,35,40, 2700,130},
+                    {10,0,0,0,40,44, 2800,131},
+                    { 7,3,0,0,40,46, 3200,132},
+                    {10,0,0,0,45,49,3500,133},
                 },
             },
             [dsp.zone.WESTERN_ALTEPA_DESERT] =
@@ -1051,7 +1051,10 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
     player:addStatusEffect(dsp.effect.DEDICATION,175,0,9600,0,3000)
     player:addStatusEffect(dsp.effect.REGEN, 1, 3, 9600)
     player:addStatusEffect(dsp.effect.REFRESH, 1, 3, 9600, 0, 3)    
-    player:addStatusEffect(dsp.effect.ATTACK_BOOST, 22, 0, 9600)
+    player:addStatusEffect(dsp.effect.ATTACK_BOOST, 34, 0, 9600)
+    if player:getMainLvl() < 30 then
+        player:addStatusEffect(dsp.effect.RERAISE, 1, 0, 9600)
+    end
 
     local zoneId = player:getZoneID()
     local msgOffset = zones[zoneId].text.REGIME_REGISTERED
