@@ -1048,7 +1048,7 @@ dsp.regime.bookOnEventUpdate = function(player, option, regimeType)
 end
 
 dsp.regime.bookOnEventFinish = function(player, option, regimeType)
-    player:addStatusEffect(dsp.effect.DEDICATION,175,0,9600,0,3000)
+    player:addStatusEffect(dsp.effect.DEDICATION,150,0,9600,0,3000)
     player:addStatusEffect(dsp.effect.REGEN, 1, 3, 9600)
     player:addStatusEffect(dsp.effect.REFRESH, 1, 3, 9600, 0, 3)    
     player:addStatusEffect(dsp.effect.ATTACK_BOOST, 34, 0, 9600)
