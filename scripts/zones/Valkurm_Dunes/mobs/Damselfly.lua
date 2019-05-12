@@ -1,0 +1,20 @@
+-----------------------------------
+-- Area: Valkurm Dunes
+--  MOB: Damselfly
+-- Note: Place holder Valkurm Emperor
+-----------------------------------
+local ID = require("scripts/zones/Valkurm_Dunes/IDs");
+require("scripts/globals/regimes")
+require("scripts/globals/mobs");
+
+function onMobDeath(mob, player, isKiller)
+    dsp.regime.checkRegime(player, mob, 9, 1, dsp.regime.type.FIELDS)
+    dsp.regime.checkRegime(player, mob, 10, 2, dsp.regime.type.FIELDS)
+    if (math.random(1,100) < 90 and isKiller == true) then
+        player:addTreasure(15147,mob);
+    end
+end;
+
+function onMobDespawn(mob)
+    dsp.mob.phOnDespawn(mob,ID.mob.VALKURM_EMPEROR_PH,5,3600); -- 1 hour
+end;
