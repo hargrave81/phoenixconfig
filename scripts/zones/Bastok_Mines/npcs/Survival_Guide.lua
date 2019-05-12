@@ -34,6 +34,7 @@ function onTrigger(player,npc)
             if i ~= missionId then player:addMission(1, i) end
             player:PrintToPlayer("Complete mission #"..i)
             player:completeMission(1, i)
+            i = i + 1
         end
         player:setVar("BastokMissionFast",0)        
     else
