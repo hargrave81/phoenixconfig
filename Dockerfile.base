@@ -7,32 +7,30 @@ ARG CACHEBUST=1
 RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/hargrave81/darkstar.git/ /darkstar && \
   cd /darkstar && \
   sh autogen.sh && \
-  ./configure --enable-debug=gdb && \
-  make -j8 && \
-  apt-get autoremove -y build-essential autoconf pkg-config software-properties-common && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /darkstar/src && \
-  rm -rf /darkstar/sql
+  ./configure --enable-debug=gdb  
+
+RUN apt-get install rsync && \
+    git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
+    rsync -avh /configuration/scripts/* /darkstar/scripts && \
+    rm -rf /configuration/scripts && \
+    rsync -avh /configuration/build/* /darkstar && \
+    rm -rf /configuration/build && \
+    rsync -avh /configuration/* /darkstar/conf && \
+    rm -rf /configuration && \
+    make -j8 && \
+    apt-get autoremove -y build-essential autoconf pkg-config software-properties-common && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /darkstar/src && \
+    rm -rf /darkstar/sql && \
+    rm /darkstar/*.o && \
+    rm -rf /darkstar/win32 && \
+    git clone --depth=1 -b ${DS_BRANCH} https://github.com/DarkstarProject/xiNavmeshes.git /darkstar/navmeshes
 
 # add darkstar user and fix permissions
 RUN groupadd -r darkstar && \
   useradd -g darkstar -ms /bin/bash darkstar && \
   chown -R darkstar:darkstar /darkstar
   
-
-RUN apt-get install rsync && \
-    git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
-    rsync -avh /configuration/scripts/* /darkstar/scripts && \
-    rm -rf /configuration/scripts && \    
-    rsync -avh /configuration/* /darkstar/conf && \                   
-    rm -rf /configuration && \    
-    echo "done" && \          
-    rm /darkstar/*.o && \
-    rm -rf /darkstar/win32 && \
-    git clone --depth=1 -b ${DS_BRANCH} https://github.com/DarkstarProject/xiNavmeshes.git /darkstar/navmeshes && \
-    echo "dones" && \
-    chown -R darkstar:darkstar /darkstar/conf
-
 COPY docker-supervisord.conf etc/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/
 

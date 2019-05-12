@@ -30,6 +30,9 @@ UPDATE item_mods SET value = 2 WHERE itemId = 13496 AND modId = 12; -- custom wi
 UPDATE item_mods SET value = 6 WHERE itemId = 13497 AND modId = 2; -- custom bastokan ring
 UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 9; -- custom bastokan ring
 UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 10; -- custom bastokan ring
+UPDATE item_weapon SET [DMG] = 8, [DELAY] = 222 WHERE itemId = 20674; -- aern sword
+UPDATE item_weapon SET [DMG] = 4, [DELAY] = 150 WHERE itemId = 20674; -- aern dagger
+UPDATE item_mods SET value = 
 
 --
 -- Inserting data into table item_mods
@@ -75,6 +78,7 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
  WHERE familyid = 36 and systemid = 5
+
 
 
 LOCK TABLES mob_pools WRITE;
