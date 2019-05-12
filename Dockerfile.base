@@ -17,6 +17,7 @@ RUN apt-get install rsync && \
     rm -rf /configuration/build && \
     rsync -avh /configuration/* /darkstar/conf && \
     rm -rf /configuration && \
+    cd /darkstar && \
     make -j8 && \
     apt-get autoremove -y build-essential autoconf pkg-config software-properties-common && \
     rm -rf /var/lib/apt/lists/* && \
@@ -30,7 +31,7 @@ RUN apt-get install rsync && \
 RUN groupadd -r darkstar && \
   useradd -g darkstar -ms /bin/bash darkstar && \
   chown -R darkstar:darkstar /darkstar
-  
+
 COPY docker-supervisord.conf etc/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/
 
