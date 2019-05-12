@@ -26,8 +26,8 @@ function onTrigger(player,npc)
     local giftReady = vanaDay() > player:getVar("LastGoblinGift")
     if giftReady then        
         -- randomly give a gift
-        local gift = 4120;
-        local max = {26, 21,23};
+        local gift = 4120
+        local max = {26, 21,23}
         local gearA = 
         {
             17271, -- platoon gun
@@ -56,7 +56,7 @@ function onTrigger(player,npc)
             13258, -- steppe stone
             13259, -- jungle stone
             13260, -- desert stone
-        };
+        }
         local gearB = 
         {
             4869, -- warp
@@ -80,7 +80,7 @@ function onTrigger(player,npc)
             13164, -- agile gorget
             12350, -- strike shield
             13553, -- blitz ring
-        };
+        }
         local gearC = 
         {
             4900, -- thunder spirit pact
@@ -106,26 +106,26 @@ function onTrigger(player,npc)
             16684, -- kabrakan's axe
             17822, -- omokage
             18632, -- iridal staff
-        };
-        local tarum = 14837;
-        local taruf = 14838;
-        local mith = 14839;
-        local galk = 14840;
-        local elvf = 14836;
-        local elvm = 14835;
-        local humf = 14834;
-        local humm = 14833;
+        }
+        local tarum = 14837
+        local taruf = 14838
+        local mith = 14839
+        local galk = 14840
+        local elvf = 14836
+        local elvm = 14835
+        local humf = 14834
+        local humm = 14833
 
-        local factor1 = math.random(1,100);
-        local factor2 = 0;
+        local factor1 = math.random(1,100)
+        local factor2 = 0
         if factor1 >= 98 then 
-            factor2 = 2;
+            factor2 = 2
         elseif factor1 >= 93 then
-            factor2 = 3;
+            factor2 = 3
         elseif factor1 >= 82 then
-            factor2 = 1;        
+            factor2 = 1     
         end
-        player:PrintToPlayer("Rolling Dice  1="..factor1.."  2="..factor2);
+        player:PrintToPlayer("Rolling Dice  1="..factor1.."  2="..factor2)
         
     end    
     player:showText(npc,ID.text.OLWYN_SHOP_DIALOG)
