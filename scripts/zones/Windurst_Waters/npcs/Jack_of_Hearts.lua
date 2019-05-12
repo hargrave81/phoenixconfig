@@ -5,11 +5,13 @@
 -- Working 100%
 -------------------------------------
 require("scripts/globals/settings");
+require("scripts/globals/coupon");
 
 function onTrade(player,npc,trade)
     if (trade:getItemCount() == 1 and trade:hasItemQty(536,1) == true) then
         player:startEvent(10012,GIL_RATE*5000);
         player:addGil(GIL_RATE*5000);
+        onCoupon(player);
         player:tradeComplete();
     end
 end;
