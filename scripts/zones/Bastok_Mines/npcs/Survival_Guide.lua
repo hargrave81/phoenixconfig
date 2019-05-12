@@ -37,6 +37,33 @@ function onTrigger(player,npc)
             i = i + 1
         end
         player:setRank(5);
+        if not player:hasKeyItem(dsp.keyItem.AIRSHIP_PASS) then
+            player:addKeyItem(dsp.keyItem.AIRSHIP_PASS)
+        end
+        if not player:hasKeyItem(dsp.keyItem.SILVER_BELL) then
+            player:addKeyItem(dsp.keyItem.SILVER_BELL)
+        end
+        if not player:hasKeyItem(dsp.keyItem.CORUSCANT_ROSARY) then
+            player:addKeyItem(dsp.keyItem.CORUSCANT_ROSARY)
+        end
+        if not player:hasKeyItem(dsp.keyItem.BLACK_MATINEE_NECKLACE) then
+            player:addKeyItem(dsp.keyItem.BLACK_MATINEE_NECKLACE)
+        end
+        if not player:hasKeyItem(dsp.keyItem.BLACK_MATINEE_NECKLACE) then
+            player:addKeyItem(dsp.keyItem.BLACK_MATINEE_NECKLACE)
+        end
+        if not player:hasKeyItem(dsp.keyItem.YAGUDO_TORCH) then
+            player:addKeyItem(dsp.keyItem.YAGUDO_TORCH)
+        end
+        if not player:hasKeyItem(dsp.keyItem.CREST_OF_DAVOI_KI) then
+            player:addKeyItem(dsp.keyItem.CREST_OF_DAVOI_KI)
+        end
+        if not player:hasKeyItem(dsp.keyItem.DELKFUTT_KEY) then
+            player:addKeyItem(dsp.keyItem.DELKFUTT_KEY)
+        end
+        if not player:hasKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT) then
+            player:addKeyItem(dsp.keyItem.ARCHDUCAL_AUDIENCE_PERMIT)
+        end  
         player:setVar("BastokMissionFast",0)        
     else
         if player:getNation() == 1 and player:getRank() < 5 then
