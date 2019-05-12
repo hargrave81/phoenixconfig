@@ -771,7 +771,7 @@ void CBattleEntity::SetSLevel(uint8 slvl)
     }
     else
     {
-        m_slvl = (slvl > ((m_mlvl * 2) / 3) ? (m_mlvl == 1 ? 1 : ((m_mlvl * 2) / 3)) : slvl); // Sub is 2/3 of main
+        m_slvl = (slvl > ((m_mlvl * 3) / 5) ? (m_mlvl == 1 ? 1 : ((m_mlvl * 5) / 9)) : slvl); // Sub is 5/9 of main
     }    
     if (this->objtype & TYPE_PC)
         Sql_Query(SqlHandle, "UPDATE char_stats SET slvl = %u WHERE charid = %u LIMIT 1;", m_slvl, this->id);
