@@ -118,47 +118,15 @@ function onTrigger(player,npc)
 
         local factor1 = math.random(1,100);
         local factor2 = 0;
-        if factor1 > 98 then 
+        if factor1 >= 98 then 
             factor2 = 2;
-        elseif factor1 > 93 then
+        elseif factor1 >= 93 then
             factor2 = 3;
-        elseif factor1 > 82 then
-            factor2 = 1;
+        elseif factor1 >= 82 then
+            factor2 = 1;        
         end
         player:PrintToPlayer("Rolling Dice  1="..factor1.."  2="..factor2);
-        if factor2 == 3 then
-            if player:getRace() == dsp.race.MITHRA then
-                gift = mith;
-            elseif player:getRace() == dsp.race.TARU_M then
-                gift = tarum;
-            elseif player:getRace() == dsp.race.TARU_F then
-                gift = taruf;
-            elseif player:getRace() == dsp.race.ELVAAN_M then
-                gift = elvm;
-            elseif player:getRace() == dsp.race.ELVAAN_F then
-                gift = elvf;
-            elseif player:getRace() == dsp.race.HUME_M then
-                gift = humm;
-            elseif player:getRace() == dsp.race.HUME_F then
-                gift = humf;
-            elseif player:getRace() == dsp.race.GALKA then            
-                gift = galk;
-            end
-        else
-            if factor2 ~= nil then
-                local factor3 = math.random(0,max[factor2]-1);
-                if factor2 == 0 then
-                    gift = gearA[factor3];
-                elseif factor2 == 1 then
-                    gift = gearB[factor3];
-                else
-                    gift = gearC[factor3];
-                end
-            end
-        end
-        player.addItem(gift);
-        player:messageSpecial(ID.text.ITEM_OBTAINED, gift);
-        player:setVar("LastGoblinGift",vanaDay())
+        
     end    
     player:showText(npc,ID.text.OLWYN_SHOP_DIALOG)
     dsp.shop.nation(player, stock, dsp.nation.BASTOK)
