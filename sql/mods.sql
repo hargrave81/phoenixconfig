@@ -108,10 +108,10 @@ VALUES (17199700,0,315.47,0.15,-74.82);
 
 
 INSERT INTO mob_groups VALUES
-(15002,6500,103,2500,0,5000,10000,5000,19,32,0); -- Qufim
+(15002,6500,126,2500,0,5000,10000,5000,19,32,0); -- Qufim
 
 INSERT INTO mob_spawn_points VALUES 
-(17293700,'Hurkan','Hurkan',15002,238.39,-19.48,386.78,127);
+(17293700,'Hurkan','Hurkan',15002,238.39,-19.48,386.78,39);
 
 INSERT INTO nm_spawn_points
 VALUES (17293700,0,238.39,-19.48,386.78);
@@ -125,10 +125,10 @@ INSERT INTO mob_groups VALUES
 (15003,6501,102,2500,2,5000,30000,10000,32,39,0); -- La Theine Plateau
 
 INSERT INTO mob_spawn_points VALUES 
-(17195500,'Primogenial_Marolith','Primogenial_Marolith',15003, 428.29,23.69,-203.57,127);
+(17195497,'Primogenial_Marolith','Primogenial_Marolith',15003, 428.29,23.69,-203.57,39);
 
 INSERT INTO nm_spawn_points
-VALUES (17195500,0,428.29,23.69,-203.57);
+VALUES (17195497,0,428.29,23.69,-203.57);
 
 
 INSERT INTO mob_droplist VALUES
