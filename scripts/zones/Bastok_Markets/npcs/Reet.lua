@@ -23,10 +23,10 @@ function onEventUpdate(player,csid,option)
 end;
 
 function onEventFinish(player,csid,option)
-    if (csid == 6) then
-        player:tradeComplete();
-        player:addGil(GIL_RATE*5000);
+    if (csid == 6) then                
         player:messageSpecial(ID.text.GIL_OBTAINED,GIL_RATE*5000);
         onCoupon(player,ID.text.ITEM_OBTAINED);
+        player:addGil(GIL_RATE*5000);
+        player:tradeComplete();
     end
 end;

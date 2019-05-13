@@ -47,6 +47,8 @@ function onEventFinish(player,csid,option)
         player:addQuest(BASTOK, dsp.quest.id.bastok.BLADE_OF_DARKNESS)   
         player:setVar("ChaosbringerKills",100)
         npcUtil.completeQuest(player, BASTOK, dsp.quest.id.bastok.BLADE_OF_DARKNESS, {title=dsp.title.DARK_SIDER, var="ZeruhnMines_Zeid_CS"})
+        player:addItem(16607)        
+        player:messageSpecial(ID.text.ITEM_OBTAINED, 16607)
         player:unlockJob(dsp.job.DRK)
         player:messageSpecial(ID.text.YOU_CAN_NOW_BECOME_A_DARK_KNIGHT)
     elseif (csid == 130) then

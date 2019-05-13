@@ -1,30 +1,31 @@
 -----------------------------------
--- Area: Windurst Waters
---  NPC: Jack of Hearts
+-- Area: Windurst Woods
+--  NPC: Jack of Spades
 -- Adventurer's Assistant
 -- Working 100%
 -------------------------------------
-require("scripts/globals/settings");
-require("scripts/globals/coupon");
+require("scripts/globals/npc_util")
+require("scripts/globals/settings")
+-----------------------------------
 
 function onTrade(player,npc,trade)
-    if (trade:getItemCount() == 1 and trade:hasItemQty(536,1) == true) then
-        player:startEvent(10012,GIL_RATE*5000);        
+    if npcUtil.tradeHas(trade, 536) then -- adventurer coupon
+        player:startEvent(10010, GIL_RATE * 50)
     end
-end;
+end
 
 function onTrigger(player,npc)
-    player:startEvent(10011,0,1);
-end;
+    player:startEvent(10009,0,4)
+end
 
 function onEventUpdate(player,csid,option)
-end;
+end
 
 function onEventFinish(player,csid,option)
-    if csid == 10012 then
+    if csid == 10010 then
         player:messageSpecial(ID.text.GIL_OBTAINED,GIL_RATE*5000);
         onCoupon(player,ID.text.ITEM_OBTAINED);
         player:addGil(GIL_RATE*5000);
         player:tradeComplete();
     end
-end;
+end

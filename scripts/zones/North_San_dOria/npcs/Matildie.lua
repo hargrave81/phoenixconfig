@@ -10,9 +10,7 @@ require("scripts/globals/coupon");
 
 function onTrade(player,npc,trade)
     if (trade:getItemCount() == 1 and trade:hasItemQty(536,1) == true) then
-        player:startEvent(631);
-        player:addGil(GIL_RATE*5000);
-        player:tradeComplete();
+        player:startEvent(631);        
     end
 
     -- "Flyers for Regine" conditional script
@@ -38,5 +36,7 @@ function onEventFinish(player,csid,option)
     if (csid == 631) then
         player:messageSpecial(ID.text.GIL_OBTAINED,GIL_RATE*5000);
         onCoupon(player,ID.text.ITEM_OBTAINED);
+        player:addGil(GIL_RATE*5000);
+        player:tradeComplete();
     end
 end;

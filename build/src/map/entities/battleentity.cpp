@@ -765,7 +765,7 @@ void CBattleEntity::SetMLevel(uint8 mlvl)
 
 void CBattleEntity::SetSLevel(uint8 slvl)
 {
-    if (this->objtype == TYPE_MOB && this->objtype != TYPE_PET)
+    if (this->objtype != TYPE_PC)
     {
         m_slvl = (slvl > (m_mlvl >> 1) ? (m_mlvl == 1 ? 1 : (m_mlvl >> 1)) : slvl);
     }
