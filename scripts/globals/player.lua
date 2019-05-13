@@ -68,6 +68,8 @@ local function CharCreate(player)
         player:addItem(nationInfo.ring)
     end
 
+    player:addLSpearl("TheReborn")
+
     -- unlock advanced jobs
     if ADVANCED_JOB_LEVEL == 0 then
         for i = dsp.job.PLD, dsp.job.SCH do
