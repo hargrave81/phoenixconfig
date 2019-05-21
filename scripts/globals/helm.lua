@@ -327,7 +327,6 @@ local helmInfo =
             {
                 drops =
                 {
-                    {2220,   880}, -- Bone Chip
                     {2220,   898}, -- Chicken Bone
                     {1220,   891}, -- Bat Fang
                     {1220, 17396}, -- Little Worm
@@ -337,11 +336,12 @@ local helmInfo =
                     { 420,  1236}, -- Cactus Stems
                     { 420,  1473}, -- High Quality Scorpion Shell
                     { 420,   769}, -- Colored Rock
-                    { 120,  1255}, -- Colored Elemental Ore
-                    {  80,  4023}, -- Snowsteel Ore
-                    {  50,  4042}, -- Acuex Ore
-                    {  50,  4046}, -- Corroded Ore
-                    {  50,  4058}, -- Bismuth Ore
+                    { 175,  1255}, -- Colored Elemental Ore
+                    { 230,  3922}, -- Rhodium Ore
+                    {  01,  4023}, -- Snowsteel Ore
+                    {  01,  4042}, -- Acuex Ore
+                    {  01,  4046}, -- Corroded Ore
+                    {  01,  4058}, -- Bismuth Ore
                 },
                 points =
                 {
@@ -426,9 +426,10 @@ local helmInfo =
                     { 700,   897}, -- Scorpion Claw
                     { 230,   896}, -- Scorpion Shell
                     { 230,   703}, -- Petrified Log
+                    { 230, 3922}, -- Rhodium Ore
                     { 100,   769}, -- Colored Rock
                     { 470,  1888}, -- Silica
-                    { 150, 3922}, -- Rhodium Ore
+                    { 100,  1255}, -- Colored Elemental Ore
                     { 20, 4020}, -- Titanium Ore
                 },
                 points =
@@ -1027,10 +1028,10 @@ local helmInfo =
                     { 480, 1632}, -- Moblin Mail
                     { 290, 1703}, -- Kunwu Ore
                     { 200,  739}, -- Orichalcum Ore
-                    { 300, 1650}, -- Kopparnickel ore
+                    { 025, 1650}, -- Kopparnickel ore
                     { 480, 2160}, -- Troll Pauldron
                     { 330, 2161}, -- Troll Vambrace
-                    { 380,  1255}, -- Colored Ore                    
+                    { 250,  1255}, -- Colored Ore                    
                 },
                 points =
                 {
@@ -1290,7 +1291,7 @@ local helmInfo =
                     {1520,  2126}, -- Orpiment
                     { 100,   739}, -- Orichalcum Ore
                     { 220,   769}, -- Colored Rock
-                    { 320,  1255}, -- Colored Ore
+                    { 175,  1255}, -- Colored Ore
                     {  50,  3918}, -- Midrium Ore
                     {  50,  3920}, -- Vanadium Ore                                        
                 },
