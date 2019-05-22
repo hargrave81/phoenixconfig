@@ -89,9 +89,9 @@ public:
     int32 needToZone(lua_State*);           // Check if player has zoned since the flag has been raised
 
     // Object Identification
-    int32 getID(lua_State* L);              // Gets Entity Id
-    int32 getShortID(lua_State* L);
-    int32 getCursorTarget(lua_State* L);    // Returns the ID any object under players in game cursor.
+    int32 getID(lua_State *L);              // Gets Entity Id
+    int32 getShortID(lua_State *L);
+    int32 getCursorTarget(lua_State *L);    // Returns the ID any object under players in game cursor.
 
     int32 getObjType(lua_State*);
     int32 isPC(lua_State*);
@@ -180,7 +180,7 @@ public:
     // Items
     int32 addLinkshell(lua_State* L);         // Adds LS to player
     int32 getEquipID(lua_State*);            // Gets the Item Id of the item in specified slot
-    int32 hasItem(lua_State*);               // Check to see if Entity has item in inventory (hasItem(itemNumber))    
+    int32 hasItem(lua_State*);               // Check to see if Entity has item in inventory (hasItem(itemNumber))
     int32 addItem(lua_State*);               // Add item to Entity inventory (additem(itemNumber,quantity))
     int32 delItem(lua_State*);
     int32 addUsedItem(lua_State*);           // Add charged item with timer already on full cooldown
@@ -216,13 +216,13 @@ public:
 
     int32 getStorageItem(lua_State*);        // returns item object player:getStorageItem(containerid, slotid, equipslotid)
     int32 storeWithPorterMoogle(lua_State* L);
-    int32 getRetrievableItemsForSlip(lua_State* L);
-    int32 retrieveItemFromSlip(lua_State* L);
+    int32 getRetrievableItemsForSlip(lua_State *L);
+    int32 retrieveItemFromSlip(lua_State *L);
 
     // Player Appearance
     int32 getRace(lua_State*);               // Gets Race of Entity
     int32 getGender(lua_State*);             // Returns the player character's gender
-    int32 getName(lua_State* L);             // Gets Entity Name
+    int32 getName(lua_State *L);             // Gets Entity Name
     int32 hideName(lua_State* L);
     int32 checkNameFlags(lua_State* L);      // this is check and not get because it tests for a flag, it doesn't return all flags
     int32 getModelId(lua_State* L);
@@ -251,7 +251,7 @@ public:
     int32 getGMHidden(lua_State* L);
     int32 setGMHidden(lua_State* L);
 
-    int32 isJailed(lua_State* L);           // Is the player jailed
+    int32 isJailed(lua_State *L);           // Is the player jailed
     int32 jail(lua_State* L);
 
     int32 canUseMisc(lua_State*);           // Check misc flags of current zone.
@@ -560,7 +560,7 @@ public:
     int32 getEVA(lua_State*);                   // Get total EVA
     int32 getRACC(lua_State*);                  // Get total r.acc
     int32 getRATT(lua_State*);                  // Get total r.attack
-    int32 getILvlMacc(lua_State* L);
+    int32 getILvlMacc(lua_State *L);
     int32 isSpellAoE(lua_State* L);
 
     int32 physicalDmgTaken(lua_State* L);
@@ -636,7 +636,7 @@ public:
     int32 isUndead(lua_State*);             // True if mob is undead
     int32 isNM(lua_State* L);
 
-    int32 getModelSize(lua_State* L);       // Gets model size
+    int32 getModelSize(lua_State *L);       // Gets model size
     int32 setMobFlags(lua_State*);          // Used to manipulate the mob's flags for testing.
     int32 getMobFlags(lua_State*);
 
@@ -684,6 +684,7 @@ public:
     int32 actionQueueEmpty(lua_State*);     // returns whether the action queue is empty or not
 
     int32 castSpell(lua_State*);            // forces a mob to cast a spell (parameter = spell ID, otherwise picks a spell from its list)
+    int32 getLastMagicTime(lua_State*);     // get the time between now and the last time the monster cast a spell (in ms)
     int32 useJobAbility(lua_State*);        // forces a job ability use (players/pets only)
     int32 useMobAbility(lua_State*);        // forces a mob to use a mobability (parameter = skill ID)
     int32 hasTPMoves(lua_State*);
@@ -692,7 +693,7 @@ public:
     int32 hasPreventActionEffect(lua_State*);
     int32 stun(lua_State* L);
 
-    int32 getPool(lua_State* L);            // Returns a mobs pool ID. If entity is not a mob, returns nil.
+    int32 getPool(lua_State *L);            // Returns a mobs pool ID. If entity is not a mob, returns nil.
     int32 getDropID(lua_State* L);
     int32 setDropID(lua_State* L);
     int32 addTreasure(lua_State*);          // Add item to directly to treasure pool
