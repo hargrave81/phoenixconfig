@@ -1047,7 +1047,7 @@ dsp.regime.bookOnEventUpdate = function(player, option, regimeType)
     end
 end
 
-dsp.regime.bookOnEventFinish = function(player, option, regimeType)
+dsp.regime.bookOnEventFinish = function(player, option, regimeType)    
     player:addStatusEffect(dsp.effect.DEDICATION,150,0,9600,0,3000)
     player:addStatusEffect(dsp.effect.REGEN, 1, 3, 9600)
     player:addStatusEffect(dsp.effect.REFRESH, 1, 3, 9600, 0, 3)    
@@ -1087,7 +1087,8 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
     if opt.act then
         local act = opt.act
         player:delCurrency("valor_point", opt.cost)
-
+        local mLvl = player:getMainLvl()
+        local foodPower = 3 + (mLvl / 10)
         if act == "CANCEL_REGIME" then
             clearPlayerVars(player)
             player:showText(player, msgOffset + 2) -- Training regime canceled.
@@ -1126,8 +1127,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
             player:delStatusEffect(dsp.effect.SUBLIMATION_ACTIVATED)
             player:addStatusEffect(dsp.effect.REFRESH, 1, 3, 3600, 0, 3)
 
-        elseif act == "PROTECT" then
-            local mLvl = player:getMainLvl()
+        elseif act == "PROTECT" then            
             local power = 0
 
             if mLvl < 27 then
@@ -1143,8 +1143,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
             player:delStatusEffectSilent(dsp.effect.PROTECT)
             player:addStatusEffect(dsp.effect.PROTECT, power, 0, 1800)
 
-        elseif act == "SHELL" then
-            local mLvl = player:getMainLvl()
+        elseif act == "SHELL" then            
             local power = 0
 
             if mLvl < 37 then
@@ -1166,29 +1165,29 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
 
         elseif act == "DRIED_MEAT" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 1, 0, 1800)            
-            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.STR_BOOST,3,0,3600,0,0)
+            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,foodPower/2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,3600,0,0)
         elseif act == "SALTED_FISH" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 2, 0, 1800)
-            player:addStatusEffect(dsp.effect.ICE_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.DEF_BOOST,5,0,3600,0,0)          
+            player:addStatusEffect(dsp.effect.ICE_SPIKES,foodPower/2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.DEF_BOOST,foodPower,0,3600,0,0)          
         elseif act == "HARD_COOKIE" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 3, 0, 1800)
-            player:addStatusEffect(dsp.effect.SHOCK_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.INT_BOOST,3,0,3600,0,0)            
-            pet:addStatusEffect(dsp.effect.STR_BOOST,4,0,3600,0,0)
+            player:addStatusEffect(dsp.effect.SHOCK_SPIKES,foodPower/2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.INT_BOOST,foodPower,0,3600,0,0)            
+            pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,3600,0,0)
         elseif act == "INSTANT_NOODLES" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 4, 0, 1800)
-            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.DEX_BOOST,3,0,3600,0,0)            
+            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,foodPower/2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.DEX_BOOST,foodPower,0,3600,0,0)            
         elseif act == "DRIED_AGARICUS" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 5, 0, 1800)
-            player:addStatusEffect(dsp.effect.SHOCK_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.MND_BOOST,4,0,3600,0,0)                        
+            player:addStatusEffect(dsp.effect.SHOCK_SPIKES,foodPower/2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.MND_BOOST,foodPower,0,3600,0,0)                        
         elseif act == "INSTANT_RICE" then
             player:addStatusEffectEx(dsp.effect.FIELD_SUPPORT_FOOD, 251, 6, 0, 1800)
-            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,2,0,1800,0,0)
-            player:addStatusEffect(dsp.effect.CHR_BOOST,3,0,3600,0,0)            
+            player:addStatusEffect(dsp.effect.BLAZE_SPIKES,foodPower/2,0,1800,0,0)
+            player:addStatusEffect(dsp.effect.CHR_BOOST,foodPower,0,3600,0,0)            
         end
 
     -- select a training regime
