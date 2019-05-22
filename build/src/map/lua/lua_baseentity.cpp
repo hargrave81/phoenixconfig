@@ -170,7 +170,7 @@ CLuaBaseEntity::CLuaBaseEntity(CBaseEntity* PEntity)
 *  Notes   : Mainly used for showing retail text specific to an NPC
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::showText(lua_State *L)
+inline int32 CLuaBaseEntity::showText(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     // DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -409,7 +409,7 @@ inline int32 CLuaBaseEntity::messageName(lua_State* L)
     if (!lua_isnil(L, 7) && lua_isnumber(L, 7))
         chatType = (int32)lua_tointeger(L, 7);
 
-    if (CCharEntity* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    if (CCharEntity * PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
         PChar->pushPacket(new CMessageNamePacket(PChar, messageID, PNameEntity, param0, param1, param2, param3, chatType));
     }
@@ -460,7 +460,7 @@ inline int32 CLuaBaseEntity::messagePublic(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::messageSpecial(lua_State *L)
+inline int32 CLuaBaseEntity::messageSpecial(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -535,7 +535,7 @@ inline int32 CLuaBaseEntity::messageSystem(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getVar(lua_State *L)
+inline int32 CLuaBaseEntity::getVar(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -555,7 +555,7 @@ inline int32 CLuaBaseEntity::getVar(lua_State *L)
 *  Notes   : Passing a '0' value will delete the variable
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setVar(lua_State *L)
+inline int32 CLuaBaseEntity::setVar(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -587,7 +587,7 @@ inline int32 CLuaBaseEntity::setVar(lua_State *L)
 *  Notes   : Can use values greater than 1 to increment more
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addVar(lua_State *L)
+inline int32 CLuaBaseEntity::addVar(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -672,7 +672,7 @@ inline int32 CLuaBaseEntity::resetLocalVars(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMaskBit(lua_State *L)
+inline int32 CLuaBaseEntity::getMaskBit(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -694,7 +694,7 @@ inline int32 CLuaBaseEntity::getMaskBit(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setMaskBit(lua_State *L)
+inline int32 CLuaBaseEntity::setMaskBit(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -733,7 +733,7 @@ inline int32 CLuaBaseEntity::setMaskBit(lua_State *L)
 *  Notes   : Useful for quests such as Flyers for Regine
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::countMaskBits(lua_State *L)
+inline int32 CLuaBaseEntity::countMaskBits(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -758,7 +758,7 @@ inline int32 CLuaBaseEntity::countMaskBits(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isMaskFull(lua_State *L)
+inline int32 CLuaBaseEntity::isMaskFull(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -784,7 +784,7 @@ inline int32 CLuaBaseEntity::isMaskFull(lua_State *L)
 *  Notes   : Used only for testing through inject.lua command
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::injectPacket(lua_State *L)
+inline int32 CLuaBaseEntity::injectPacket(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -796,7 +796,7 @@ inline int32 CLuaBaseEntity::injectPacket(lua_State *L)
 
     if (File)
     {
-        CBasicPacket * PPacket = new CBasicPacket();
+        CBasicPacket* PPacket = new CBasicPacket();
 
         fseek(File, 1, SEEK_SET);
         if (fread(&size, 1, 1, File) != 1)
@@ -848,14 +848,14 @@ inline int32 CLuaBaseEntity::injectActionPacket(lua_State* L)
     ACTIONTYPE actiontype = ACTION_MAGIC_FINISH;
     switch (action)
     {
-        case 3: actiontype = ACTION_WEAPONSKILL_FINISH; break;
-        case 4: actiontype = ACTION_MAGIC_FINISH; break;
-        case 5: actiontype = ACTION_ITEM_FINISH; break;
-        case 6: actiontype = ACTION_JOBABILITY_FINISH; break;
-        case 8: actiontype = ACTION_MAGIC_START; break;
-        case 11: actiontype = ACTION_MOBABILITY_FINISH; break;
-        case 13: actiontype = ACTION_PET_MOBABILITY_FINISH; break;
-        case 14: actiontype = ACTION_DANCE; break;
+    case 3: actiontype = ACTION_WEAPONSKILL_FINISH; break;
+    case 4: actiontype = ACTION_MAGIC_FINISH; break;
+    case 5: actiontype = ACTION_ITEM_FINISH; break;
+    case 6: actiontype = ACTION_JOBABILITY_FINISH; break;
+    case 8: actiontype = ACTION_MAGIC_START; break;
+    case 11: actiontype = ACTION_MOBABILITY_FINISH; break;
+    case 13: actiontype = ACTION_PET_MOBABILITY_FINISH; break;
+    case 14: actiontype = ACTION_DANCE; break;
     }
 
     action_t Action;
@@ -979,7 +979,7 @@ inline int32 CLuaBaseEntity::entityAnimationPacket(lua_State* L)
 *  Notes   : Cutscene ID must be associated with the zone
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::startEvent(lua_State *L)
+inline int32 CLuaBaseEntity::startEvent(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1072,7 +1072,7 @@ inline int32 CLuaBaseEntity::startEvent(lua_State *L)
 *  Notes   : See scripts/zones/Aht_Urhgan_Whitegate/npcs/Ghatsad.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::startEventString(lua_State *L)
+inline int32 CLuaBaseEntity::startEventString(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1164,7 +1164,7 @@ inline int32 CLuaBaseEntity::startEventString(lua_State *L)
 *  Notes   : Ex: CoP ring selection uses this to redisplay correct order of rings
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::updateEvent(lua_State *L)
+inline int32 CLuaBaseEntity::updateEvent(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1288,7 +1288,7 @@ inline int32 CLuaBaseEntity::updateEventString(lua_State* L)
 *  Notes   : Used to relocate Siren's Tear, as an example
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getEventTarget(lua_State *L)
+inline int32 CLuaBaseEntity::getEventTarget(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1313,7 +1313,7 @@ inline int32 CLuaBaseEntity::getEventTarget(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::release(lua_State *L)
+inline int32 CLuaBaseEntity::release(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1340,7 +1340,7 @@ inline int32 CLuaBaseEntity::release(lua_State *L)
 *  Notes   : Also used for Regain and Spike spell effects
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setFlag(lua_State *L)
+inline int32 CLuaBaseEntity::setFlag(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1359,7 +1359,7 @@ inline int32 CLuaBaseEntity::setFlag(lua_State *L)
 *  Notes   :  Used in Mog House exit quests (ex. A Lady's Heart)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::moghouseFlag(lua_State *L)
+inline int32 CLuaBaseEntity::moghouseFlag(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -1383,7 +1383,7 @@ inline int32 CLuaBaseEntity::moghouseFlag(lua_State *L)
 *  Notes   : Used in events where player needs to zone before continuing
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::needToZone(lua_State *L)
+inline int32 CLuaBaseEntity::needToZone(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1403,7 +1403,7 @@ inline int32 CLuaBaseEntity::needToZone(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getID(lua_State *L)
+inline int32 CLuaBaseEntity::getID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1418,7 +1418,7 @@ inline int32 CLuaBaseEntity::getID(lua_State *L)
 *  Notes   : To Do: Should be renamed to getTargID
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getShortID(lua_State *L)
+inline int32 CLuaBaseEntity::getShortID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1465,7 +1465,7 @@ inline int32 CLuaBaseEntity::getCursorTarget(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getObjType(lua_State *L)
+inline int32 CLuaBaseEntity::getObjType(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1480,7 +1480,7 @@ inline int32 CLuaBaseEntity::getObjType(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isPC(lua_State *L)
+inline int32 CLuaBaseEntity::isPC(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1495,7 +1495,7 @@ inline int32 CLuaBaseEntity::isPC(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isNPC(lua_State *L)
+inline int32 CLuaBaseEntity::isNPC(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1510,7 +1510,7 @@ inline int32 CLuaBaseEntity::isNPC(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isMob(lua_State *L)
+inline int32 CLuaBaseEntity::isMob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1525,7 +1525,7 @@ inline int32 CLuaBaseEntity::isMob(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isPet(lua_State *L)
+inline int32 CLuaBaseEntity::isPet(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1540,7 +1540,7 @@ inline int32 CLuaBaseEntity::isPet(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isAlly(lua_State *L)
+inline int32 CLuaBaseEntity::isAlly(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1586,7 +1586,7 @@ int32 CLuaBaseEntity::resetAI(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStatus(lua_State *L)
+inline int32 CLuaBaseEntity::getStatus(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1601,7 +1601,7 @@ inline int32 CLuaBaseEntity::getStatus(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setStatus(lua_State *L)
+inline int32 CLuaBaseEntity::setStatus(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -1833,7 +1833,7 @@ inline int32 CLuaBaseEntity::pathThrough(lua_State* L)
         lua_rawgeti(L, 1, i + 1);
         lua_rawgeti(L, 1, i + 2);
 
-        points.push_back({(float)lua_tointeger(L, -3), (float)lua_tointeger(L, -2), (float)lua_tointeger(L, -1), 0, 0});
+        points.push_back({ (float)lua_tointeger(L, -3), (float)lua_tointeger(L, -2), (float)lua_tointeger(L, -1), 0, 0 });
 
         lua_pop(L, 3);
     }
@@ -1904,7 +1904,7 @@ inline int32 CLuaBaseEntity::clearPath(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::checkDistance(lua_State *L)
+inline int32 CLuaBaseEntity::checkDistance(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -1951,7 +1951,7 @@ inline int32 CLuaBaseEntity::wait(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::openDoor(lua_State *L)
+inline int32 CLuaBaseEntity::openDoor(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_NPC);
@@ -1963,7 +1963,7 @@ inline int32 CLuaBaseEntity::openDoor(lua_State *L)
         m_PBaseEntity->animation = ANIMATION_OPEN_DOOR;
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE, UPDATE_COMBAT));
 
-        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity* PNpc)
+        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity * PNpc)
         {
             PNpc->animation = ANIMATION_CLOSE_DOOR;
             PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc, ENTITY_UPDATE, UPDATE_COMBAT));
@@ -1979,7 +1979,7 @@ inline int32 CLuaBaseEntity::openDoor(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::closeDoor(lua_State *L)
+inline int32 CLuaBaseEntity::closeDoor(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_NPC);
@@ -1990,7 +1990,7 @@ inline int32 CLuaBaseEntity::closeDoor(lua_State *L)
         m_PBaseEntity->animation = ANIMATION_CLOSE_DOOR;
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE, UPDATE_COMBAT));
 
-        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(CloseTime), false, [](CBaseEntity* PNpc)
+        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(CloseTime), false, [](CBaseEntity * PNpc)
         {
             PNpc->animation = ANIMATION_OPEN_DOOR;
             PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc, ENTITY_UPDATE, UPDATE_COMBAT));
@@ -2006,7 +2006,7 @@ inline int32 CLuaBaseEntity::closeDoor(lua_State *L)
 *  Notes   : See: scripts/zones/Metalworks/npcs/_6lt.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setElevator(lua_State *L)
+inline int32 CLuaBaseEntity::setElevator(lua_State* L)
 {
     //Usage: setElevator(id, lower door id, upper door id, elevator platform id, animations reversed bool)
     //If giving the elevator ANIMATION_ELEVATOR_UP makes it go down, set this bool to true
@@ -2055,7 +2055,7 @@ inline int32 CLuaBaseEntity::setElevator(lua_State *L)
 *  Notes   : See usage below
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addPeriodicTrigger(lua_State *L)
+inline int32 CLuaBaseEntity::addPeriodicTrigger(lua_State* L)
 {
     //Usage npc:addPeriodicTrigger( triggerID, period, minute offset )
     //triggerID is an ID unique to the NPC
@@ -2094,7 +2094,7 @@ inline int32 CLuaBaseEntity::addPeriodicTrigger(lua_State *L)
 *  Notes   : Default is 15 seconds
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::showNPC(lua_State *L)
+inline int32 CLuaBaseEntity::showNPC(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_NPC);
@@ -2104,7 +2104,7 @@ inline int32 CLuaBaseEntity::showNPC(lua_State *L)
     m_PBaseEntity->status = STATUS_NORMAL;
     m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE, UPDATE_COMBAT));
 
-    m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity* PNpc)
+    m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity * PNpc)
     {
         PNpc->status = STATUS_DISAPPEAR;
         PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc, ENTITY_DESPAWN, UPDATE_NONE));
@@ -2120,7 +2120,7 @@ inline int32 CLuaBaseEntity::showNPC(lua_State *L)
 *  Notes   : Default is 15 seconds
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hideNPC(lua_State *L)
+inline int32 CLuaBaseEntity::hideNPC(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_NPC);
@@ -2132,7 +2132,7 @@ inline int32 CLuaBaseEntity::hideNPC(lua_State *L)
         m_PBaseEntity->status = STATUS_DISAPPEAR;
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN, UPDATE_NONE));
 
-        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity* PNpc)
+        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity * PNpc)
         {
             PNpc->status = STATUS_NORMAL;
             PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc, ENTITY_UPDATE, UPDATE_COMBAT));
@@ -2148,7 +2148,7 @@ inline int32 CLuaBaseEntity::hideNPC(lua_State *L)
 *  Notes   : Default is 15 seconds
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::updateNPCHideTime(lua_State *L)
+inline int32 CLuaBaseEntity::updateNPCHideTime(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_NPC);
@@ -2157,7 +2157,7 @@ inline int32 CLuaBaseEntity::updateNPCHideTime(lua_State *L)
     {
         uint32 OpenTime = (!lua_isnil(L, 1) && lua_isnumber(L, 1)) ? (uint32)lua_tointeger(L, 1) * 1000 : 15000;
 
-        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity* PNpc)
+        m_PBaseEntity->PAI->QueueAction(queueAction_t(std::chrono::milliseconds(OpenTime), false, [](CBaseEntity * PNpc)
         {
             PNpc->status = STATUS_NORMAL;
             PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc, ENTITY_UPDATE, UPDATE_COMBAT));
@@ -2173,7 +2173,7 @@ inline int32 CLuaBaseEntity::updateNPCHideTime(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeather(lua_State *L)
+inline int32 CLuaBaseEntity::getWeather(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2195,7 +2195,7 @@ inline int32 CLuaBaseEntity::getWeather(lua_State *L)
 *  Notes   : Only used for GM command: scripts/commands/setweather.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setWeather(lua_State *L)
+inline int32 CLuaBaseEntity::setWeather(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -2217,7 +2217,7 @@ inline int32 CLuaBaseEntity::setWeather(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setHomePoint(lua_State *L)
+inline int32 CLuaBaseEntity::setHomePoint(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2227,7 +2227,7 @@ inline int32 CLuaBaseEntity::setHomePoint(lua_State *L)
     PChar->profile.home_point.p = PChar->loc.p;
     PChar->profile.home_point.destination = PChar->getZone();
 
-    const char *fmtQuery = "UPDATE chars \
+    const char* fmtQuery = "UPDATE chars \
                             SET home_zone = %u, home_rot = %u, home_x = %.3f, home_y = %.3f, home_z = %.3f \
                             WHERE charid = %u;";
 
@@ -2248,7 +2248,7 @@ inline int32 CLuaBaseEntity::setHomePoint(lua_State *L)
 *  Notes   : Used for mounting Chocobo and changing Jeuno music in Winter
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::ChangeMusic(lua_State *L)
+inline int32 CLuaBaseEntity::ChangeMusic(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2272,7 +2272,7 @@ inline int32 CLuaBaseEntity::ChangeMusic(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::sendMenu(lua_State *L)
+inline int32 CLuaBaseEntity::sendMenu(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2285,19 +2285,19 @@ inline int32 CLuaBaseEntity::sendMenu(lua_State *L)
 
     switch (menu)
     {
-        case 1:
-            PChar->pushPacket(new CMenuMogPacket());
-            break;
-        case 2:
-            PChar->pushPacket(new CShopMenuPacket(PChar));
-            PChar->pushPacket(new CShopItemsPacket(PChar));
-            break;
-        case 3:
-            PChar->pushPacket(new CAuctionHousePacket(2));
-            break;
-        default:
-            ShowDebug("Menu %i not implemented, yet.\n", menu);
-            break;
+    case 1:
+        PChar->pushPacket(new CMenuMogPacket());
+        break;
+    case 2:
+        PChar->pushPacket(new CShopMenuPacket(PChar));
+        PChar->pushPacket(new CShopItemsPacket(PChar));
+        break;
+    case 3:
+        PChar->pushPacket(new CAuctionHousePacket(2));
+        break;
+    default:
+        ShowDebug("Menu %i not implemented, yet.\n", menu);
+        break;
     }
     return 0;
 }
@@ -2358,7 +2358,7 @@ inline int32 CLuaBaseEntity::sendGuild(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::openSendBox(lua_State *L)
+inline int32 CLuaBaseEntity::openSendBox(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2375,7 +2375,7 @@ inline int32 CLuaBaseEntity::openSendBox(lua_State *L)
 *  Notes   : Used for logoff commands
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::leavegame(lua_State *L)
+inline int32 CLuaBaseEntity::leavegame(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2398,7 +2398,7 @@ inline int32 CLuaBaseEntity::sendEmote(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC)
 
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
+        DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 3) || !lua_isnumber(L, 3));
 
@@ -2411,8 +2411,8 @@ inline int32 CLuaBaseEntity::sendEmote(lua_State* L)
         const auto emoteMode = static_cast<EmoteMode>(lua_tointeger(L, 3));
 
         PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE,
-                                    new CCharEmotionPacket(PChar, PTarget->GetBaseEntity()->id,
-                                                           PTarget->GetBaseEntity()->targid, emoteID, emoteMode, 0));
+            new CCharEmotionPacket(PChar, PTarget->GetBaseEntity()->id,
+                PTarget->GetBaseEntity()->targid, emoteID, emoteMode, 0));
     }
 
     return 0;
@@ -2425,7 +2425,7 @@ inline int32 CLuaBaseEntity::sendEmote(lua_State* L)
 *  Notes   : Can specify angle for wider/narrower ranges
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isBehind(lua_State *L)
+inline int32 CLuaBaseEntity::isBehind(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -2448,7 +2448,7 @@ inline int32 CLuaBaseEntity::isBehind(lua_State *L)
 *  Notes   : Can specify angle for wider/narrower ranges
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isFacing(lua_State *L)
+inline int32 CLuaBaseEntity::isFacing(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -2470,7 +2470,7 @@ inline int32 CLuaBaseEntity::isFacing(lua_State *L)
 *  Notes   : 0 degrees front; 180 behind
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getAngle(lua_State *L)
+inline int32 CLuaBaseEntity::getAngle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -2490,7 +2490,7 @@ inline int32 CLuaBaseEntity::getAngle(lua_State *L)
 *  Notes   : To Do: I don't think some scripts are using this correctly...
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getZone(lua_State *L)
+inline int32 CLuaBaseEntity::getZone(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2518,7 +2518,7 @@ inline int32 CLuaBaseEntity::getZone(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getZoneID(lua_State *L)
+inline int32 CLuaBaseEntity::getZoneID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2533,7 +2533,7 @@ inline int32 CLuaBaseEntity::getZoneID(lua_State *L)
 *  Notes   : Highly useful for the above example
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getZoneName(lua_State *L)
+inline int32 CLuaBaseEntity::getZoneName(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->loc.zone == nullptr);
@@ -2549,7 +2549,7 @@ inline int32 CLuaBaseEntity::getZoneName(lua_State *L)
 *  Notes   : Mainly used for teleport items (like to Bibiki Bay)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isZoneVisited(lua_State *L)
+inline int32 CLuaBaseEntity::isZoneVisited(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2569,7 +2569,7 @@ inline int32 CLuaBaseEntity::isZoneVisited(lua_State *L)
 *  Notes   : Useful for returning players to their last position
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getPreviousZone(lua_State *L)
+inline int32 CLuaBaseEntity::getPreviousZone(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2584,7 +2584,7 @@ inline int32 CLuaBaseEntity::getPreviousZone(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCurrentRegion(lua_State *L)
+inline int32 CLuaBaseEntity::getCurrentRegion(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2599,7 +2599,7 @@ inline int32 CLuaBaseEntity::getCurrentRegion(lua_State *L)
 *  Notes   : Used in Signet/Sanction applications
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getContinentID(lua_State *L)
+inline int32 CLuaBaseEntity::getContinentID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2657,7 +2657,7 @@ inline int32 CLuaBaseEntity::updateToEntireZone(lua_State* L)
     CNpcEntity* PNpc = (CNpcEntity*)m_PBaseEntity;
 
     PNpc->status = (STATUSTYPE)lua_tointeger(L, 1);
-    PNpc->animation = (uint8)lua_tointeger(L,2);
+    PNpc->animation = (uint8)lua_tointeger(L, 2);
 
     //If this flag is high, update the NPC's name to match the current time
     if (!lua_isnil(L, 3) && (bool)lua_toboolean(L, 3) == true)
@@ -2704,7 +2704,7 @@ inline int32 CLuaBaseEntity::getPos(lua_State* L)
 *  Notes   : Format: x,y,z,rot
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::showPosition(lua_State *L)
+inline int32 CLuaBaseEntity::showPosition(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2725,7 +2725,7 @@ inline int32 CLuaBaseEntity::showPosition(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getXPos(lua_State *L)
+inline int32 CLuaBaseEntity::getXPos(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2740,7 +2740,7 @@ inline int32 CLuaBaseEntity::getXPos(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getYPos(lua_State *L)
+inline int32 CLuaBaseEntity::getYPos(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2755,7 +2755,7 @@ inline int32 CLuaBaseEntity::getYPos(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getZPos(lua_State *L)
+inline int32 CLuaBaseEntity::getZPos(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2770,7 +2770,7 @@ inline int32 CLuaBaseEntity::getZPos(lua_State *L)
 *  Notes   : Rot = Rotation of 0-359 degrees
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRotPos(lua_State *L)
+inline int32 CLuaBaseEntity::getRotPos(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2785,7 +2785,7 @@ inline int32 CLuaBaseEntity::getRotPos(lua_State *L)
 *  Notes   : Using without zone will send player to coordinates on same map
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setPos(lua_State *L)
+inline int32 CLuaBaseEntity::setPos(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -2862,7 +2862,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::warp(lua_State *L)
+inline int32 CLuaBaseEntity::warp(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -2888,7 +2888,7 @@ inline int32 CLuaBaseEntity::warp(lua_State *L)
 *  Notes   : scripts/globals/mobskills/tarutaru_warp_ii.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::teleport(lua_State *L)
+inline int32 CLuaBaseEntity::teleport(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1));
@@ -2920,7 +2920,7 @@ inline int32 CLuaBaseEntity::teleport(lua_State *L)
 *  Notes   : Function name is ambiguous
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::resetPlayer(lua_State *L)
+inline int32 CLuaBaseEntity::resetPlayer(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1));
 
@@ -2994,21 +2994,21 @@ int32 CLuaBaseEntity::goToEntity(lua_State* L)
     {
         CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
-        bool spawnedOnly  = !lua_isnil(L, 2) ? lua_tonumber(L, 2) : 0;
+        bool spawnedOnly = !lua_isnil(L, 2) ? lua_tonumber(L, 2) : 0;
 
-        uint32 targetID   = (uint32)lua_tonumber(L, 1);
+        uint32 targetID = (uint32)lua_tonumber(L, 1);
         uint16 targetZone = (targetID >> 12) & 0x0FFF;
-        uint16 playerID   = m_PBaseEntity->id;
+        uint16 playerID = m_PBaseEntity->id;
         uint16 playerZone = PChar->loc.zone->GetID();
 
         char buf[12];
         memset(&buf[0], 0, sizeof(buf));
 
-        ref<bool>  (&buf,  0) = true; // Toggle for message routing; goes to entity server first
-        ref<bool>  (&buf,  1) = spawnedOnly; // Specification for Spawned Only or Any
-        ref<uint16>(&buf,  2) = targetZone;
-        ref<uint16>(&buf,  4) = playerZone;
-        ref<uint32>(&buf,  6) = targetID;
+        ref<bool>(&buf, 0) = true; // Toggle for message routing; goes to entity server first
+        ref<bool>(&buf, 1) = spawnedOnly; // Specification for Spawned Only or Any
+        ref<uint16>(&buf, 2) = targetZone;
+        ref<uint16>(&buf, 4) = playerZone;
+        ref<uint32>(&buf, 6) = targetID;
         ref<uint16>(&buf, 10) = playerID;
 
         message::send(MSG_SEND_TO_ENTITY, &buf[0], sizeof(buf), nullptr);
@@ -3098,7 +3098,7 @@ inline int32 CLuaBaseEntity::bringPlayer(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getNationTeleport(lua_State *L)
+inline int32 CLuaBaseEntity::getNationTeleport(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3110,17 +3110,17 @@ inline int32 CLuaBaseEntity::getNationTeleport(lua_State *L)
 
     switch (nation)
     {
-        case 0: lua_pushinteger(L, PChar->nationtp.sandoria); return 1; break;
-        case 1: lua_pushinteger(L, PChar->nationtp.bastok); return 1; break;
-        case 2: lua_pushinteger(L, PChar->nationtp.windurst); return 1; break;
-        case 3: lua_pushinteger(L, PChar->nationtp.ahturhgan); return 1; break;
-        case 4: lua_pushinteger(L, PChar->nationtp.maw); return 1; break;
-        case 5: lua_pushinteger(L, PChar->nationtp.pastsandoria); return 1; break;
-        case 6: lua_pushinteger(L, PChar->nationtp.pastbastok); return 1; break;
-        case 7: lua_pushinteger(L, PChar->nationtp.pastwindurst); return 1; break;
-        default:
-            ShowDebug(CL_CYAN"lua::getNationTeleport no region with this number!\n" CL_RESET);
-            return 0;
+    case 0: lua_pushinteger(L, PChar->nationtp.sandoria); return 1; break;
+    case 1: lua_pushinteger(L, PChar->nationtp.bastok); return 1; break;
+    case 2: lua_pushinteger(L, PChar->nationtp.windurst); return 1; break;
+    case 3: lua_pushinteger(L, PChar->nationtp.ahturhgan); return 1; break;
+    case 4: lua_pushinteger(L, PChar->nationtp.maw); return 1; break;
+    case 5: lua_pushinteger(L, PChar->nationtp.pastsandoria); return 1; break;
+    case 6: lua_pushinteger(L, PChar->nationtp.pastbastok); return 1; break;
+    case 7: lua_pushinteger(L, PChar->nationtp.pastwindurst); return 1; break;
+    default:
+        ShowDebug(CL_CYAN"lua::getNationTeleport no region with this number!\n" CL_RESET);
+        return 0;
     }
 }
 
@@ -3131,7 +3131,7 @@ inline int32 CLuaBaseEntity::getNationTeleport(lua_State *L)
 *  Notes   : Used in new Maws, Aht Urghan, etc
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addNationTeleport(lua_State *L)
+inline int32 CLuaBaseEntity::addNationTeleport(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3145,17 +3145,17 @@ inline int32 CLuaBaseEntity::addNationTeleport(lua_State *L)
 
     switch (nation)
     {
-        case 0: PChar->nationtp.sandoria |= newTP; break;
-        case 1: PChar->nationtp.bastok |= newTP; break;
-        case 2: PChar->nationtp.windurst |= newTP; break;
-        case 3: PChar->nationtp.ahturhgan |= newTP; break;
-        case 4: PChar->nationtp.maw |= newTP; break;
-        case 5: PChar->nationtp.pastsandoria |= newTP; break;
-        case 6: PChar->nationtp.pastbastok |= newTP; break;
-        case 7: PChar->nationtp.pastwindurst |= newTP; break;
-        default:
-            ShowDebug(CL_CYAN"lua::addNationTeleport no region with this number!\n" CL_RESET);
-            return 0;
+    case 0: PChar->nationtp.sandoria |= newTP; break;
+    case 1: PChar->nationtp.bastok |= newTP; break;
+    case 2: PChar->nationtp.windurst |= newTP; break;
+    case 3: PChar->nationtp.ahturhgan |= newTP; break;
+    case 4: PChar->nationtp.maw |= newTP; break;
+    case 5: PChar->nationtp.pastsandoria |= newTP; break;
+    case 6: PChar->nationtp.pastbastok |= newTP; break;
+    case 7: PChar->nationtp.pastwindurst |= newTP; break;
+    default:
+        ShowDebug(CL_CYAN"lua::addNationTeleport no region with this number!\n" CL_RESET);
+        return 0;
     }
 
     charutils::SaveCharUnlocks(PChar);
@@ -3169,7 +3169,7 @@ inline int32 CLuaBaseEntity::addNationTeleport(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getEquipID(lua_State *L)
+inline int32 CLuaBaseEntity::getEquipID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC && m_PBaseEntity->objtype != TYPE_PET && m_PBaseEntity->objtype != TYPE_MOB);
@@ -3203,7 +3203,7 @@ inline int32 CLuaBaseEntity::getEquipID(lua_State *L)
 *  Notes   : Send with an L2 value to specify container
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasItem(lua_State *L)
+inline int32 CLuaBaseEntity::hasItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3277,7 +3277,7 @@ inline int32 CLuaBaseEntity::addLinkshell(lua_State* L)
 *  Notes   : See format and variable options below
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addItem(lua_State *L)
+inline int32 CLuaBaseEntity::addItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3298,7 +3298,7 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
         with values of 5 and 10, respectively
     */
 
-    if (lua_istable(L,1))
+    if (lua_istable(L, 1))
     {
         lua_getfield(L, 1, "id");
         if (lua_isnil(L, -1))
@@ -3324,7 +3324,7 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
 
                 lua_getfield(L, 1, "silent");
                 bool silent = false;
-                if (!lua_isnil(L,-1))
+                if (!lua_isnil(L, -1))
                 {
                     silent = lua_toboolean(L, -1);
                 }
@@ -3343,11 +3343,11 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
                     uint16 trial = (uint16)lua_tointeger(L, -1);
                     if (trial != 0) ((CItemArmor*)PItem)->setTrialNumber(trial);
                     lua_getfield(L, 1, "augments");
-                    if (lua_istable(L,-1))
+                    if (lua_istable(L, -1))
                     {
                         auto table = lua_gettop(L);
                         lua_pushnil(L);
-                        while (lua_next(L,table) != 0)
+                        while (lua_next(L, table) != 0)
                         {
                             uint16 augid = (uint16)lua_tointeger(L, -2);
                             uint8 augval = (uint8)lua_tointeger(L, -1);
@@ -3498,7 +3498,7 @@ int32 CLuaBaseEntity::delItem(lua_State* L)
 *  Notes   : Currently unused, but should be
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addUsedItem(lua_State *L)
+inline int32 CLuaBaseEntity::addUsedItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3543,7 +3543,7 @@ inline int32 CLuaBaseEntity::addUsedItem(lua_State *L)
 *  Notes   : Used mainly for Testimonies and BCNM orbs
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasWornItem(lua_State *L)
+inline int32 CLuaBaseEntity::hasWornItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -3568,7 +3568,7 @@ inline int32 CLuaBaseEntity::hasWornItem(lua_State *L)
 *  Notes   : Prevent Orbs and Testimonies from being used again
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::createWornItem(lua_State *L)
+inline int32 CLuaBaseEntity::createWornItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -3602,7 +3602,7 @@ inline int32 CLuaBaseEntity::createWornItem(lua_State *L)
 *  Notes   : Used almost exclusively for instances
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addTempItem(lua_State *L)
+inline int32 CLuaBaseEntity::addTempItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3645,7 +3645,7 @@ inline int32 CLuaBaseEntity::addTempItem(lua_State *L)
 *  Notes   : Used solely in scripts/globals/shop.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::createShop(lua_State *L)
+inline int32 CLuaBaseEntity::createShop(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3667,7 +3667,7 @@ inline int32 CLuaBaseEntity::createShop(lua_State *L)
 *  Notes   : Use with createShop() - 16 Max Items in Shop
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addShopItem(lua_State *L)
+inline int32 CLuaBaseEntity::addShopItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3719,7 +3719,7 @@ inline int32 CLuaBaseEntity::getCurrentGPItem(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getContainerSize(lua_State *L)
+inline int32 CLuaBaseEntity::getContainerSize(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3738,7 +3738,7 @@ inline int32 CLuaBaseEntity::getContainerSize(lua_State *L)
 *  Notes   : Used primarily for Gobbie Bag quests
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::changeContainerSize(lua_State *L)
+inline int32 CLuaBaseEntity::changeContainerSize(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3771,7 +3771,7 @@ inline int32 CLuaBaseEntity::changeContainerSize(lua_State *L)
 *  Notes   : Default slot is inventory; add value to specify containers
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getFreeSlotsCount(lua_State *L)
+inline int32 CLuaBaseEntity::getFreeSlotsCount(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3797,7 +3797,7 @@ inline int32 CLuaBaseEntity::getFreeSlotsCount(lua_State *L)
 *  Notes   : Must use trade:confirmItem(slotID) first
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::confirmTrade(lua_State *L)
+inline int32 CLuaBaseEntity::confirmTrade(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3825,7 +3825,7 @@ inline int32 CLuaBaseEntity::confirmTrade(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::tradeComplete(lua_State *L)
+inline int32 CLuaBaseEntity::tradeComplete(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3854,7 +3854,7 @@ inline int32 CLuaBaseEntity::tradeComplete(lua_State *L)
 *  Notes   : CItemArmor* is a pointer to weapons or armor
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::canEquipItem(lua_State *L)
+inline int32 CLuaBaseEntity::canEquipItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3893,7 +3893,7 @@ inline int32 CLuaBaseEntity::canEquipItem(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::equipItem(lua_State *L)
+inline int32 CLuaBaseEntity::equipItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3934,7 +3934,7 @@ int32 CLuaBaseEntity::unequipItem(lua_State* L)
 
     if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        auto PChar {static_cast<CCharEntity*>(m_PBaseEntity)};
+        auto PChar{ static_cast<CCharEntity*>(m_PBaseEntity) };
         charutils::UnequipItem(PChar, (uint8)lua_tointeger(L, 1));
     }
     return 0;
@@ -3953,7 +3953,7 @@ int32 CLuaBaseEntity::setEquipBlock(lua_State* L)
 
     if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        auto PChar {static_cast<CCharEntity*>(m_PBaseEntity)};
+        auto PChar{ static_cast<CCharEntity*>(m_PBaseEntity) };
         PChar->m_EquipBlock = (uint16)lua_tointeger(L, 1);
         PChar->pushPacket(new CCharJobsPacket(PChar));
     }
@@ -3967,7 +3967,7 @@ int32 CLuaBaseEntity::setEquipBlock(lua_State* L)
 *  Notes   : Currently not implemented in any file, imagine this is for Salvage
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::lockEquipSlot(lua_State *L)
+inline int32 CLuaBaseEntity::lockEquipSlot(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -3998,7 +3998,7 @@ inline int32 CLuaBaseEntity::lockEquipSlot(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::unlockEquipSlot(lua_State *L)
+inline int32 CLuaBaseEntity::unlockEquipSlot(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4024,7 +4024,7 @@ inline int32 CLuaBaseEntity::unlockEquipSlot(lua_State *L)
 *  Notes   : Returns 0 if player does not have shield equipped
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getShieldSize(lua_State *L)
+inline int32 CLuaBaseEntity::getShieldSize(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC && m_PBaseEntity->objtype != TYPE_PET);
@@ -4046,7 +4046,7 @@ inline int32 CLuaBaseEntity::getShieldSize(lua_State *L)
 *  Notes   : Used exclusively in scripts/globals/gear_sets.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasGearSetMod(lua_State *L)
+inline int32 CLuaBaseEntity::hasGearSetMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4077,7 +4077,7 @@ inline int32 CLuaBaseEntity::hasGearSetMod(lua_State *L)
 *  Notes   : Used exclusively in scripts/globals/gear_sets.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addGearSetMod(lua_State *L)
+inline int32 CLuaBaseEntity::addGearSetMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4118,7 +4118,7 @@ inline int32 CLuaBaseEntity::addGearSetMod(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::clearGearSetMods(lua_State *L)
+inline int32 CLuaBaseEntity::clearGearSetMods(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4143,7 +4143,7 @@ inline int32 CLuaBaseEntity::clearGearSetMods(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStorageItem(lua_State *L)
+inline int32 CLuaBaseEntity::getStorageItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -4183,7 +4183,7 @@ inline int32 CLuaBaseEntity::getStorageItem(lua_State *L)
 *  Notes   : Sets an 'extra' value so item doesn't appear in inventory
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::storeWithPorterMoogle(lua_State *L)
+inline int32 CLuaBaseEntity::storeWithPorterMoogle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4272,7 +4272,7 @@ inline int32 CLuaBaseEntity::storeWithPorterMoogle(lua_State *L)
 *  Notes   : See scripts/globals/porter_moogle_util.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRetrievableItemsForSlip(lua_State *L)
+inline int32 CLuaBaseEntity::getRetrievableItemsForSlip(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4304,7 +4304,7 @@ inline int32 CLuaBaseEntity::getRetrievableItemsForSlip(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::retrieveItemFromSlip(lua_State *L)
+inline int32 CLuaBaseEntity::retrieveItemFromSlip(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4351,7 +4351,7 @@ inline int32 CLuaBaseEntity::retrieveItemFromSlip(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRace(lua_State *L)
+inline int32 CLuaBaseEntity::getRace(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4385,7 +4385,7 @@ inline int32 CLuaBaseEntity::getGender(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getName(lua_State *L)
+inline int32 CLuaBaseEntity::getName(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -4464,32 +4464,32 @@ inline int32 CLuaBaseEntity::setModelId(lua_State* L)
 
         switch ((SLOTTYPE)lua_tointeger(L, 2))
         {
-            case SLOT_MAIN:
-                m_PBaseEntity->look.main = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_SUB:
-                m_PBaseEntity->look.sub = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_RANGED:
-                m_PBaseEntity->look.ranged = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_HEAD:
-                m_PBaseEntity->look.head = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_BODY:
-                m_PBaseEntity->look.body = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_HANDS:
-                m_PBaseEntity->look.hands = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_LEGS:
-                m_PBaseEntity->look.legs = (uint16)lua_tointeger(L, 1);
-                break;
-            case SLOT_FEET:
-                m_PBaseEntity->look.feet = (uint16)lua_tointeger(L, 1);
-                break;
-            default:
-                break;
+        case SLOT_MAIN:
+            m_PBaseEntity->look.main = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_SUB:
+            m_PBaseEntity->look.sub = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_RANGED:
+            m_PBaseEntity->look.ranged = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_HEAD:
+            m_PBaseEntity->look.head = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_BODY:
+            m_PBaseEntity->look.body = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_HANDS:
+            m_PBaseEntity->look.hands = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_LEGS:
+            m_PBaseEntity->look.legs = (uint16)lua_tointeger(L, 1);
+            break;
+        case SLOT_FEET:
+            m_PBaseEntity->look.feet = (uint16)lua_tointeger(L, 1);
+            break;
+        default:
+            break;
         }
         ((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharAppearancePacket((CCharEntity*)m_PBaseEntity));
     }
@@ -4511,7 +4511,7 @@ inline int32 CLuaBaseEntity::setModelId(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::costume(lua_State *L)
+inline int32 CLuaBaseEntity::costume(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4544,7 +4544,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
 *  Notes   : Not currently implemented
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::costume2(lua_State *L)
+inline int32 CLuaBaseEntity::costume2(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4576,7 +4576,7 @@ inline int32 CLuaBaseEntity::costume2(lua_State *L)
 *  Notes   : ANIMATION_ATTACK
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getAnimation(lua_State *L)
+inline int32 CLuaBaseEntity::getAnimation(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -4591,7 +4591,7 @@ inline int32 CLuaBaseEntity::getAnimation(lua_State *L)
 *  Notes   : Look at scripts/zones/VeLugannon_Palace/npcs/Monolith.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setAnimation(lua_State *L)
+inline int32 CLuaBaseEntity::setAnimation(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -4614,7 +4614,7 @@ inline int32 CLuaBaseEntity::setAnimation(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::AnimationSub(lua_State *L)
+inline int32 CLuaBaseEntity::AnimationSub(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -4648,7 +4648,7 @@ inline int32 CLuaBaseEntity::AnimationSub(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getNation(lua_State *L)
+inline int32 CLuaBaseEntity::getNation(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4664,7 +4664,7 @@ inline int32 CLuaBaseEntity::getNation(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setNation(lua_State *L)
+inline int32 CLuaBaseEntity::setNation(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4719,7 +4719,7 @@ inline int32 CLuaBaseEntity::setAllegiance(lua_State* L)
 *  Notes   : A return of 0 means the player doesn't have any allegiances
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCampaignAllegiance(lua_State *L)
+inline int32 CLuaBaseEntity::getCampaignAllegiance(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4735,7 +4735,7 @@ inline int32 CLuaBaseEntity::getCampaignAllegiance(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setCampaignAllegiance(lua_State *L)
+inline int32 CLuaBaseEntity::setCampaignAllegiance(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4920,7 +4920,7 @@ inline int32 CLuaBaseEntity::setGMHidden(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isJailed(lua_State *L)
+inline int32 CLuaBaseEntity::isJailed(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -4952,7 +4952,7 @@ inline int32 CLuaBaseEntity::jail(lua_State* L)
 *  Notes   : Checks if specified MISC flag is set in current zone
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::canUseMisc(lua_State *L)
+inline int32 CLuaBaseEntity::canUseMisc(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->loc.zone == nullptr);
@@ -4969,7 +4969,7 @@ inline int32 CLuaBaseEntity::canUseMisc(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::speed(lua_State *L)
+inline int32 CLuaBaseEntity::speed(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -5003,7 +5003,7 @@ inline int32 CLuaBaseEntity::speed(lua_State *L)
 *  Notes   : See scripts/zones/Port_Bastok/Zone.lua for no playtime example
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getPlaytime(lua_State *L)
+inline int32 CLuaBaseEntity::getPlaytime(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5026,7 +5026,7 @@ inline int32 CLuaBaseEntity::getPlaytime(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMainJob(lua_State *L)
+inline int32 CLuaBaseEntity::getMainJob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -5042,7 +5042,7 @@ inline int32 CLuaBaseEntity::getMainJob(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getSubJob(lua_State *L)
+inline int32 CLuaBaseEntity::getSubJob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -5058,7 +5058,7 @@ inline int32 CLuaBaseEntity::getSubJob(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::changeJob(lua_State *L)
+inline int32 CLuaBaseEntity::changeJob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5094,7 +5094,7 @@ inline int32 CLuaBaseEntity::changeJob(lua_State *L)
     charutils::BuildingCharAbilityTable(PChar);
     charutils::BuildingCharTraitsTable(PChar);
 
-    PChar->ForParty([](CBattleEntity* PMember)
+    PChar->ForParty([](CBattleEntity * PMember)
     {
         ((CCharEntity*)PMember)->PLatentEffectContainer->CheckLatentsPartyJobs();
     });
@@ -5126,7 +5126,7 @@ inline int32 CLuaBaseEntity::changeJob(lua_State *L)
 *  Notes   : To Do: Change name to changeSubJob for visual clarity?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::changesJob(lua_State *L)
+inline int32 CLuaBaseEntity::changesJob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5159,7 +5159,7 @@ inline int32 CLuaBaseEntity::changesJob(lua_State *L)
 *  Notes   : Changes value of job from 0 (locked) to 1(unlocked)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::unlockJob(lua_State *L)
+inline int32 CLuaBaseEntity::unlockJob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5239,7 +5239,7 @@ inline int32 CLuaBaseEntity::sjRestriction(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMainLvl(lua_State *L)
+inline int32 CLuaBaseEntity::getMainLvl(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -5255,7 +5255,7 @@ inline int32 CLuaBaseEntity::getMainLvl(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getSubLvl(lua_State *L)
+inline int32 CLuaBaseEntity::getSubLvl(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -5271,7 +5271,7 @@ inline int32 CLuaBaseEntity::getSubLvl(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setLevel(lua_State *L)
+inline int32 CLuaBaseEntity::setLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5323,7 +5323,7 @@ inline int32 CLuaBaseEntity::setLevel(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setsLevel(lua_State *L)
+inline int32 CLuaBaseEntity::setsLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5371,7 +5371,7 @@ inline int32 CLuaBaseEntity::setsLevel(lua_State *L)
 *  Notes   : To Do: Rename to setGenkai() for clarity?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::levelCap(lua_State *L)
+inline int32 CLuaBaseEntity::levelCap(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5475,7 +5475,7 @@ inline int32 CLuaBaseEntity::levelRestriction(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getTitle(lua_State *L)
+inline int32 CLuaBaseEntity::getTitle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5491,7 +5491,7 @@ inline int32 CLuaBaseEntity::getTitle(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasTitle(lua_State *L)
+inline int32 CLuaBaseEntity::hasTitle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5511,7 +5511,7 @@ inline int32 CLuaBaseEntity::hasTitle(lua_State *L)
 *  Notes   : Use setTitle to both change and add
 ************************************************************************/
 
-inline int CLuaBaseEntity::addTitle(lua_State *L)
+inline int CLuaBaseEntity::addTitle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5537,7 +5537,7 @@ inline int CLuaBaseEntity::addTitle(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setTitle(lua_State *L)
+inline int32 CLuaBaseEntity::setTitle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5560,7 +5560,7 @@ inline int32 CLuaBaseEntity::setTitle(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delTitle(lua_State *L)
+inline int32 CLuaBaseEntity::delTitle(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5591,7 +5591,7 @@ inline int32 CLuaBaseEntity::delTitle(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getFame(lua_State *L)
+inline int32 CLuaBaseEntity::getFame(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5613,35 +5613,35 @@ inline int32 CLuaBaseEntity::getFame(lua_State *L)
 
         switch (fameArea)
         {
-            case 0: // San d'Oria
-            case 1: // Bastok
-            case 2: // Windurst
-                fame = (uint16)(PChar->profile.fame[fameArea] * fameMultiplier);
-                break;
-            case 3: // Jeuno
-                fame = (uint16)(PChar->profile.fame[4] + ((PChar->profile.fame[0] + PChar->profile.fame[1] + PChar->profile.fame[2]) * fameMultiplier / 3));
-                break;
-            case 4: // Selbina / Rabao
-                fame = (uint16)((PChar->profile.fame[0] + PChar->profile.fame[1]) * fameMultiplier / 2);
-                break;
-            case 5: // Norg
-                fame = (uint16)(PChar->profile.fame[3] * fameMultiplier);
-                break;
+        case 0: // San d'Oria
+        case 1: // Bastok
+        case 2: // Windurst
+            fame = (uint16)(PChar->profile.fame[fameArea] * fameMultiplier);
+            break;
+        case 3: // Jeuno
+            fame = (uint16)(PChar->profile.fame[4] + ((PChar->profile.fame[0] + PChar->profile.fame[1] + PChar->profile.fame[2]) * fameMultiplier / 3));
+            break;
+        case 4: // Selbina / Rabao
+            fame = (uint16)((PChar->profile.fame[0] + PChar->profile.fame[1]) * fameMultiplier / 2);
+            break;
+        case 5: // Norg
+            fame = (uint16)(PChar->profile.fame[3] * fameMultiplier);
+            break;
             // Abyssea
-            case 6: // Konschtat
-            case 7: // Tahrongi
-            case 8: // La Theine
-            case 9: // Misareaux
-            case 10: // Vunkerl
-            case 11: // Attohwa
-            case 12: // Altepa
-            case 13: // Grauberg
-            case 14: // Uleguerand
-                fame = (uint16)(PChar->profile.fame[fameArea-1] * fameMultiplier);
-                break;
-            case 15: // Adoulin
-                fame = (uint16)(PChar->profile.fame[14] * fameMultiplier);
-                break;
+        case 6: // Konschtat
+        case 7: // Tahrongi
+        case 8: // La Theine
+        case 9: // Misareaux
+        case 10: // Vunkerl
+        case 11: // Attohwa
+        case 12: // Altepa
+        case 13: // Grauberg
+        case 14: // Uleguerand
+            fame = (uint16)(PChar->profile.fame[fameArea - 1] * fameMultiplier);
+            break;
+        case 15: // Adoulin
+            fame = (uint16)(PChar->profile.fame[14] * fameMultiplier);
+            break;
         }
         lua_pushinteger(L, fame);
     }
@@ -5660,7 +5660,7 @@ inline int32 CLuaBaseEntity::getFame(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addFame(lua_State *L)
+inline int32 CLuaBaseEntity::addFame(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5682,36 +5682,36 @@ inline int32 CLuaBaseEntity::addFame(lua_State *L)
 
         switch (fameArea)
         {
-            case 0: // San d'Oria
-            case 1: // Bastok
-            case 2: // Windurst
-                PChar->profile.fame[fameArea] += fame;
-                break;
-            case 3: // Jeuno
-                PChar->profile.fame[4] += fame;
-                break;
-            case 4: // Selbina / Rabao
-                PChar->profile.fame[0] += fame;
-                PChar->profile.fame[1] += fame;
-                break;
-            case 5: // Norg
-                PChar->profile.fame[3] += fame;
-                break;
+        case 0: // San d'Oria
+        case 1: // Bastok
+        case 2: // Windurst
+            PChar->profile.fame[fameArea] += fame;
+            break;
+        case 3: // Jeuno
+            PChar->profile.fame[4] += fame;
+            break;
+        case 4: // Selbina / Rabao
+            PChar->profile.fame[0] += fame;
+            PChar->profile.fame[1] += fame;
+            break;
+        case 5: // Norg
+            PChar->profile.fame[3] += fame;
+            break;
             // Abyssea
-            case 6: // Konschtat
-            case 7: // Tahrongi
-            case 8: // La Theine
-            case 9: // Misareaux
-            case 10: // Vunkerl
-            case 11: // Attohwa
-            case 12: // Altepa
-            case 13: // Grauberg
-            case 14: // Uleguerand
-                PChar->profile.fame[fameArea-1] += fame;
-                break;
-            case 15: // Adoulin
-                PChar->profile.fame[14] += fame;
-                break;
+        case 6: // Konschtat
+        case 7: // Tahrongi
+        case 8: // La Theine
+        case 9: // Misareaux
+        case 10: // Vunkerl
+        case 11: // Attohwa
+        case 12: // Altepa
+        case 13: // Grauberg
+        case 14: // Uleguerand
+            PChar->profile.fame[fameArea - 1] += fame;
+            break;
+        case 15: // Adoulin
+            PChar->profile.fame[14] += fame;
+            break;
         }
         charutils::SaveFame(PChar);
     }
@@ -5729,7 +5729,7 @@ inline int32 CLuaBaseEntity::addFame(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setFame(lua_State *L)
+inline int32 CLuaBaseEntity::setFame(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5749,36 +5749,36 @@ inline int32 CLuaBaseEntity::setFame(lua_State *L)
     {
         switch (fameArea)
         {
-            case 0: // San d'Oria
-            case 1: // Bastok
-            case 2: // Windurst
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[fameArea] = fame;
-                break;
-            case 3: // Jeuno
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[4] = fame;
-                break;
-            case 4: // Selbina / Rabao
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[0] = fame;
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[1] = fame;
-                break;
-            case 5: // Norg
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[3] = fame;
-                break;
+        case 0: // San d'Oria
+        case 1: // Bastok
+        case 2: // Windurst
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[fameArea] = fame;
+            break;
+        case 3: // Jeuno
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[4] = fame;
+            break;
+        case 4: // Selbina / Rabao
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[0] = fame;
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[1] = fame;
+            break;
+        case 5: // Norg
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[3] = fame;
+            break;
             // Abyssea
-            case 6: // Konschtat
-            case 7: // Tahrongi
-            case 8: // La Theine
-            case 9: // Misareaux
-            case 10: // Vunkerl
-            case 11: // Attohwa
-            case 12: // Altepa
-            case 13: // Grauberg
-            case 14: // Uleguerand
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[fameArea-1] = fame;
-                break;
-            case 15: // Adoulin
-                ((CCharEntity*)m_PBaseEntity)->profile.fame[14] = fame;
-                break;
+        case 6: // Konschtat
+        case 7: // Tahrongi
+        case 8: // La Theine
+        case 9: // Misareaux
+        case 10: // Vunkerl
+        case 11: // Attohwa
+        case 12: // Altepa
+        case 13: // Grauberg
+        case 14: // Uleguerand
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[fameArea - 1] = fame;
+            break;
+        case 15: // Adoulin
+            ((CCharEntity*)m_PBaseEntity)->profile.fame[14] = fame;
+            break;
         }
         charutils::SaveFame((CCharEntity*)m_PBaseEntity);
     }
@@ -5796,7 +5796,7 @@ inline int32 CLuaBaseEntity::setFame(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getFameLevel(lua_State *L)
+inline int32 CLuaBaseEntity::getFameLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5853,12 +5853,12 @@ inline int32 CLuaBaseEntity::getFameLevel(lua_State *L)
 *  Notes   : To Do: Add functionality for specifying a nation?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRank(lua_State *L)
+inline int32 CLuaBaseEntity::getRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CCharEntity * PChar = (CCharEntity*)m_PBaseEntity;
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
     lua_pushinteger(L, PChar->profile.rank[PChar->profile.nation]);
     return 1;
@@ -5871,7 +5871,7 @@ inline int32 CLuaBaseEntity::getRank(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setRank(lua_State *L)
+inline int32 CLuaBaseEntity::setRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5892,7 +5892,7 @@ inline int32 CLuaBaseEntity::setRank(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRankPoints(lua_State *L)
+inline int32 CLuaBaseEntity::getRankPoints(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5908,7 +5908,7 @@ inline int32 CLuaBaseEntity::getRankPoints(lua_State *L)
 *  Notes   : Like, when you trade crystals
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addRankPoints(lua_State *L)
+inline int32 CLuaBaseEntity::addRankPoints(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5929,7 +5929,7 @@ inline int32 CLuaBaseEntity::addRankPoints(lua_State *L)
 *  Notes   : player:setRankPoints(0) is called after switching nations
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setRankPoints(lua_State *L)
+inline int32 CLuaBaseEntity::setRankPoints(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5950,7 +5950,7 @@ inline int32 CLuaBaseEntity::setRankPoints(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addQuest(lua_State *L)
+inline int32 CLuaBaseEntity::addQuest(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -5994,7 +5994,7 @@ inline int32 CLuaBaseEntity::addQuest(lua_State *L)
 *  Notes   : Doesn't delete any player variables associated with quest
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delQuest(lua_State *L)
+inline int32 CLuaBaseEntity::delQuest(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6041,7 +6041,7 @@ inline int32 CLuaBaseEntity::delQuest(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getQuestStatus(lua_State *L)
+inline int32 CLuaBaseEntity::getQuestStatus(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6079,7 +6079,7 @@ inline int32 CLuaBaseEntity::getQuestStatus(lua_State *L)
 *  Example : if (player:hasCompletedQuest(JEUNO,BEYOND_INFINITY)) then
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasCompletedQuest(lua_State *L)
+inline int32 CLuaBaseEntity::hasCompletedQuest(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6114,7 +6114,7 @@ inline int32 CLuaBaseEntity::hasCompletedQuest(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::completeQuest(lua_State *L)
+inline int32 CLuaBaseEntity::completeQuest(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6159,7 +6159,7 @@ inline int32 CLuaBaseEntity::completeQuest(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addMission(lua_State *L)
+inline int32 CLuaBaseEntity::addMission(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6202,7 +6202,7 @@ inline int32 CLuaBaseEntity::addMission(lua_State *L)
 *  Notes   : Doesn't delete any player variables associated with mission
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delMission(lua_State *L)
+inline int32 CLuaBaseEntity::delMission(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6251,7 +6251,7 @@ inline int32 CLuaBaseEntity::delMission(lua_State *L)
 *  Notes   : Specify the area to pass a Lua table object
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCurrentMission(lua_State *L)
+inline int32 CLuaBaseEntity::getCurrentMission(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6285,7 +6285,7 @@ inline int32 CLuaBaseEntity::getCurrentMission(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasCompletedMission(lua_State *L)
+inline int32 CLuaBaseEntity::hasCompletedMission(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6323,7 +6323,7 @@ inline int32 CLuaBaseEntity::hasCompletedMission(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::completeMission(lua_State *L)
+inline int32 CLuaBaseEntity::completeMission(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6374,7 +6374,7 @@ inline int32 CLuaBaseEntity::completeMission(lua_State *L)
 *  Notes   : See scripts/zones/Aht_Urhgan_Whitegate/npcs/Famad.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addAssault(lua_State *L)
+inline int32 CLuaBaseEntity::addAssault(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6404,7 +6404,7 @@ inline int32 CLuaBaseEntity::addAssault(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delAssault(lua_State *L)
+inline int32 CLuaBaseEntity::delAssault(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6434,7 +6434,7 @@ inline int32 CLuaBaseEntity::delAssault(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCurrentAssault(lua_State *L)
+inline int32 CLuaBaseEntity::getCurrentAssault(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6452,7 +6452,7 @@ inline int32 CLuaBaseEntity::getCurrentAssault(lua_State *L)
 *  Notes   : See scripts/zones/Leujaoam_Sanctum/npcs/rune_of_release.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasCompletedAssault(lua_State *L)
+inline int32 CLuaBaseEntity::hasCompletedAssault(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6474,7 +6474,7 @@ inline int32 CLuaBaseEntity::hasCompletedAssault(lua_State *L)
 *  Notes   : See scripts/zones/Aht_Urhgan_Whitegate/npcs/Rytaal.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::completeAssault(lua_State *L)
+inline int32 CLuaBaseEntity::completeAssault(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6506,7 +6506,7 @@ inline int32 CLuaBaseEntity::completeAssault(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addKeyItem(lua_State *L)
+inline int32 CLuaBaseEntity::addKeyItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6536,7 +6536,7 @@ inline int32 CLuaBaseEntity::addKeyItem(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasKeyItem(lua_State *L)
+inline int32 CLuaBaseEntity::hasKeyItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6556,7 +6556,7 @@ inline int32 CLuaBaseEntity::hasKeyItem(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delKeyItem(lua_State *L)
+inline int32 CLuaBaseEntity::delKeyItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6581,7 +6581,7 @@ inline int32 CLuaBaseEntity::delKeyItem(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::seenKeyItem(lua_State *L)
+inline int32 CLuaBaseEntity::seenKeyItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6601,7 +6601,7 @@ inline int32 CLuaBaseEntity::seenKeyItem(lua_State *L)
 *  Notes   : Some things just can't be unseen... (not implemented though)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::unseenKeyItem(lua_State *L)
+inline int32 CLuaBaseEntity::unseenKeyItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6626,7 +6626,7 @@ inline int32 CLuaBaseEntity::unseenKeyItem(lua_State *L)
 *  Notes   : Used in Dynamis Pages, etc
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addExp(lua_State *L)
+inline int32 CLuaBaseEntity::addExp(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6644,7 +6644,7 @@ inline int32 CLuaBaseEntity::addExp(lua_State *L)
 *  Notes   : Used only in GM command takexp.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delExp(lua_State *L)
+inline int32 CLuaBaseEntity::delExp(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6664,7 +6664,7 @@ inline int32 CLuaBaseEntity::delExp(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMerit(lua_State *L)
+inline int32 CLuaBaseEntity::getMerit(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -6692,7 +6692,7 @@ inline int32 CLuaBaseEntity::getMerit(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMeritCount(lua_State *L)
+inline int32 CLuaBaseEntity::getMeritCount(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -6714,7 +6714,7 @@ inline int32 CLuaBaseEntity::getMeritCount(lua_State *L)
 *  Notes   : Used in GM command and Nomad Moogle for Genkai quest
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setMerits(lua_State *L)
+inline int32 CLuaBaseEntity::setMerits(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6738,13 +6738,13 @@ inline int32 CLuaBaseEntity::setMerits(lua_State *L)
 *  Notes   : Used mostly as a control to make sure player has enough gil
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getGil(lua_State *L)
+inline int32 CLuaBaseEntity::getGil(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
     if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        CItem * item = ((CCharEntity*)m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
+        CItem* item = ((CCharEntity*)m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
 
         if (item == nullptr) //Player has no money
         {
@@ -6762,7 +6762,7 @@ inline int32 CLuaBaseEntity::getGil(lua_State *L)
     }
     if (m_PBaseEntity->objtype == TYPE_MOB)
     {
-        CMobEntity * PMob = (CMobEntity*)m_PBaseEntity;
+        CMobEntity* PMob = (CMobEntity*)m_PBaseEntity;
         if (PMob->CanStealGil())
         {
             lua_pushinteger(L, PMob->GetRandomGil());
@@ -6780,14 +6780,14 @@ inline int32 CLuaBaseEntity::getGil(lua_State *L)
 *  Notes   : Use messageSpecial() to display the 'obtained' message
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addGil(lua_State *L)
+inline int32 CLuaBaseEntity::addGil(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CItem * item = ((CCharEntity*)m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
+    CItem* item = ((CCharEntity*)m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
 
     if (item == nullptr || !item->isType(ITEM_CURRENCY))
     {
@@ -6808,14 +6808,14 @@ inline int32 CLuaBaseEntity::addGil(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setGil(lua_State *L)
+inline int32 CLuaBaseEntity::setGil(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CItem * item = ((CCharEntity*)m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
+    CItem* item = ((CCharEntity*)m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
 
     if (item == nullptr || !item->isType(ITEM_CURRENCY))
     {
@@ -6836,7 +6836,7 @@ inline int32 CLuaBaseEntity::setGil(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delGil(lua_State *L)
+inline int32 CLuaBaseEntity::delGil(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6867,7 +6867,7 @@ inline int32 CLuaBaseEntity::delGil(lua_State *L)
 *  Notes   : See char_points.sql for all currency types
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCurrency(lua_State *L)
+inline int32 CLuaBaseEntity::getCurrency(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6889,7 +6889,7 @@ inline int32 CLuaBaseEntity::getCurrency(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addCurrency(lua_State *L)
+inline int32 CLuaBaseEntity::addCurrency(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6913,7 +6913,7 @@ inline int32 CLuaBaseEntity::addCurrency(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setCurrency(lua_State *L)
+inline int32 CLuaBaseEntity::setCurrency(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6937,7 +6937,7 @@ inline int32 CLuaBaseEntity::setCurrency(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delCurrency(lua_State *L)
+inline int32 CLuaBaseEntity::delCurrency(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6961,7 +6961,7 @@ inline int32 CLuaBaseEntity::delCurrency(lua_State *L)
 *  Notes   : Current nation only
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCP(lua_State *L)
+inline int32 CLuaBaseEntity::getCP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -6979,7 +6979,7 @@ inline int32 CLuaBaseEntity::getCP(lua_State *L)
 *  Notes   : Current nation only
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addCP(lua_State *L)
+inline int32 CLuaBaseEntity::addCP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7002,7 +7002,7 @@ inline int32 CLuaBaseEntity::addCP(lua_State *L)
 *  Notes   : Current nation only
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delCP(lua_State *L)
+inline int32 CLuaBaseEntity::delCP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7025,7 +7025,7 @@ inline int32 CLuaBaseEntity::delCP(lua_State *L)
 *  Notes   : 0 = Beast; 1 = Kindred; 2 = KCrest; 3 = HKCrest; 4 = SKCrest
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getSeals(lua_State *L)
+inline int32 CLuaBaseEntity::getSeals(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7037,23 +7037,23 @@ inline int32 CLuaBaseEntity::getSeals(lua_State *L)
 
     switch (type)
     {
-        case 0:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "beastman_seal"));
-            break;
-        case 1:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "kindred_seal"));
-            break;
-        case 2:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "kindred_crest"));
-            break;
-        case 3:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "high_kindred_crest"));
-            break;
-        case 4:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "sacred_kindred_crest"));
-            break;
-        default:
-            lua_pushinteger(L, 0);
+    case 0:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "beastman_seal"));
+        break;
+    case 1:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "kindred_seal"));
+        break;
+    case 2:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "kindred_crest"));
+        break;
+    case 3:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "high_kindred_crest"));
+        break;
+    case 4:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "sacred_kindred_crest"));
+        break;
+    default:
+        lua_pushinteger(L, 0);
     }
     return 1;
 }
@@ -7065,7 +7065,7 @@ inline int32 CLuaBaseEntity::getSeals(lua_State *L)
 *  Notes   : 0 = Beast; 1 = Kindred; 2 = KCrest; 3 = HKCrest; 4 = SKCrest
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addSeals(lua_State *L)
+inline int32 CLuaBaseEntity::addSeals(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7079,23 +7079,23 @@ inline int32 CLuaBaseEntity::addSeals(lua_State *L)
 
     switch (type)
     {
-        case 0:
-            charutils::AddPoints(PChar, "beastman_seal", points);
-            break;
-        case 1:
-            charutils::AddPoints(PChar, "kindred_seal", points);
-            break;
-        case 2:
-            charutils::AddPoints(PChar, "kindred_crest", points);
-            break;
-        case 3:
-            charutils::AddPoints(PChar, "high_kindred_crest", points);
-            break;
-        case 4:
-            charutils::AddPoints(PChar, "sacred_kindred_crest", points);
-            break;
-        default:
-            break;
+    case 0:
+        charutils::AddPoints(PChar, "beastman_seal", points);
+        break;
+    case 1:
+        charutils::AddPoints(PChar, "kindred_seal", points);
+        break;
+    case 2:
+        charutils::AddPoints(PChar, "kindred_crest", points);
+        break;
+    case 3:
+        charutils::AddPoints(PChar, "high_kindred_crest", points);
+        break;
+    case 4:
+        charutils::AddPoints(PChar, "sacred_kindred_crest", points);
+        break;
+    default:
+        break;
     }
 
     return 0;
@@ -7108,7 +7108,7 @@ inline int32 CLuaBaseEntity::addSeals(lua_State *L)
 *  Notes   : 0 = Beast; 1 = Kindred; 2 = KCrest; 3 = HKCrest; 4 = SKCrest
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delSeals(lua_State *L)
+inline int32 CLuaBaseEntity::delSeals(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7122,23 +7122,23 @@ inline int32 CLuaBaseEntity::delSeals(lua_State *L)
 
     switch (type)
     {
-        case 0:
-            charutils::AddPoints(PChar, "beastman_seal", -points);
-            break;
-        case 1:
-            charutils::AddPoints(PChar, "kindred_seal", -points);
-            break;
-        case 2:
-            charutils::AddPoints(PChar, "kindred_crest", -points);
-            break;
-        case 3:
-            charutils::AddPoints(PChar, "high_kindred_crest", -points);
-            break;
-        case 4:
-            charutils::AddPoints(PChar, "sacred_kindred_crest", -points);
-            break;
-        default:
-            break;
+    case 0:
+        charutils::AddPoints(PChar, "beastman_seal", -points);
+        break;
+    case 1:
+        charutils::AddPoints(PChar, "kindred_seal", -points);
+        break;
+    case 2:
+        charutils::AddPoints(PChar, "kindred_crest", -points);
+        break;
+    case 3:
+        charutils::AddPoints(PChar, "high_kindred_crest", -points);
+        break;
+    case 4:
+        charutils::AddPoints(PChar, "sacred_kindred_crest", -points);
+        break;
+    default:
+        break;
     }
     return 0;
 }
@@ -7150,7 +7150,7 @@ inline int32 CLuaBaseEntity::delSeals(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getAssaultPoint(lua_State *L)
+inline int32 CLuaBaseEntity::getAssaultPoint(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7162,23 +7162,23 @@ inline int32 CLuaBaseEntity::getAssaultPoint(lua_State *L)
 
     switch (region)
     {
-        case 0:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "leujaoam_assault_point"));
-            break;
-        case 1:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "mamool_assault_point"));
-            break;
-        case 2:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "lebros_assault_point"));
-            break;
-        case 3:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "periqia_assault_point"));
-            break;
-        case 4:
-            lua_pushinteger(L, charutils::GetPoints(PChar, "ilrusi_assault_point"));
-            break;
-        default:
-            lua_pushinteger(L, 0);
+    case 0:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "leujaoam_assault_point"));
+        break;
+    case 1:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "mamool_assault_point"));
+        break;
+    case 2:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "lebros_assault_point"));
+        break;
+    case 3:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "periqia_assault_point"));
+        break;
+    case 4:
+        lua_pushinteger(L, charutils::GetPoints(PChar, "ilrusi_assault_point"));
+        break;
+    default:
+        lua_pushinteger(L, 0);
     }
     return 1;
 }
@@ -7190,7 +7190,7 @@ inline int32 CLuaBaseEntity::getAssaultPoint(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addAssaultPoint(lua_State *L)
+inline int32 CLuaBaseEntity::addAssaultPoint(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7204,23 +7204,23 @@ inline int32 CLuaBaseEntity::addAssaultPoint(lua_State *L)
 
     switch (region)
     {
-        case 0:
-            charutils::AddPoints(PChar, "leujaoam_assault_point", points);
-            break;
-        case 1:
-            charutils::AddPoints(PChar, "mamool_assault_point", points);
-            break;
-        case 2:
-            charutils::AddPoints(PChar, "lebros_assault_point", points);
-            break;
-        case 3:
-            charutils::AddPoints(PChar, "periqia_assault_point", points);
-            break;
-        case 4:
-            charutils::AddPoints(PChar, "ilrusi_assault_point", points);
-            break;
-        default:
-            break;
+    case 0:
+        charutils::AddPoints(PChar, "leujaoam_assault_point", points);
+        break;
+    case 1:
+        charutils::AddPoints(PChar, "mamool_assault_point", points);
+        break;
+    case 2:
+        charutils::AddPoints(PChar, "lebros_assault_point", points);
+        break;
+    case 3:
+        charutils::AddPoints(PChar, "periqia_assault_point", points);
+        break;
+    case 4:
+        charutils::AddPoints(PChar, "ilrusi_assault_point", points);
+        break;
+    default:
+        break;
     }
 
     return 0;
@@ -7233,7 +7233,7 @@ inline int32 CLuaBaseEntity::addAssaultPoint(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delAssaultPoint(lua_State *L)
+inline int32 CLuaBaseEntity::delAssaultPoint(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7247,23 +7247,23 @@ inline int32 CLuaBaseEntity::delAssaultPoint(lua_State *L)
 
     switch (region)
     {
-        case 0:
-            charutils::AddPoints(PChar, "leujaoam_assault_point", -points);
-            break;
-        case 1:
-            charutils::AddPoints(PChar, "mamool_assault_point", -points);
-            break;
-        case 2:
-            charutils::AddPoints(PChar, "lebros_assault_point", -points);
-            break;
-        case 3:
-            charutils::AddPoints(PChar, "periqia_assault_point", -points);
-            break;
-        case 4:
-            charutils::AddPoints(PChar, "ilrusi_assault_point", -points);
-            break;
-        default:
-            break;
+    case 0:
+        charutils::AddPoints(PChar, "leujaoam_assault_point", -points);
+        break;
+    case 1:
+        charutils::AddPoints(PChar, "mamool_assault_point", -points);
+        break;
+    case 2:
+        charutils::AddPoints(PChar, "lebros_assault_point", -points);
+        break;
+    case 3:
+        charutils::AddPoints(PChar, "periqia_assault_point", -points);
+        break;
+    case 4:
+        charutils::AddPoints(PChar, "ilrusi_assault_point", -points);
+        break;
+    default:
+        break;
     }
     return 0;
 }
@@ -7305,7 +7305,7 @@ inline int32 CLuaBaseEntity::addGuildPoints(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getHP(lua_State *L)
+inline int32 CLuaBaseEntity::getHP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7321,7 +7321,7 @@ inline int32 CLuaBaseEntity::getHP(lua_State *L)
 *  Notes   : Hit Points / Max Hit Points, rounded up to whole integer
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getHPP(lua_State *L)
+inline int32 CLuaBaseEntity::getHPP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7337,7 +7337,7 @@ inline int32 CLuaBaseEntity::getHPP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMaxHP(lua_State *L)
+inline int32 CLuaBaseEntity::getMaxHP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7371,7 +7371,7 @@ inline int32 CLuaBaseEntity::getBaseHP(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addHP(lua_State *L)
+inline int32 CLuaBaseEntity::addHP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7398,7 +7398,7 @@ inline int32 CLuaBaseEntity::addHP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setHP(lua_State *L)
+inline int32 CLuaBaseEntity::setHP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7424,7 +7424,7 @@ inline int32 CLuaBaseEntity::setHP(lua_State *L)
 *  Notes   : Returns amount restored if not dead
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::restoreHP(lua_State *L)
+inline int32 CLuaBaseEntity::restoreHP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7449,7 +7449,7 @@ inline int32 CLuaBaseEntity::restoreHP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delHP(lua_State *L)
+inline int32 CLuaBaseEntity::delHP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7468,7 +7468,7 @@ inline int32 CLuaBaseEntity::delHP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::takeDamage(lua_State *L)
+inline int32 CLuaBaseEntity::takeDamage(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7530,7 +7530,7 @@ inline int32 CLuaBaseEntity::hideHP(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMP(lua_State *L)
+inline int32 CLuaBaseEntity::getMP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7546,7 +7546,7 @@ inline int32 CLuaBaseEntity::getMP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMaxMP(lua_State *L)
+inline int32 CLuaBaseEntity::getMaxMP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7580,7 +7580,7 @@ inline int32 CLuaBaseEntity::getBaseMP(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addMP(lua_State *L)
+inline int32 CLuaBaseEntity::addMP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7600,7 +7600,7 @@ inline int32 CLuaBaseEntity::addMP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setMP(lua_State *L)
+inline int32 CLuaBaseEntity::setMP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7621,7 +7621,7 @@ inline int32 CLuaBaseEntity::setMP(lua_State *L)
 *  Notes   : Returns the restored amount if not dead
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::restoreMP(lua_State *L)
+inline int32 CLuaBaseEntity::restoreMP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7646,7 +7646,7 @@ inline int32 CLuaBaseEntity::restoreMP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delMP(lua_State *L)
+inline int32 CLuaBaseEntity::delMP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7664,7 +7664,7 @@ inline int32 CLuaBaseEntity::delMP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getTP(lua_State *L)
+inline int32 CLuaBaseEntity::getTP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7680,7 +7680,7 @@ inline int32 CLuaBaseEntity::getTP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addTP(lua_State *L)
+inline int32 CLuaBaseEntity::addTP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7699,7 +7699,7 @@ inline int32 CLuaBaseEntity::addTP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setTP(lua_State *L)
+inline int32 CLuaBaseEntity::setTP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7719,7 +7719,7 @@ inline int32 CLuaBaseEntity::setTP(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delTP(lua_State *L)
+inline int32 CLuaBaseEntity::delTP(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -7839,7 +7839,7 @@ inline int32 CLuaBaseEntity::capAllSkills(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getSkillLevel(lua_State *L)
+inline int32 CLuaBaseEntity::getSkillLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype & TYPE_NPC);
@@ -7858,7 +7858,7 @@ inline int32 CLuaBaseEntity::getSkillLevel(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setSkillLevel(lua_State *L)
+inline int32 CLuaBaseEntity::setSkillLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7890,7 +7890,7 @@ inline int32 CLuaBaseEntity::setSkillLevel(lua_State *L)
 *  Notes   : Used in Meteor, summons, and some Mob TP moves
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMaxSkillLevel(lua_State *L)
+inline int32 CLuaBaseEntity::getMaxSkillLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -7913,7 +7913,7 @@ inline int32 CLuaBaseEntity::getMaxSkillLevel(lua_State *L)
 *  Notes   : DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getSkillRank(lua_State *L)
+inline int32 CLuaBaseEntity::getSkillRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -7931,7 +7931,7 @@ inline int32 CLuaBaseEntity::getSkillRank(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setSkillRank(lua_State *L)
+inline int32 CLuaBaseEntity::setSkillRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -7961,7 +7961,7 @@ inline int32 CLuaBaseEntity::setSkillRank(lua_State *L)
 *  Notes   : Only used for Chocobo Digging currently
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCharSkillLevel(lua_State *L)
+inline int32 CLuaBaseEntity::getCharSkillLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -7987,7 +7987,7 @@ inline int32 CLuaBaseEntity::getCharSkillLevel(lua_State *L)
 *  Notes   : Do not see implemented in any script
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addLearnedWeaponskill(lua_State *L)
+inline int32 CLuaBaseEntity::addLearnedWeaponskill(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8012,7 +8012,7 @@ inline int32 CLuaBaseEntity::addLearnedWeaponskill(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasLearnedWeaponskill(lua_State *L)
+inline int32 CLuaBaseEntity::hasLearnedWeaponskill(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8032,7 +8032,7 @@ inline int32 CLuaBaseEntity::hasLearnedWeaponskill(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delLearnedWeaponskill(lua_State *L)
+inline int32 CLuaBaseEntity::delLearnedWeaponskill(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8057,7 +8057,7 @@ inline int32 CLuaBaseEntity::delLearnedWeaponskill(lua_State *L)
 *  Notes   : Returns true if points were successfully added.
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addWeaponSkillPoints(lua_State *L)
+inline int32 CLuaBaseEntity::addWeaponSkillPoints(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8081,7 +8081,7 @@ inline int32 CLuaBaseEntity::addWeaponSkillPoints(lua_State *L)
 *  Notes   : Used exclusively for Corsair Die usage
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addLearnedAbility(lua_State *L)
+inline int32 CLuaBaseEntity::addLearnedAbility(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8109,7 +8109,7 @@ inline int32 CLuaBaseEntity::addLearnedAbility(lua_State *L)
 *  Notes   : Although canLearnAbility is similar, they have distinct diff
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasLearnedAbility(lua_State *L)
+inline int32 CLuaBaseEntity::hasLearnedAbility(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8129,7 +8129,7 @@ inline int32 CLuaBaseEntity::hasLearnedAbility(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::canLearnAbility(lua_State *L)
+inline int32 CLuaBaseEntity::canLearnAbility(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8158,7 +8158,7 @@ inline int32 CLuaBaseEntity::canLearnAbility(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delLearnedAbility(lua_State *L)
+inline int32 CLuaBaseEntity::delLearnedAbility(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8184,7 +8184,7 @@ inline int32 CLuaBaseEntity::delLearnedAbility(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addSpell(lua_State *L)
+inline int32 CLuaBaseEntity::addSpell(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8227,7 +8227,7 @@ inline int32 CLuaBaseEntity::addSpell(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasSpell(lua_State *L)
+inline int32 CLuaBaseEntity::hasSpell(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8247,7 +8247,7 @@ inline int32 CLuaBaseEntity::hasSpell(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::canLearnSpell(lua_State *L)
+inline int32 CLuaBaseEntity::canLearnSpell(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8276,7 +8276,7 @@ inline int32 CLuaBaseEntity::canLearnSpell(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delSpell(lua_State *L)
+inline int32 CLuaBaseEntity::delSpell(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8367,7 +8367,7 @@ inline int32 CLuaBaseEntity::getParty(lua_State* L)
 
     lua_createtable(L, size, 0);
     int i = 1;
-    ((CBattleEntity*)m_PBaseEntity)->ForParty([&L, &i](CBattleEntity* member)
+    ((CBattleEntity*)m_PBaseEntity)->ForParty([&L, &i](CBattleEntity * member)
     {
         lua_getglobal(L, CLuaBaseEntity::className);
         lua_pushstring(L, "new");
@@ -8418,7 +8418,7 @@ inline int32 CLuaBaseEntity::getPartySize(lua_State* L)
 *  Notes   : Highly useful for future addition of features
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasPartyJob(lua_State *L)
+inline int32 CLuaBaseEntity::hasPartyJob(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -8536,7 +8536,7 @@ inline int32 CLuaBaseEntity::forMembersInRange(lua_State* L)
     auto range = (uint8)lua_tointeger(L, 1);
     auto function = luautils::register_fp(2);
 
-    target->ForParty([&target, &range, &function](CBattleEntity* member)
+    target->ForParty([&target, &range, &function](CBattleEntity * member)
     {
         if (target->loc.zone == member->loc.zone &&
             distanceSquared(target->loc.p, member->loc.p) < (range * range))
@@ -8559,7 +8559,7 @@ inline int32 CLuaBaseEntity::forMembersInRange(lua_State* L)
 *  Notes   : Must have at least three members, scales to six max
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addPartyEffect(lua_State *L)
+inline int32 CLuaBaseEntity::addPartyEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8571,7 +8571,7 @@ inline int32 CLuaBaseEntity::addPartyEffect(lua_State *L)
 
     int32 n = lua_gettop(L);
 
-    CStatusEffect * PEffect = new CStatusEffect(
+    CStatusEffect* PEffect = new CStatusEffect(
         (EFFECT)lua_tointeger(L, 1),
         (uint16)lua_tointeger(L, 2),
         (uint16)lua_tointeger(L, 3),
@@ -8582,7 +8582,7 @@ inline int32 CLuaBaseEntity::addPartyEffect(lua_State *L)
 
     CBattleEntity* PEntity = ((CBattleEntity*)m_PBaseEntity);
 
-    PEntity->ForParty([PEffect](CBattleEntity* PMember)
+    PEntity->ForParty([PEffect](CBattleEntity * PMember)
     {
         PMember->StatusEffectContainer->AddStatusEffect(PEffect);
     });
@@ -8596,7 +8596,7 @@ inline int32 CLuaBaseEntity::addPartyEffect(lua_State *L)
 *  Notes   : Currently not used in any script
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasPartyEffect(lua_State *L)
+inline int32 CLuaBaseEntity::hasPartyEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8630,7 +8630,7 @@ inline int32 CLuaBaseEntity::hasPartyEffect(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::removePartyEffect(lua_State *L)
+inline int32 CLuaBaseEntity::removePartyEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8680,7 +8680,7 @@ inline int32 CLuaBaseEntity::getAlliance(lua_State* L)
     lua_createtable(L, size, 0);
     int i = 1;
 
-    PChar->ForAlliance([&L, &i](CBattleEntity* PMember)
+    PChar->ForAlliance([&L, &i](CBattleEntity * PMember)
     {
         lua_getglobal(L, CLuaBaseEntity::className);
         lua_pushstring(L, "new");
@@ -8764,7 +8764,7 @@ inline int32 CLuaBaseEntity::disableLevelSync(lua_State* L)
 *  Notes   : Returns 0 (Solo), 1 (Party), or 2 (Alliance)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::checkSoloPartyAlliance(lua_State *L)
+inline int32 CLuaBaseEntity::checkSoloPartyAlliance(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8789,7 +8789,7 @@ inline int32 CLuaBaseEntity::checkSoloPartyAlliance(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::checkFovAllianceAllowed(lua_State *L)
+inline int32 CLuaBaseEntity::checkFovAllianceAllowed(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8808,7 +8808,7 @@ inline int32 CLuaBaseEntity::checkFovAllianceAllowed(lua_State *L)
 *  Notes   : and the mob is able to give exp to the members
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::checkValorCredit(lua_State *L)
+inline int32 CLuaBaseEntity::checkValorCredit(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8876,7 +8876,7 @@ inline int32 CLuaBaseEntity::getInstance(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setInstance(lua_State *L)
+inline int32 CLuaBaseEntity::setInstance(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9030,7 +9030,7 @@ inline int32 CLuaBaseEntity::getBattlefield(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getBattlefieldID(lua_State *L)
+inline int32 CLuaBaseEntity::getBattlefieldID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9056,7 +9056,7 @@ inline int32 CLuaBaseEntity::getBattlefieldID(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isInBattlefieldList(lua_State *L)
+inline int32 CLuaBaseEntity::isInBattlefieldList(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -9078,7 +9078,7 @@ inline int32 CLuaBaseEntity::isInBattlefieldList(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addInBattlefieldList(lua_State *L)
+inline int32 CLuaBaseEntity::addInBattlefieldList(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -9097,7 +9097,7 @@ inline int32 CLuaBaseEntity::addInBattlefieldList(lua_State *L)
 *  Notes   : Used only for Limbus events
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addPlayerToSpecialBattlefield(lua_State *L)
+inline int32 CLuaBaseEntity::addPlayerToSpecialBattlefield(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9131,7 +9131,7 @@ inline int32 CLuaBaseEntity::addPlayerToSpecialBattlefield(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getSpecialBattlefieldLeftTime(lua_State *L)
+inline int32 CLuaBaseEntity::getSpecialBattlefieldLeftTime(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9160,7 +9160,7 @@ inline int32 CLuaBaseEntity::getSpecialBattlefieldLeftTime(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addTimeToSpecialBattlefield(lua_State *L)
+inline int32 CLuaBaseEntity::addTimeToSpecialBattlefield(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -9182,7 +9182,7 @@ inline int32 CLuaBaseEntity::addTimeToSpecialBattlefield(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isSpecialBattlefieldEmpty(lua_State *L)
+inline int32 CLuaBaseEntity::isSpecialBattlefieldEmpty(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9212,7 +9212,7 @@ inline int32 CLuaBaseEntity::isSpecialBattlefieldEmpty(lua_State *L)
 *  Notes   : Checks to see if Player is in battlefield before applying
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::RestoreAndHealOnBattlefield(lua_State *L)
+inline int32 CLuaBaseEntity::RestoreAndHealOnBattlefield(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9234,7 +9234,7 @@ inline int32 CLuaBaseEntity::RestoreAndHealOnBattlefield(lua_State *L)
 *  Notes   : Used by Dynamis and BCNM
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::bcnmRegister(lua_State *L)
+inline int32 CLuaBaseEntity::bcnmRegister(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9315,7 +9315,7 @@ inline int32 CLuaBaseEntity::bcnmRegister(lua_State *L)
 *  Notes   : Used by Dynamis and BCNM
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::bcnmEnter(lua_State *L)
+inline int32 CLuaBaseEntity::bcnmEnter(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9363,7 +9363,7 @@ inline int32 CLuaBaseEntity::bcnmEnter(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::bcnmLeave(lua_State *L)
+inline int32 CLuaBaseEntity::bcnmLeave(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9401,7 +9401,7 @@ inline int32 CLuaBaseEntity::bcnmLeave(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isInBcnm(lua_State *L)
+inline int32 CLuaBaseEntity::isInBcnm(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9424,7 +9424,7 @@ inline int32 CLuaBaseEntity::isInBcnm(lua_State *L)
 *  Notes   : Up to three are available, if 3/3 are used up, returns false
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isBcnmsFull(lua_State *L)
+inline int32 CLuaBaseEntity::isBcnmsFull(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9453,7 +9453,7 @@ inline int32 CLuaBaseEntity::isBcnmsFull(lua_State *L)
 *  Notes   : Actives upon open treasure box in BCNM
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getBCNMloot(lua_State *L)
+inline int32 CLuaBaseEntity::getBCNMloot(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9480,7 +9480,7 @@ inline int32 CLuaBaseEntity::getBCNMloot(lua_State *L)
 *  Notes   : Passes LootID, Instance Region, and CofferID to SetLootToBCNM
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::BCNMSetLoot(lua_State *L)
+inline int32 CLuaBaseEntity::BCNMSetLoot(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9501,7 +9501,7 @@ inline int32 CLuaBaseEntity::BCNMSetLoot(lua_State *L)
 *  Notes   : Unimplemented at this time
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getDynamisUniqueID(lua_State *L)
+inline int32 CLuaBaseEntity::getDynamisUniqueID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -9523,7 +9523,7 @@ inline int32 CLuaBaseEntity::getDynamisUniqueID(lua_State *L)
 *  Notes   : Variable is the BCNM ID
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addPlayerToDynamis(lua_State *L)
+inline int32 CLuaBaseEntity::addPlayerToDynamis(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9557,7 +9557,7 @@ inline int32 CLuaBaseEntity::addPlayerToDynamis(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addTimeToDynamis(lua_State *L)
+inline int32 CLuaBaseEntity::addTimeToDynamis(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -9579,7 +9579,7 @@ inline int32 CLuaBaseEntity::addTimeToDynamis(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::launchDynamisSecondPart(lua_State *L)
+inline int32 CLuaBaseEntity::launchDynamisSecondPart(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -9598,7 +9598,7 @@ inline int32 CLuaBaseEntity::launchDynamisSecondPart(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isInDynamis(lua_State *L)
+inline int32 CLuaBaseEntity::isInDynamis(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -9614,7 +9614,7 @@ inline int32 CLuaBaseEntity::isInDynamis(lua_State *L)
 *  Notes   : See scripts/globals/dynamis.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStatPoppedMobs(lua_State *L)
+inline int32 CLuaBaseEntity::getStatPoppedMobs(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -9632,7 +9632,7 @@ inline int32 CLuaBaseEntity::getStatPoppedMobs(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setStatPoppedMobs(lua_State *L)
+inline int32 CLuaBaseEntity::setStatPoppedMobs(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -9679,7 +9679,7 @@ int32 CLuaBaseEntity::isDead(lua_State* L)
 *  Notes   : Sending the Raise menu is handled by CDeathState::Update
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::sendRaise(lua_State *L)
+inline int32 CLuaBaseEntity::sendRaise(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9709,7 +9709,7 @@ inline int32 CLuaBaseEntity::sendRaise(lua_State *L)
 *  Notes   : Sending the Reraise menu is handled by CDeathState::Update
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::sendReraise(lua_State *L)
+inline int32 CLuaBaseEntity::sendReraise(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9738,7 +9738,7 @@ inline int32 CLuaBaseEntity::sendReraise(lua_State *L)
 *  Notes   : Sets position to Tractor to, Tractor available flag, and shows menu to PC
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::sendTractor(lua_State *L)
+inline int32 CLuaBaseEntity::sendTractor(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -9777,7 +9777,7 @@ int32 CLuaBaseEntity::engage(lua_State* L)
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
     CBattleEntity* battleEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    auto requestedTarget = (uint16)lua_tointeger(L,1);
+    auto requestedTarget = (uint16)lua_tointeger(L, 1);
 
     if (requestedTarget > 0)
     {
@@ -9878,14 +9878,14 @@ inline int32 CLuaBaseEntity::addRecast(lua_State* L)
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 3) || !lua_isnumber(L, 3));
 
     CBattleEntity* PBattleEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
-    if(PBattleEntity)
+    if (PBattleEntity)
     {
         RECASTTYPE recastContainer = (RECASTTYPE)lua_tointeger(L, 1);
         auto recastID = (uint16)lua_tointeger(L, 2);
         auto duration = (uint32)lua_tointeger(L, 3);
 
         PBattleEntity->PRecastContainer->Add(recastContainer, recastID, duration);
-        if(PBattleEntity->objtype == TYPE_PC)
+        if (PBattleEntity->objtype == TYPE_PC)
         {
             CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
             PChar->pushPacket(new CCharSkillsPacket(PChar));
@@ -9932,7 +9932,7 @@ inline int32 CLuaBaseEntity::hasRecast(lua_State* L)
 *          : I imagine the Magic container can be specified?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::resetRecast(lua_State *L)
+inline int32 CLuaBaseEntity::resetRecast(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -9967,7 +9967,7 @@ inline int32 CLuaBaseEntity::resetRecast(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::resetRecasts(lua_State *L)
+inline int32 CLuaBaseEntity::resetRecasts(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -10061,7 +10061,7 @@ int32 CLuaBaseEntity::getEntity(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    auto PEntity {m_PBaseEntity->GetEntity((uint16)lua_tointeger(L,1))};
+    auto PEntity{ m_PBaseEntity->GetEntity((uint16)lua_tointeger(L,1)) };
     if (PEntity)
     {
         lua_getglobal(L, CLuaBaseEntity::className);
@@ -10106,7 +10106,7 @@ inline int32 CLuaBaseEntity::getNearbyEntities(lua_State* L)
     lua_newtable(L);
     int newTable = lua_gettop(L);
 
-    for (auto&& list : {iterTarget->SpawnMOBList, iterTarget->SpawnPCList, iterTarget->SpawnPETList})
+    for (auto&& list : { iterTarget->SpawnMOBList, iterTarget->SpawnPCList, iterTarget->SpawnPETList })
     {
         for (auto&& entity : list)
         {
@@ -10144,7 +10144,7 @@ int32 CLuaBaseEntity::canChangeState(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::wakeUp(lua_State *L)
+inline int32 CLuaBaseEntity::wakeUp(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10175,7 +10175,7 @@ int32 CLuaBaseEntity::recalculateStats(lua_State* L)
 
     if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        auto PChar {static_cast<CCharEntity*>(m_PBaseEntity)};
+        auto PChar{ static_cast<CCharEntity*>(m_PBaseEntity) };
         charutils::BuildingCharSkillsTable(PChar);
         charutils::CalculateStats(PChar);
         charutils::CheckValidEquipment(PChar);
@@ -10208,12 +10208,12 @@ int32 CLuaBaseEntity::checkImbuedItems(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    auto PChar {static_cast<CCharEntity*>(m_PBaseEntity)};
+    auto PChar{ static_cast<CCharEntity*>(m_PBaseEntity) };
 
     for (uint8 LocID = 0; LocID < MAX_CONTAINER_ID; ++LocID)
     {
         bool found = false;
-        PChar->getStorage(LocID)->ForEachItem([&found](CItem* PItem)
+        PChar->getStorage(LocID)->ForEachItem([&found](CItem * PItem)
         {
             if (PItem->getID() >= 5365 && PItem->getID() <= 5384)
             {
@@ -10237,7 +10237,7 @@ int32 CLuaBaseEntity::checkImbuedItems(lua_State* L)
 *  Notes   : See Ventriloquy and Atonement
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getCE(lua_State *L)
+inline int32 CLuaBaseEntity::getCE(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -10255,7 +10255,7 @@ inline int32 CLuaBaseEntity::getCE(lua_State *L)
 *  Notes   : See Ventriloquy and Atonement
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getVE(lua_State *L)
+inline int32 CLuaBaseEntity::getVE(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -10273,7 +10273,7 @@ inline int32 CLuaBaseEntity::getVE(lua_State *L)
 *  Notes   : Currently only used in scripts/globals/abilities/ventriloquy.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setCE(lua_State *L)
+inline int32 CLuaBaseEntity::setCE(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
@@ -10293,7 +10293,7 @@ inline int32 CLuaBaseEntity::setCE(lua_State *L)
 *  Notes   : Currently only used in scripts/globals/abilities/ventriloquy.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setVE(lua_State *L)
+inline int32 CLuaBaseEntity::setVE(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
@@ -10313,7 +10313,7 @@ inline int32 CLuaBaseEntity::setVE(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addEnmity(lua_State *L)
+inline int32 CLuaBaseEntity::addEnmity(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 3) || !lua_isnumber(L, 3));
@@ -10351,7 +10351,7 @@ inline int32 CLuaBaseEntity::addEnmity(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::lowerEnmity(lua_State *L)
+inline int32 CLuaBaseEntity::lowerEnmity(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -10376,7 +10376,7 @@ inline int32 CLuaBaseEntity::lowerEnmity(lua_State *L)
 *  Notes   : Mob will aggro an Entity, but be unclaimed until engaged
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::updateEnmity(lua_State *L)
+inline int32 CLuaBaseEntity::updateEnmity(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -10415,7 +10415,7 @@ int32 CLuaBaseEntity::transferEnmity(lua_State* L)
     auto percent = (uint8)lua_tointeger(L, 2);
     auto range = lua_tonumber(L, 3);
 
-    auto PIterEntity = [&]() -> CCharEntity*
+    auto PIterEntity = [&]() -> CCharEntity *
     {
         if (m_PBaseEntity->objtype == TYPE_PC)
         {
@@ -10451,7 +10451,7 @@ int32 CLuaBaseEntity::transferEnmity(lua_State* L)
             if (distanceSquared(mob_pair.second->loc.p, PEntity->loc.p) < (range * range))
             {
                 battleutils::TransferEnmity(static_cast<CBattleEntity*>(PEntity),
-                    static_cast<CBattleEntity*>(m_PBaseEntity),static_cast<CMobEntity*>(mob_pair.second), percent);
+                    static_cast<CBattleEntity*>(m_PBaseEntity), static_cast<CMobEntity*>(mob_pair.second), percent);
             }
         }
     }
@@ -10465,7 +10465,7 @@ int32 CLuaBaseEntity::transferEnmity(lua_State* L)
 *  Notes   : Used in most Weaponskills and damaging abilities scripts
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::updateEnmityFromDamage(lua_State *L)
+inline int32 CLuaBaseEntity::updateEnmityFromDamage(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -10504,7 +10504,7 @@ inline int32 CLuaBaseEntity::updateEnmityFromDamage(lua_State *L)
 *  Notes   : Used in nearly all Cure scripts and abilities which heal
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::updateEnmityFromCure(lua_State *L)
+inline int32 CLuaBaseEntity::updateEnmityFromCure(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -10516,7 +10516,7 @@ inline int32 CLuaBaseEntity::updateEnmityFromCure(lua_State *L)
     CLuaBaseEntity* PEntity = Lunar<CLuaBaseEntity>::check(L, 1);
     auto amount = (int32)lua_tointeger(L, 2);
 
-    auto PCurer = [&]() -> CCharEntity*
+    auto PCurer = [&]() -> CCharEntity *
     {
         if (m_PBaseEntity->objtype == TYPE_PC)
         {
@@ -10548,7 +10548,7 @@ inline int32 CLuaBaseEntity::updateEnmityFromCure(lua_State *L)
 *  Notes   : Used in Mob special abilities which reset Enmity
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::resetEnmity(lua_State *L)
+inline int32 CLuaBaseEntity::resetEnmity(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -10573,7 +10573,7 @@ inline int32 CLuaBaseEntity::resetEnmity(lua_State *L)
 *  Notes   : Used mostly in QM (???) scripts
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::updateClaim(lua_State *L)
+inline int32 CLuaBaseEntity::updateClaim(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -10598,7 +10598,7 @@ inline int32 CLuaBaseEntity::updateClaim(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::addStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10619,7 +10619,7 @@ inline int32 CLuaBaseEntity::addStatusEffect(lua_State *L)
 
         int32 n = lua_gettop(L);
 
-        CStatusEffect * PEffect = new CStatusEffect(
+        CStatusEffect* PEffect = new CStatusEffect(
             (EFFECT)lua_tointeger(L, 1), // Effect ID
             (uint16)lua_tointeger(L, 1), // Effect Icon (Associated with ID)
             (uint16)lua_tointeger(L, 2), // Power
@@ -10650,7 +10650,7 @@ inline int32 CLuaBaseEntity::addStatusEffect(lua_State *L)
 *  Notes   : For instance, Chocobo status, Fireflights, Teleport
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addStatusEffectEx(lua_State *L)
+inline int32 CLuaBaseEntity::addStatusEffectEx(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10669,7 +10669,7 @@ inline int32 CLuaBaseEntity::addStatusEffectEx(lua_State *L)
         n--;
     }
 
-    CStatusEffect * PEffect = new CStatusEffect(
+    CStatusEffect* PEffect = new CStatusEffect(
         (EFFECT)lua_tointeger(L, 1),
         (uint16)lua_tointeger(L, 2),
         (uint16)lua_tointeger(L, 3),
@@ -10690,7 +10690,7 @@ inline int32 CLuaBaseEntity::addStatusEffectEx(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::getStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10732,14 +10732,14 @@ inline int32 CLuaBaseEntity::getStatusEffect(lua_State *L)
 *  Notes   : Currently only used to check for Snake Eyes in ability.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStatusEffects(lua_State *L)
+inline int32 CLuaBaseEntity::getStatusEffects(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
     int count = 0;
     lua_newtable(L);
-    static_cast<CBattleEntity*>(m_PBaseEntity)->StatusEffectContainer->ForEachEffect([&](CStatusEffect* PEffect){
+    static_cast<CBattleEntity*>(m_PBaseEntity)->StatusEffectContainer->ForEachEffect([&](CStatusEffect * PEffect) {
         lua_getglobal(L, CLuaStatusEffect::className);
         lua_pushstring(L, "new");
         lua_gettable(L, -2);
@@ -10762,7 +10762,7 @@ inline int32 CLuaBaseEntity::getStatusEffects(lua_State *L)
 *  Notes   : For instnace, Bind = Ice, Slow = Earth
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStatusEffectElement(lua_State *L)
+inline int32 CLuaBaseEntity::getStatusEffectElement(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10782,7 +10782,7 @@ inline int32 CLuaBaseEntity::getStatusEffectElement(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::canGainStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::canGainStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10806,7 +10806,7 @@ inline int32 CLuaBaseEntity::canGainStatusEffect(lua_State *L)
 *  Notes   : More specific in scope than hasStatusEffectByFlag()
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::hasStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10837,7 +10837,7 @@ inline int32 CLuaBaseEntity::hasStatusEffect(lua_State *L)
 *  Notes   : More broad in scope than hasStatusEffect()
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasStatusEffectByFlag(lua_State *L)
+inline int32 CLuaBaseEntity::hasStatusEffectByFlag(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10856,7 +10856,7 @@ inline int32 CLuaBaseEntity::hasStatusEffectByFlag(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::countEffect(lua_State *L)
+inline int32 CLuaBaseEntity::countEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10876,7 +10876,7 @@ inline int32 CLuaBaseEntity::countEffect(lua_State *L)
 *  Notes   : Can specify Power of the Effect as an option
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::delStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10910,7 +10910,7 @@ inline int32 CLuaBaseEntity::delStatusEffect(lua_State *L)
 *  Notes   : Used for removal of multiple effects with matching flag
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delStatusEffectsByFlag(lua_State *L)
+inline int32 CLuaBaseEntity::delStatusEffectsByFlag(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10949,7 +10949,7 @@ inline int32 CLuaBaseEntity::delStatusEffectSilent(lua_State* L)
 *  Notes   : Can specify which type to remove, if Erasable
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::eraseStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::eraseStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10965,7 +10965,7 @@ inline int32 CLuaBaseEntity::eraseStatusEffect(lua_State *L)
 *  Notes   : Can specify which type to remove, if Erasable
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::eraseAllStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::eraseAllStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -10981,7 +10981,7 @@ inline int32 CLuaBaseEntity::eraseAllStatusEffect(lua_State *L)
 *  Notes   : Can specify which type to remove, if Dispelable
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::dispelStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::dispelStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11007,7 +11007,7 @@ inline int32 CLuaBaseEntity::dispelStatusEffect(lua_State *L)
 *  Notes   : Can specify which types to remove, if Dispelable
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::dispelAllStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::dispelAllStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11033,7 +11033,7 @@ inline int32 CLuaBaseEntity::dispelAllStatusEffect(lua_State *L)
 *  Notes   : Returns a Lua table with the information on the Status Effect stolen
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::stealStatusEffect(lua_State *L)
+inline int32 CLuaBaseEntity::stealStatusEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11045,7 +11045,7 @@ inline int32 CLuaBaseEntity::stealStatusEffect(lua_State *L)
     if (!lua_isnil(L, 2) && lua_isnumber(L, 2))
         flag = (EFFECTFLAG)lua_tointeger(L, 2);
 
-    if (CStatusEffect* PStatusEffect = ((CBattleEntity*)PEntity->m_PBaseEntity)->StatusEffectContainer->StealStatusEffect(flag))
+    if (CStatusEffect * PStatusEffect = ((CBattleEntity*)PEntity->m_PBaseEntity)->StatusEffectContainer->StealStatusEffect(flag))
     {
         ((CBattleEntity*)m_PBaseEntity)->StatusEffectContainer->AddStatusEffect(PStatusEffect);
         lua_pushinteger(L, PStatusEffect->GetStatusID());
@@ -11065,7 +11065,7 @@ inline int32 CLuaBaseEntity::stealStatusEffect(lua_State *L)
 *  Notes   : If Mod ID already exists, adds the amount to existing amount
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addMod(lua_State *L)
+inline int32 CLuaBaseEntity::addMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11086,7 +11086,7 @@ inline int32 CLuaBaseEntity::addMod(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMod(lua_State *L)
+inline int32 CLuaBaseEntity::getMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11104,7 +11104,7 @@ inline int32 CLuaBaseEntity::getMod(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setMod(lua_State *L)
+inline int32 CLuaBaseEntity::setMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11125,7 +11125,7 @@ inline int32 CLuaBaseEntity::setMod(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delMod(lua_State *L)
+inline int32 CLuaBaseEntity::delMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11146,7 +11146,7 @@ inline int32 CLuaBaseEntity::delMod(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addLatent(lua_State *L)
+inline int32 CLuaBaseEntity::addLatent(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -11173,7 +11173,7 @@ inline int32 CLuaBaseEntity::addLatent(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delLatent(lua_State *L)
+inline int32 CLuaBaseEntity::delLatent(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -11217,7 +11217,7 @@ inline int32 CLuaBaseEntity::fold(lua_State* L)
 *  Notes   : Calls the DoWildCardToEntity member of battleutils
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::doWildCard(lua_State *L)
+inline int32 CLuaBaseEntity::doWildCard(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -11238,7 +11238,7 @@ inline int32 CLuaBaseEntity::doWildCard(lua_State *L)
 *  Notes   : Returns true if success (Is range a factor?)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addCorsairRoll(lua_State *L)
+inline int32 CLuaBaseEntity::addCorsairRoll(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11254,7 +11254,7 @@ inline int32 CLuaBaseEntity::addCorsairRoll(lua_State *L)
     auto casterJob = lua_tointeger(L, 1);
     auto bustDuration = (uint8)lua_tointeger(L, 2);
 
-    CStatusEffect * PEffect = new CStatusEffect(
+    CStatusEffect* PEffect = new CStatusEffect(
         (EFFECT)lua_tointeger(L, 3), // Effect ID
         (uint16)lua_tointeger(L, 3), // Effect Icon (Associated with ID)
         (uint16)lua_tointeger(L, 4), // Power
@@ -11297,7 +11297,7 @@ inline int32 CLuaBaseEntity::hasCorsairEffect(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasBustEffect(lua_State *L)
+inline int32 CLuaBaseEntity::hasBustEffect(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11320,7 +11320,7 @@ inline int32 CLuaBaseEntity::hasBustEffect(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::numBustEffects(lua_State *L)
+inline int32 CLuaBaseEntity::numBustEffects(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11338,7 +11338,7 @@ inline int32 CLuaBaseEntity::numBustEffects(lua_State *L)
 *  Notes   : Erases one random effect if it's 'Waltzable'
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::healingWaltz(lua_State *L)
+inline int32 CLuaBaseEntity::healingWaltz(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11354,7 +11354,7 @@ inline int32 CLuaBaseEntity::healingWaltz(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addBardSong(lua_State *L)
+inline int32 CLuaBaseEntity::addBardSong(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -11369,7 +11369,7 @@ inline int32 CLuaBaseEntity::addBardSong(lua_State *L)
 
     CLuaBaseEntity* PEntity = Lunar<CLuaBaseEntity>::check(L, 1); //Caster
 
-    CStatusEffect * PEffect = new CStatusEffect(
+    CStatusEffect* PEffect = new CStatusEffect(
         (EFFECT)lua_tointeger(L, 2),  // Effect ID
         (uint16)lua_tointeger(L, 2),  // Effect Icon (Associated with ID)
         (uint16)lua_tointeger(L, 3),  // Power
@@ -11467,7 +11467,7 @@ int32 CLuaBaseEntity::setStatDebilitation(lua_State* L)
 
     if (m_PBaseEntity->objtype == TYPE_PC)
     {
-        auto PChar {static_cast<CCharEntity*>(m_PBaseEntity)};
+        auto PChar{ static_cast<CCharEntity*>(m_PBaseEntity) };
         PChar->m_StatsDebilitation = (uint16)lua_tointeger(L, 1);
         PChar->pushPacket(new CCharJobsPacket(PChar));
     }
@@ -11481,7 +11481,7 @@ int32 CLuaBaseEntity::setStatDebilitation(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStat(lua_State *L)
+inline int32 CLuaBaseEntity::getStat(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11492,21 +11492,21 @@ inline int32 CLuaBaseEntity::getStat(lua_State *L)
 
     switch (static_cast<Mod>(lua_tointeger(L, 1)))
     {
-        case Mod::STR:  lua_pushinteger(L, PEntity->STR()); break;
-        case Mod::DEX:  lua_pushinteger(L, PEntity->DEX()); break;
-        case Mod::VIT:  lua_pushinteger(L, PEntity->VIT()); break;
-        case Mod::AGI:  lua_pushinteger(L, PEntity->AGI()); break;
-        case Mod::INT:  lua_pushinteger(L, PEntity->INT()); break;
-        case Mod::MND:  lua_pushinteger(L, PEntity->MND()); break;
-        case Mod::CHR:  lua_pushinteger(L, PEntity->CHR()); break;
-        case Mod::ATT:  lua_pushinteger(L, PEntity->ATT()); break;
-        case Mod::DEF:  lua_pushinteger(L, PEntity->DEF()); break;
-        case Mod::EVA:  lua_pushinteger(L, PEntity->EVA()); break;
+    case Mod::STR:  lua_pushinteger(L, PEntity->STR()); break;
+    case Mod::DEX:  lua_pushinteger(L, PEntity->DEX()); break;
+    case Mod::VIT:  lua_pushinteger(L, PEntity->VIT()); break;
+    case Mod::AGI:  lua_pushinteger(L, PEntity->AGI()); break;
+    case Mod::INT:  lua_pushinteger(L, PEntity->INT()); break;
+    case Mod::MND:  lua_pushinteger(L, PEntity->MND()); break;
+    case Mod::CHR:  lua_pushinteger(L, PEntity->CHR()); break;
+    case Mod::ATT:  lua_pushinteger(L, PEntity->ATT()); break;
+    case Mod::DEF:  lua_pushinteger(L, PEntity->DEF()); break;
+    case Mod::EVA:  lua_pushinteger(L, PEntity->EVA()); break;
         // TODO: support getStat for ACC/RACC/RATT
         //case Mod::ACC:  lua_pushinteger(L, PEntity->ACC()); break;
         //case Mod::RACC: lua_pushinteger(L, PEntity->RACC()); break;
         //case Mod::RATT: lua_pushinteger(L, PEntity->RATT()); break;
-        default: lua_pushnil(L);
+    default: lua_pushnil(L);
     }
     return 1;
 }
@@ -11518,7 +11518,7 @@ inline int32 CLuaBaseEntity::getStat(lua_State *L)
 *  Notes   : Uses the ACC member of CBattleEntity for calculation
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getACC(lua_State *L)
+inline int32 CLuaBaseEntity::getACC(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11537,7 +11537,7 @@ inline int32 CLuaBaseEntity::getACC(lua_State *L)
 *  Notes   : Uses the EVA member of CBattleEntity for calculation
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getEVA(lua_State *L)
+inline int32 CLuaBaseEntity::getEVA(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -11555,7 +11555,7 @@ inline int32 CLuaBaseEntity::getEVA(lua_State *L)
 *  Notes   : To Do: The calculation is already a public member of battleentity, shouldn't have two calculations, just call (CBattleEntity*)m_PBaseEntity)->RACC and return result
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRACC(lua_State *L)
+inline int32 CLuaBaseEntity::getRACC(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -11588,7 +11588,7 @@ inline int32 CLuaBaseEntity::getRACC(lua_State *L)
 *  Notes   : Calls the RATT member function of CBattleEntity for calculation
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRATT(lua_State *L)
+inline int32 CLuaBaseEntity::getRATT(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11612,7 +11612,7 @@ inline int32 CLuaBaseEntity::getRATT(lua_State *L)
 *  Notes   : Value of m_iLvlMacc (private member of CItemWeapon)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getILvlMacc(lua_State *L)
+inline int32 CLuaBaseEntity::getILvlMacc(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -11656,7 +11656,7 @@ inline int32 CLuaBaseEntity::isSpellAoE(lua_State* L)
 *            DamageType is optional and defaults to weapon type if not provided.
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::physicalDmgTaken(lua_State *L)
+inline int32 CLuaBaseEntity::physicalDmgTaken(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11676,7 +11676,7 @@ inline int32 CLuaBaseEntity::physicalDmgTaken(lua_State *L)
 *  Notes   : Passes argument to MagicDmgTaken member of battleutils
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::magicDmgTaken(lua_State *L)
+inline int32 CLuaBaseEntity::magicDmgTaken(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11698,7 +11698,7 @@ inline int32 CLuaBaseEntity::magicDmgTaken(lua_State *L)
 *  Notes   : Passes argument to RangedDmgTaken member of battleutils
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::rangedDmgTaken(lua_State *L)
+inline int32 CLuaBaseEntity::rangedDmgTaken(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11718,7 +11718,7 @@ inline int32 CLuaBaseEntity::rangedDmgTaken(lua_State *L)
 *  Notes   : Passes argument to BreathDmgTaken member of battleutils
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::breathDmgTaken(lua_State *L)
+inline int32 CLuaBaseEntity::breathDmgTaken(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11756,7 +11756,7 @@ int32 CLuaBaseEntity::handleAfflatusMiseryDamage(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isWeaponTwoHanded(lua_State *L)
+inline int32 CLuaBaseEntity::isWeaponTwoHanded(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11781,7 +11781,7 @@ inline int32 CLuaBaseEntity::isWeaponTwoHanded(lua_State *L)
 *          : Not currently used in any scripts (handled by battleutils) - Is this even needed?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMeleeHitDamage(lua_State *L)
+inline int32 CLuaBaseEntity::getMeleeHitDamage(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11815,7 +11815,7 @@ inline int32 CLuaBaseEntity::getMeleeHitDamage(lua_State *L)
 *  Notes   : Also used in Mob damage calculations
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeaponDmg(lua_State *L)
+inline int32 CLuaBaseEntity::getWeaponDmg(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11833,7 +11833,7 @@ inline int32 CLuaBaseEntity::getWeaponDmg(lua_State *L)
 *  Notes   : Primarily used in fSTR calculation in scripts/globals/weaponskills.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeaponDmgRank(lua_State *L)
+inline int32 CLuaBaseEntity::getWeaponDmgRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11852,7 +11852,7 @@ inline int32 CLuaBaseEntity::getWeaponDmgRank(lua_State *L)
 *  Notes   : Mainly used to add an extra TP Hit in Weaponskills
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getOffhandDmg(lua_State *L)
+inline int32 CLuaBaseEntity::getOffhandDmg(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11870,7 +11870,7 @@ inline int32 CLuaBaseEntity::getOffhandDmg(lua_State *L)
 *  Notes   : Not currently being used in any script calculation
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getOffhandDmgRank(lua_State *L)
+inline int32 CLuaBaseEntity::getOffhandDmgRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11888,7 +11888,7 @@ inline int32 CLuaBaseEntity::getOffhandDmgRank(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRangedDmg(lua_State *L)
+inline int32 CLuaBaseEntity::getRangedDmg(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11906,7 +11906,7 @@ inline int32 CLuaBaseEntity::getRangedDmg(lua_State *L)
 *  Notes   :   To Do: Rename to getRangedDmgRank to match convention
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRangedDmgForRank(lua_State *L)
+inline int32 CLuaBaseEntity::getRangedDmgForRank(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11924,7 +11924,7 @@ inline int32 CLuaBaseEntity::getRangedDmgForRank(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getAmmoDmg(lua_State *L)
+inline int32 CLuaBaseEntity::getAmmoDmg(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -11963,7 +11963,7 @@ int32 CLuaBaseEntity::removeAmmo(lua_State* L)
 *  Notes   : Mainly used to determine String/Wind level, but can be used for others
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeaponSkillLevel(lua_State *L)
+inline int32 CLuaBaseEntity::getWeaponSkillLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC && m_PBaseEntity->objtype != TYPE_PET && m_PBaseEntity->objtype != TYPE_MOB);
@@ -11997,7 +11997,7 @@ inline int32 CLuaBaseEntity::getWeaponSkillLevel(lua_State *L)
 *  Notes   : Used to identify which damage type is the weapon
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeaponDamageType(lua_State *L)
+inline int32 CLuaBaseEntity::getWeaponDamageType(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12030,7 +12030,7 @@ inline int32 CLuaBaseEntity::getWeaponDamageType(lua_State *L)
 *  Notes   : Used to identify which type of weapon it is (Katana, Sword, etc)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeaponSkillType(lua_State *L)
+inline int32 CLuaBaseEntity::getWeaponSkillType(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12063,7 +12063,7 @@ inline int32 CLuaBaseEntity::getWeaponSkillType(lua_State *L)
 *  Notes   : Mainly used to differentiate between ammo and ranged equipment
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getWeaponSubSkillType(lua_State *L)
+inline int32 CLuaBaseEntity::getWeaponSubSkillType(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12162,7 +12162,7 @@ int32 CLuaBaseEntity::takeWeaponskillDamage(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::spawnPet(lua_State *L)
+inline int32 CLuaBaseEntity::spawnPet(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12226,7 +12226,7 @@ inline int32 CLuaBaseEntity::spawnPet(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::spawnTrust(lua_State *L)
+inline int32 CLuaBaseEntity::spawnTrust(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC); // only PCs can spawn trusts
@@ -12249,7 +12249,7 @@ inline int32 CLuaBaseEntity::spawnTrust(lua_State *L)
 *  Notes   : Upon death or dismissal or similar
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::despawnPet(lua_State *L)
+inline int32 CLuaBaseEntity::despawnPet(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12293,7 +12293,7 @@ inline int32 CLuaBaseEntity::hasValidJugPetItem(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CItemWeapon* PItem = static_cast<CItemWeapon *>(static_cast<CCharEntity *>(m_PBaseEntity)->getEquip(SLOT_AMMO));
+    CItemWeapon* PItem = static_cast<CItemWeapon*>(static_cast<CCharEntity*>(m_PBaseEntity)->getEquip(SLOT_AMMO));
 
     if (PItem != nullptr && PItem->getSubSkillType() >= SUBSKILL_SHEEP && PItem->getSubSkillType() <= SUBSKILL_TOLOI)
     {
@@ -12314,7 +12314,7 @@ inline int32 CLuaBaseEntity::hasValidJugPetItem(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasPet(lua_State *L)
+inline int32 CLuaBaseEntity::hasPet(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12379,7 +12379,7 @@ inline int32 CLuaBaseEntity::getPetID(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getPetElement(lua_State *L)
+inline int32 CLuaBaseEntity::getPetElement(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12432,7 +12432,7 @@ inline int32 CLuaBaseEntity::getMaster(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getPetName(lua_State *L)
+inline int32 CLuaBaseEntity::getPetName(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12455,7 +12455,7 @@ inline int32 CLuaBaseEntity::getPetName(lua_State *L)
 *  Notes   : Updates char_pet.sql
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setPetName(lua_State *L)
+inline int32 CLuaBaseEntity::setPetName(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -12539,7 +12539,7 @@ inline int32 CLuaBaseEntity::getCharmChance(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::charmPet(lua_State *L)
+inline int32 CLuaBaseEntity::charmPet(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -12561,7 +12561,7 @@ inline int32 CLuaBaseEntity::charmPet(lua_State *L)
 *  Notes   : Sic
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::petAttack(lua_State *L)
+inline int32 CLuaBaseEntity::petAttack(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12583,7 +12583,7 @@ inline int32 CLuaBaseEntity::petAttack(lua_State *L)
 *  Notes   : If I had to guess, it's not coded
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::petAbility(lua_State *L)
+inline int32 CLuaBaseEntity::petAbility(lua_State* L)
 {
     return 0;
 }
@@ -12595,7 +12595,7 @@ inline int32 CLuaBaseEntity::petAbility(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::petRetreat(lua_State *L)
+inline int32 CLuaBaseEntity::petRetreat(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12874,7 +12874,7 @@ inline int32 CLuaBaseEntity::updateAttachments(lua_State* L)
 *  Notes   : CalculateStats will refill mobs hp/mp as well
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setMobLevel(lua_State *L)
+inline int32 CLuaBaseEntity::setMobLevel(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -12935,7 +12935,7 @@ inline int32 CLuaBaseEntity::getFamily(lua_State* L)
 *  Notes   : To Do: This isn't the intended function for NM checks...
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isMobType(lua_State *L)
+inline int32 CLuaBaseEntity::isMobType(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -12960,7 +12960,7 @@ inline int32 CLuaBaseEntity::isMobType(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isUndead(lua_State *L)
+inline int32 CLuaBaseEntity::isUndead(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -12998,7 +12998,7 @@ inline int32 CLuaBaseEntity::isNM(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getModelSize(lua_State *L)
+inline int32 CLuaBaseEntity::getModelSize(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -13182,7 +13182,7 @@ inline int32 CLuaBaseEntity::getSpawnPos(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setSpawn(lua_State *L)
+inline int32 CLuaBaseEntity::setSpawn(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -13315,7 +13315,7 @@ inline int32 CLuaBaseEntity::instantiateMob(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasTrait(lua_State *L)
+inline int32 CLuaBaseEntity::hasTrait(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -13338,7 +13338,7 @@ inline int32 CLuaBaseEntity::hasTrait(lua_State *L)
 *  Notes   : Arguments are dec to bin, so powers of 2 (max 256) -- Listed in mobentity.h
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::hasImmunity(lua_State *L)
+inline int32 CLuaBaseEntity::hasImmunity(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
@@ -13473,7 +13473,7 @@ inline int32 CLuaBaseEntity::hasSpellList(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB && m_PBaseEntity->objtype != TYPE_PET);
 
-    lua_pushboolean(L, (static_cast<CMobEntity *>(m_PBaseEntity))->SpellContainer->HasSpells());
+    lua_pushboolean(L, (static_cast<CMobEntity*>(m_PBaseEntity))->SpellContainer->HasSpells());
 
     return 1;
 }
@@ -13492,7 +13492,7 @@ inline int32 CLuaBaseEntity::setSpellList(lua_State* L)
 
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    mobutils::SetSpellList(static_cast<CMobEntity *>(m_PBaseEntity), (uint16)lua_tonumber(L, 1));
+    mobutils::SetSpellList(static_cast<CMobEntity*>(m_PBaseEntity), (uint16)lua_tonumber(L, 1));
 
     return 0;
 }
@@ -13573,7 +13573,7 @@ inline int32 CLuaBaseEntity::SetMobSkillAttack(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getMobMod(lua_State *L)
+inline int32 CLuaBaseEntity::getMobMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(!(m_PBaseEntity->objtype & TYPE_MOB));
@@ -13591,7 +13591,7 @@ inline int32 CLuaBaseEntity::getMobMod(lua_State *L)
 *  Notes   : Currently not being used in any script
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addMobMod(lua_State *L)
+inline int32 CLuaBaseEntity::addMobMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -13619,7 +13619,7 @@ inline int32 CLuaBaseEntity::addMobMod(lua_State *L)
 *  Notes   : Interesting note - this is being used for superlinking too
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setMobMod(lua_State *L)
+inline int32 CLuaBaseEntity::setMobMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -13647,7 +13647,7 @@ inline int32 CLuaBaseEntity::setMobMod(lua_State *L)
 *  Notes   : Currently not being used in any script
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::delMobMod(lua_State *L)
+inline int32 CLuaBaseEntity::delMobMod(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -13675,7 +13675,7 @@ inline int32 CLuaBaseEntity::delMobMod(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getBattleTime(lua_State *L)
+inline int32 CLuaBaseEntity::getBattleTime(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
@@ -13731,7 +13731,7 @@ inline int32 CLuaBaseEntity::getTarget(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    auto PBattleTarget {m_PBaseEntity->GetEntity(static_cast<CBattleEntity*>(m_PBaseEntity)->GetBattleTargetID())};
+    auto PBattleTarget{ m_PBaseEntity->GetEntity(static_cast<CBattleEntity*>(m_PBaseEntity)->GetBattleTargetID()) };
     if (PBattleTarget)
     {
         lua_getglobal(L, CLuaBaseEntity::className);
@@ -13761,7 +13761,7 @@ inline int32 CLuaBaseEntity::updateTarget(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
 
-    auto PTarget {((CMobEntity*)m_PBaseEntity)->PEnmityContainer->GetHighestEnmity()};
+    auto PTarget{ ((CMobEntity*)m_PBaseEntity)->PEnmityContainer->GetHighestEnmity() };
 
     if (PTarget)
     {
@@ -13835,7 +13835,7 @@ inline int32 CLuaBaseEntity::getEnmityList(lua_State* L)
 *  Notes   : For some reason, only used in Jump/High-Jump?
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getTrickAttackChar(lua_State *L)
+inline int32 CLuaBaseEntity::getTrickAttackChar(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -13933,8 +13933,8 @@ inline int32 CLuaBaseEntity::useJobAbility(lua_State* L)
 
     if (lua_isnumber(L, 1))
     {
-        auto skillid {(uint16)lua_tointeger(L, 1)};
-        CBattleEntity* PTarget {nullptr};
+        auto skillid{ (uint16)lua_tointeger(L, 1) };
+        CBattleEntity* PTarget{ nullptr };
 
         if (!lua_isnil(L, 2) && lua_isuserdata(L, 2))
         {
@@ -13967,9 +13967,9 @@ inline int32 CLuaBaseEntity::useMobAbility(lua_State* L)
 
     if (lua_isnumber(L, 1))
     {
-        auto skillid {(uint16)lua_tointeger(L, 1)};
-        CBattleEntity* PTarget {nullptr};
-        auto PMobSkill {battleutils::GetMobSkill(skillid)};
+        auto skillid{ (uint16)lua_tointeger(L, 1) };
+        CBattleEntity* PTarget{ nullptr };
+        auto PMobSkill{ battleutils::GetMobSkill(skillid) };
 
         if (!PMobSkill)
         {
@@ -14062,7 +14062,7 @@ inline int32 CLuaBaseEntity::hasPreventActionEffect(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    lua_pushboolean(L, (static_cast<CBattleEntity *>(m_PBaseEntity))->StatusEffectContainer->HasPreventActionEffect());
+    lua_pushboolean(L, (static_cast<CBattleEntity*>(m_PBaseEntity))->StatusEffectContainer->HasPreventActionEffect());
 
     return 1;
 }
@@ -14091,7 +14091,7 @@ inline int32 CLuaBaseEntity::stun(lua_State* L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getPool(lua_State *L)
+inline int32 CLuaBaseEntity::getPool(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
@@ -14148,7 +14148,7 @@ int32 CLuaBaseEntity::setDropID(lua_State* L)
 *  Notes   : Exclusively used for addtreasure.lua GM command
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addTreasure(lua_State *L)
+inline int32 CLuaBaseEntity::addTreasure(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -14181,7 +14181,7 @@ inline int32 CLuaBaseEntity::addTreasure(lua_State *L)
 *  Notes   : Used only in Thief quest and Maat
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getStealItem(lua_State *L)
+inline int32 CLuaBaseEntity::getStealItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -14215,7 +14215,7 @@ inline int32 CLuaBaseEntity::getStealItem(lua_State *L)
 *  Notes   : Defaults to getStealItem() if no despoil item exists
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getDespoilItem(lua_State *L)
+inline int32 CLuaBaseEntity::getDespoilItem(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
@@ -14247,7 +14247,7 @@ inline int32 CLuaBaseEntity::getDespoilItem(lua_State *L)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getDespoilDebuff(lua_State *L)
+inline int32 CLuaBaseEntity::getDespoilDebuff(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
@@ -14271,7 +14271,7 @@ inline int32 CLuaBaseEntity::getDespoilDebuff(lua_State *L)
 *  Notes   : Used in scripts/globals/abilities/steal.lua
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::itemStolen(lua_State *L)
+inline int32 CLuaBaseEntity::itemStolen(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
