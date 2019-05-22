@@ -1,6 +1,7 @@
 {
     "git.ignoreLimitWarning": true,
     "files.associations": {
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "cmath": "cpp"
     }
 }
