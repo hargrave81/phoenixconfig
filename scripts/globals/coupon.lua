@@ -11,4 +11,5 @@ function onCoupon(player,msgId)
     player:messageSpecial(msgId, 13680); -- var. mantle
     player:addItem(13681);
     player:messageSpecial(msgId, 13681); -- var. cape
+    player:addGil(15000);
 end
