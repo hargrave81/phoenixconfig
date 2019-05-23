@@ -3230,7 +3230,7 @@ inline int32 CLuaBaseEntity::hasItem(lua_State *L)
 
 
 
-inline int32 CLuaBaseEntity::addLinkshell(lua_State* L)
+inline int32 CLuaBaseEntity::addLinkshell(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 

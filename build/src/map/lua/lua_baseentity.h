@@ -178,7 +178,7 @@ public:
     int32 addNationTeleport(lua_State*);     // Add new teleport: addNationTeleport(nation,number)
 
     // Items
-    int32 addLinkshell(lua_State* L);         // Adds LS to player
+    int32 addLinkshell(lua_State*);          // Adds LS to player
     int32 getEquipID(lua_State*);            // Gets the Item Id of the item in specified slot
     int32 hasItem(lua_State*);               // Check to see if Entity has item in inventory (hasItem(itemNumber))
     int32 addItem(lua_State*);               // Add item to Entity inventory (additem(itemNumber,quantity))
