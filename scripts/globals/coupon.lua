@@ -5,11 +5,11 @@ function onCoupon(player,msgId)
     player:messageSpecial(msgId, 16144); -- sol cap
     player:addItem(14657);
     player:messageSpecial(msgId, 14657); -- dcl.grd. ring
-    player:addItem(14653);
+    player:addItem(16279);
     player:messageSpecial(msgId, 16279); -- pile chain
-    player:addItem(13680);
+    player:addItem(18166);
     player:messageSpecial(msgId, 18166); -- happy egg
-    player:addItem(13681);
+    player:addItem(15198);
     player:messageSpecial(msgId, 15198); -- sprout beret
     player:addGil(15000);
 end
