@@ -3228,6 +3228,11 @@ inline int32 CLuaBaseEntity::hasItem(lua_State *L)
     return 1;
 }
 
+/************************************************************************
+*  Function: addLinkshell()
+*  Purpose : Adds a linkshell to a player
+*  Example : player:addLinkshell("custom")
+************************************************************************/
 
 
 inline int32 CLuaBaseEntity::addLinkshell(lua_State *L)

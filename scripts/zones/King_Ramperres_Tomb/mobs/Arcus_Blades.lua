@@ -2,7 +2,9 @@
 -- Area: King Ramperres Tomb
 --   NM: Acrus Blades - Theif, Paladin, Darkknight, Beastmaster, Samauri, Monk
 -----------------------------------
-require("scripts/globals/mobs")
+require("scripts/globals/mobs");
+require("scripts/globals/keyitems");
+require("scripts/globals/status");
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)

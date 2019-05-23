@@ -2,7 +2,10 @@
 -- Area: Castle Zvahl Bailys
 --   NM: Flame of Fate - Warrior, White Mage, Blue Mage, Red Mage, Bard, Ranger, Black Mage, Ninja
 -----------------------------------
-require("scripts/globals/mobs")
+require("scripts/globals/mobs");
+require("scripts/globals/keyitems");
+require("scripts/globals/status");
+
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)

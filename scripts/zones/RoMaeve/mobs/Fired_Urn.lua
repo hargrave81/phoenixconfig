@@ -2,7 +2,10 @@
 -- Area: RoMaeve
 --   NM: Fired Urn - Dragoon, Summoner, Corsair, Puppetmaster, Dancer, Scholar
 -----------------------------------
-require("scripts/globals/mobs")
+require("scripts/globals/mobs");
+require("scripts/globals/keyitems");
+require("scripts/globals/status");
+
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)    
