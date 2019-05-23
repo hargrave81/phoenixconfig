@@ -68,8 +68,8 @@ local function CharCreate(player)
         player:addItem(nationInfo.ring)
     end
 
-    player:addLinkshell("TheReborn")
-    player:messageSpecial(ITEM_OBTAINED,515)
+    --player:addLinkshell("TheReborn")
+    --player:messageSpecial(ITEM_OBTAINED,515)
 
     -- unlock advanced jobs
     if ADVANCED_JOB_LEVEL == 0 then
