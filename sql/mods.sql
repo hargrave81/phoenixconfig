@@ -4,16 +4,6 @@
 -- ------------------------------------------------------
 -- Server version	5.6.21-log
 
-
-CREATE TABLE account_ip_record (
-  login_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  accid int(10) NOT NULL,
-  charid int(10) NOT NULL,
-  client_ip tinytext NOT NULL,
-  PRIMARY KEY (login_time,accid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 UPDATE zone_settings set zoneip = '137.116.65.36'
 WHERE zoneip = '127.0.0.1';
 --
@@ -83,18 +73,22 @@ UPDATE mob_family_system -- ENHANCE  fenrir
  SET ACC = 5, EVA = 5, HP = 180
  WHERE familyid = 36 and systemid = 5;
 
+/* ARTIFACT GEAR */;
+ --17437016 Fighter
+INSERT INTO mob_pools VALUES 
+ (6502,'Demon_Warlock','Demon_Warlock',169,0x0000E80200000000000000000000000000000000,15,15,4,240,100,0,1,0,1,0,0,0,151,131,0,0,31,1,0,169);
 
 
 INSERT INTO mob_pools VALUES 
  (6500,'Hurkan','Hurkan',460,0x0000140A00000000000000000000000000000000,1,4,7,540,5,0,0,0,1,0,0,0,1,129,0,0,0,1,0,460);
 
-
+/*
 --17216127
 --17216128
 --17216129
 --17216130
 --17216131
---17216132
+--17216132 */;
 INSERT INTO mob_groups VALUES
 (15000,6500,107,2500,0,5000,15000,10000,6,14,0); -- south gustaburg
 
@@ -104,9 +98,11 @@ INSERT INTO mob_spawn_points VALUES
 INSERT INTO nm_spawn_points
 VALUES (17216132,0,392.23,0.19,-254.11);
 
+
+/*
 --17199662
 --17199663
---17199664
+--17199664 */;
 INSERT INTO mob_groups VALUES
 (15001,6500,103,2500,0,5000,20000,15000,19,26,0); -- Valkurm Dunes
 
@@ -115,10 +111,11 @@ INSERT INTO mob_spawn_points VALUES
 INSERT INTO nm_spawn_points
 VALUES (17199662,0,315.47,0.15,-74.82);
 
+/*
 --17293669
 --17293668
 --17293667
---17293666
+--17293666 */;
 INSERT INTO mob_groups VALUES
 (15002,6500,126,2500,0,5000,25000,15000,24,30,0); -- Qufim
 
@@ -132,13 +129,13 @@ VALUES (17293757,0,238.39,-19.48,386.78);
 INSERT INTO mob_pools VALUES 
 (6501,'Primogenial_Marolith','Primogenial_Marolith',347,0x0000930700000000000000000000000000000000,1,4,11,90,10,0,0,0,0,0,0,0,1,129,4,0,0,1,0,347);
 
-
+/*
 --17195576
 --17195575
 --17195574
 --17195572
 --17195571
---17195570
+--17195570 */;
 INSERT INTO mob_groups VALUES
 (15003,6501,102,2500,0,5000,40000,20000,28,32,0); -- La Theine Plateau
 
