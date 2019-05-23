@@ -10,6 +10,6 @@ function onCoupon(player,msgId)
     player:addItem(13680);
     player:messageSpecial(msgId, 18166); -- happy egg
     player:addItem(13681);
-    player:messageSpecial(msgId, 15198); -- var. cape
+    player:messageSpecial(msgId, 15198); -- sprout beret
     player:addGil(15000);
 end
