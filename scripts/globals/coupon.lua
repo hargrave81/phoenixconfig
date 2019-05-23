@@ -6,10 +6,10 @@ function onCoupon(player,msgId)
     player:addItem(14657);
     player:messageSpecial(msgId, 14657); -- dcl.grd. ring
     player:addItem(14653);
-    player:messageSpecial(msgId, 14653); -- var. ring
+    player:messageSpecial(msgId, 16279); -- pile chain
     player:addItem(13680);
-    player:messageSpecial(msgId, 13680); -- var. mantle
+    player:messageSpecial(msgId, 18166); -- happy egg
     player:addItem(13681);
-    player:messageSpecial(msgId, 13681); -- var. cape
+    player:messageSpecial(msgId, 15198); -- var. cape
     player:addGil(15000);
 end

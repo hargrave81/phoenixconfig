@@ -67,8 +67,10 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 (13497, 303, 2), -- custom bastokan ring TH2
 (14062, 346, 2), -- custom carbuncle mitts
 (15456, 259, 5), -- custom dash sash
-(17049, 30, 3); -- custom maple wand
-
+(17049, 30, 3), -- custom maple wand
+(15198, 64, 6), -- Sprout Beret Combat skill up
+(15198, 65, 6), -- Sprout Beret Magic skill up
+(15198, 1, 1); -- Sprout Beret DEF
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
  WHERE familyid = 36 and systemid = 5;
