@@ -35,7 +35,7 @@ function onTrigger(player,destination)
             local deststr = tostring(bytes);
             player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);
             --player:PrintToPlayer("Attempt to Teleport to Dests > "..deststr);
-            for i = 20,0,-1 
+            for i = 254,0,-1 
             do 
                 local destbyte = getBytePos(destination,i)
                 if (destbyte ~= nil) then
