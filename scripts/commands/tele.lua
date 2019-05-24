@@ -32,11 +32,20 @@ function onTrigger(player,destination)
     for i, cityId in pairs(cities) do
         if (cityId == yourZone) then
             local bytes = string.sub(destination,6);
-            local destbyte = getBytePos(destination, 253);
+            local destbyte1 = getBytePos(destination, 6);
+            local destbyte2 = getBytePos(destination, 0);
+            local destbyte3 = getBytePos(destination, 1);
+            local destbyte4 = getBytePos(destination, 2);
+            local destbyte5 = getBytePos(destination, 3);
+            local destbyte6 = getBytePos(destination, 4);
+            local destbyte7 = getBytePos(destination, 9);
+            local destbyte8 = getBytePos(destination, 10);
+            local destbyte9 = getBytePos(destination, 11);
+            local destbyte10 = getBytePos(destination, 12);
             local deststr = tostring(bytes);
-            player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);
-            player:PrintToPlayer("Attempt to Teleport to Destb > "..destbyte);
+            player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);            
             player:PrintToPlayer("Attempt to Teleport to Dests > "..deststr);
+            player:PrintToPlayer("Attempt to Teleport to Destb > "..destbyte1.." . "..destbyte2.." . "..destbyte3.." . "..destbyte4.." . "..destbyte5.." . "..destbyte6.." . "..destbyte7.." . "..destbyte8.." . "..destbyte9.." . "..destbyte10);
             if destination == "Teleport-Yhoat" or destination == "yhoat" then
                 if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
                     target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.YHOAT,0,4.7)
