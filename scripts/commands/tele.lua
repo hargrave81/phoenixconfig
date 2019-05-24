@@ -33,19 +33,77 @@ function onTrigger(player,destination)
         if (cityId == yourZone) then
             local bytes = string.sub(destination,6);
             local deststr = tostring(bytes);
-            player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);
-            --player:PrintToPlayer("Attempt to Teleport to Dests > "..deststr);
-            for i = 254,0,-1 
-            do 
-                local destbyte = getBytePos(destination,i)
-                if (destbyte ~= nil) then
-                    player:PrintToPlayer("DestByte "..i.." = "..destbyte)
-                end
-            end
-            if destination == "Teleport-Yhoat" or destination == "yhoat" then
+            local vhazl = getBytePos(destination,49);
+            local altep = getBytePos(destination,114);
+            local yhoat = getBytePos(destination,115);
+            local holla = getBytePos(destination,41);
+            local mea = getBytePos(destination,23);
+            local dem = getBytePos(destination,81);
+            if yhoat == 10 or deststr == "yhoat" then
                 if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
                     target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.YHOAT,0,4.7)
                     player:PrintToPlayer("Sending you to Yhoat ...")
+                    spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
+                else
+                    player:PrintToPlayer("You lack the crystal")
+                    spell:setMsg(dsp.msg.basic.NO_EFFECT)
+                end                                
+                return;
+            end
+
+            if vahzl == 10 or deststr == "vhazl" then
+                if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                    target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.VAHZL,0,4.7)
+                    player:PrintToPlayer("Sending you to Vhazl ...")
+                    spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
+                else
+                    player:PrintToPlayer("You lack the crystal")
+                    spell:setMsg(dsp.msg.basic.NO_EFFECT)
+                end                                
+                return;
+            end
+
+            if altep == 10 or deststr == "altep" then
+                if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                    target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.ALTEP,0,4.7)
+                    player:PrintToPlayer("Sending you to Altep ...")
+                    spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
+                else
+                    player:PrintToPlayer("You lack the crystal")
+                    spell:setMsg(dsp.msg.basic.NO_EFFECT)
+                end                                
+                return;
+            end
+
+            if holla == 10 or deststr == "holla" then
+                if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                    target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.HOLLA,0,4.7)
+                    player:PrintToPlayer("Sending you to Holla ...")
+                    spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
+                else
+                    player:PrintToPlayer("You lack the crystal")
+                    spell:setMsg(dsp.msg.basic.NO_EFFECT)
+                end                                
+                return;
+            end
+
+
+            if mea == 10 or deststr == "mea" then
+                if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                    target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.MEA,0,4.7)
+                    player:PrintToPlayer("Sending you to Mea ...")
+                    spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
+                else
+                    player:PrintToPlayer("You lack the crystal")
+                    spell:setMsg(dsp.msg.basic.NO_EFFECT)
+                end                                
+                return;
+            end
+
+            if dem == 10 or deststr == "dem" then
+                if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                    target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.DEM,0,4.7)
+                    player:PrintToPlayer("Sending you to Dem ...")
                     spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
