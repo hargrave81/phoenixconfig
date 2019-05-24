@@ -45,7 +45,7 @@ function onTrigger(player,destination)
             local deststr = tostring(bytes);
             player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);
             --player:PrintToPlayer("Attempt to Teleport to Dests > "..deststr);
-            player:PrintToPlayer("Attempt to Teleport to Destb > "..destbyte1.." . "..destbyte2.." . "..destbyte3.." . "..destbyte4.." . "..destbyte5.." . "..destbyte6.." . "..destbyte7.." . "..destbyte8.." . "..destbyte9.." . "..destbyte10);
+            player:PrintToPlayer("Attempt to Teleport to Destb > "..destbyte1.." . "..destbyte2.." . "..destbyte3.." . "..destbyte4.." . "..destbyte5.." . "..destbyte6.." . "..destbyte7.." . "..destbyte8.." . "..destbyte9.." . ");
             if destination == "Teleport-Yhoat" or destination == "yhoat" then
                 if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
                     target:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.YHOAT,0,4.7)
