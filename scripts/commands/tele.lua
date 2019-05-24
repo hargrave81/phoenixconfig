@@ -43,8 +43,8 @@ function onTrigger(player,destination)
             local destbyte9 = getBytePos(destination, 11);
             local destbyte10 = getBytePos(destination, 12);
             local deststr = tostring(bytes);
-            player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);            
-            player:PrintToPlayer("Attempt to Teleport to Dests > "..deststr);
+            player:PrintToPlayer("Attempt to Teleport to Dest > "..destination);
+            --player:PrintToPlayer("Attempt to Teleport to Dests > "..deststr);
             player:PrintToPlayer("Attempt to Teleport to Destb > "..destbyte1.." . "..destbyte2.." . "..destbyte3.." . "..destbyte4.." . "..destbyte5.." . "..destbyte6.." . "..destbyte7.." . "..destbyte8.." . "..destbyte9.." . "..destbyte10);
             if destination == "Teleport-Yhoat" or destination == "yhoat" then
                 if (target:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
