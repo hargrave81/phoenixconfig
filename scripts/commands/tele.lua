@@ -52,7 +52,7 @@ function onTrigger(player,destination)
             end
 
             if vahzl == 10 or deststr == "vhazl" then
-                if (player:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                if (player:hasKeyItem(dsp.ki.VAHZL_GATE_CRYSTAL) == true) then
                     player:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.VAHZL,0,4.7)
                     player:PrintToPlayer("Sending you to Vhazl ...")
                     spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
@@ -64,7 +64,7 @@ function onTrigger(player,destination)
             end
 
             if altep == 10 or deststr == "altep" then
-                if (player:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                if (player:hasKeyItem(dsp.ki.ALTEPA_GATE_CRYSTAL) == true) then
                     player:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.ALTEP,0,4.7)
                     player:PrintToPlayer("Sending you to Altep ...")
                     spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
@@ -76,7 +76,7 @@ function onTrigger(player,destination)
             end
 
             if holla == 10 or deststr == "holla" then
-                if (player:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                if (player:hasKeyItem(dsp.ki.HOLLA_GATE_CRYSTAL) == true) then
                     player:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.HOLLA,0,4.7)
                     player:PrintToPlayer("Sending you to Holla ...")
                     spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
@@ -89,7 +89,7 @@ function onTrigger(player,destination)
 
 
             if mea == 10 or deststr == "mea" then
-                if (player:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                if (player:hasKeyItem(dsp.ki.MEA_GATE_CRYSTAL) == true) then
                     player:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.MEA,0,4.7)
                     player:PrintToPlayer("Sending you to Mea ...")
                     spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
@@ -101,7 +101,7 @@ function onTrigger(player,destination)
             end
 
             if dem == 10 or deststr == "dem" then
-                if (player:hasKeyItem(dsp.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                if (player:hasKeyItem(dsp.ki.DEM_GATE_CRYSTAL) == true) then
                     player:addStatusEffectEx(dsp.effect.TELEPORT,0,dsp.teleport.id.DEM,0,4.7)
                     player:PrintToPlayer("Sending you to Dem ...")
                     spell:setMsg(dsp.msg.basic.MAGIC_TELEPORT)
