@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ds-game
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: ds-game
@@ -16,20 +16,23 @@ spec:
     spec:
       containers:
       - name: ds-game
-        image: hargrave81/phoenixbase
+        image: hargrave81/phoenix
         env:
         - name: MYSQL_HOST
-          value: phoenixdb
+          value: phoenix.eastus2.cloudapp.azure.com
         - name: MYSQL_LOGIN
-          value: 
+          value: ffxi
+        - name: MYSQL_PORT
+          value: "3309"
         - name: MYSQL_DATABASE
           value: dspdb
         - name: MYSQL_PASSWORD
-          value: 
+          value: Squareenix81
         - name: SERVERNAME
           value: PhoenixProject
         - name: APP
           value: GAME
+        imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -42,6 +45,5 @@ spec:
     - name: stream
       port: 54230         
       protocol: UDP     
-  sessionAffinity: ClientIP 
-  loadBalancerIP: 104.46.124.243
+  sessionAffinity: ClientIP   
   type: LoadBalancer

@@ -16,20 +16,23 @@ spec:
     spec:
       containers:
       - name: ds-search
-        image: hargrave81/phoenixbase        
+        image: hargrave81/phoenix        
         env:
         - name: MYSQL_HOST
-          value: phoenixdb
+          value: phoenix.eastus2.cloudapp.azure.com
         - name: MYSQL_LOGIN
-          value: 
+          value: ffxi
+        - name: MYSQL_PORT
+          value: "3309"
         - name: MYSQL_DATABASE
           value: dspdb
         - name: MYSQL_PASSWORD
-          value: 
+          value: Squareenix81
         - name: SERVERNAME
           value: PhoenixProject
         - name: APP
           value: AUCTION
+        imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -43,5 +46,4 @@ spec:
       port: 54002      
       protocol: TCP
   sessionAffinity: ClientIP   
-  loadBalancerIP: 104.46.119.123
   type: LoadBalancer
