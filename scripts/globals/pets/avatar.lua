@@ -53,17 +53,17 @@ end
 -- on each fight round, adjust delay to match smn skill
 function onMobFight(pet, target)
     -- return the value provided in delay to resume legacy monster mode
-    pet:getMaster().PrintToPlayer("Fighting")
+    pet:getMaster():PrintToPlayer("Fighting")
     local delay = pet:getMobMod(MOBMOD_MAGIC_COOL) * 1000
     delay = spirits[pet:getFamily()].getCastingTime(pet)
-    pet:getMaster().PrintToPlayer("Delay for Fight "..delay)
+    pet:getMaster():PrintToPlayer("Delay for Fight "..delay)
     pet:setMobMod(MOBMOD_MAGIC_COOL, delay/1000)
 end
 
 -- return true if you are casting a spell, otherwise return false
 function onMobRoam(pet) --, msSinceLastCast)    
     local msSinceLastCast = pet:getLastMagicTime()
-    pet:getMaster().PrintToPlayer("Checking Roam "..msSinceLastCast)
+    pet:getMaster():PrintToPlayer("Checking Roam "..msSinceLastCast)
 	spirits[pet:getFamily()].castSpell(pet, msSinceLastCast)
 	return
 end
