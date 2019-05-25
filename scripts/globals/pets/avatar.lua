@@ -7,6 +7,7 @@ require("scripts/globals/status")
 require("scripts/globals/msg")
 require("scripts/globals/utils")
 require("scripts/globals/weather")
+require("scripts/globals/pets/spirit")
 
 local spirits =
 {
@@ -42,7 +43,7 @@ function onMobEngaged(pet)
         pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,3600,0,0)
         pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower,0,3600,0,0)
     end
-    -- return incoming delay value to return to legacy/monster mode    
+    -- return incoming delay value to return to legacy/monster mode        
     local delay = spirits[pet:getFamily()].getEngageDelay(pet, delay)
     pet:setMobMod(MOBMOD_MAGIC_COOL, delay/1000)
 end
@@ -56,7 +57,7 @@ function onMobFight(pet, target)
 end
 
 -- return true if you are casting a spell, otherwise return false
-function onMobRoam(pet, msSinceLastCast)    
+function onMobRoam(pet) --, msSinceLastCast)    
     local msSinceLastCast = pet:getLastMagicTime()
     pet.getMaster().PrintToPlayer("Checking Roam "..msSinceLastCast)
 	spirits[pet:getFamily()].castSpell(pet, msSinceLastCast)
