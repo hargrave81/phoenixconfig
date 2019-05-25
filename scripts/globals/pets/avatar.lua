@@ -20,14 +20,14 @@ local spirits =
     -- Therefore, we need to map the spirit to its element by family.
     -- Listng ordered by magical element; the ordering of spirit families
     -- should probably be fixed in the SQL DB as well.
-    --[102] = dsp.magic.element.FIRE,
-    --[103] = dsp.magic.element.ICE,
-    --[99]  = dsp.magic.element.WIND,
-    --[101] = dsp.magic.element.EARTH,
-    --[105] = dsp.magic.element.LIGHTNING,
-    --[106] = dsp.magic.element.WATER,
+    [102] = dsp.pet.spirit.create(dsp.magic.element.FIRE),
+    [103] = dsp.pet.spirit.create(dsp.magic.element.ICE),
+    [99]  = dsp.pet.spirit.create(dsp.magic.element.WIND),
+    [101] = dsp.pet.spirit.create(dsp.magic.element.EARTH),
+    [105] = dsp.pet.spirit.create(dsp.magic.element.LIGHTNING),
+    [106] = dsp.pet.spirit.create(dsp.magic.element.WATER),
     [104] = require("scripts/globals/pets/spirits/light_spirit"),
-    --[100] = dsp.magic.element.DARK
+    [100] = dsp.pet.spirit.create(dsp.magic.element.DARK)
 }
 
 function onMobDeath(mob, player, isKiller)
