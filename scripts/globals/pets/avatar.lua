@@ -56,8 +56,9 @@ function onMobFight(pet, target)
 end
 
 -- return true if you are casting a spell, otherwise return false
-function onMobRoam(pet, msSinceLastCast)
+function onMobRoam(pet, msSinceLastCast)    
     local msSinceLastCast = pet:getLastMagicTime()
+    pet.getMaster().PrintToPlayer("Checking Roam "..msSinceLastCast)
 	spirits[pet:getFamily()].castSpell(pet, msSinceLastCast)
 	return
 end

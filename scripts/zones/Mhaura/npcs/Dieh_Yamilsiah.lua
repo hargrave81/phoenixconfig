@@ -24,7 +24,7 @@ function onTrigger(player,npc)
         waiting = 193;
     end
 
-    if player:getVar("MhauraFastShip",1) then        
+    if player:getVar("MhauraFastShip") == 1 then        
         player:setVar("MhauraFastShip",0)
         if destination == 0 then
             player:setPos(18.9472, -1.78, -48.3702, 45, 248)  -- Selbina

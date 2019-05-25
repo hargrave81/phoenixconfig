@@ -22,7 +22,7 @@ function onCoupon(player,msgId)
         player:messageSpecial(msgId, 15198); -- sprout beret
         player:addGil(15000);
     end    
-    if player.hasKeyItem(3073) ~= true then
+    if player:hasKeyItem(3073) ~= true then
         player:addKeyItem(3073)
         player:PrintToPlayer("Received a mount!")
     end

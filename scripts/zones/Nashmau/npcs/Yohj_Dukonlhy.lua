@@ -19,7 +19,7 @@ function onTrigger(player,npc)
         timer = timer - waiting; -- Ship hasn't arrived, subtract waiting time to get time to arrival
     end
 
-    if player:getVar("AlZahbiFastShip",1) then        
+    if player:getVar("AlZahbiFastShip") == 1 then        
         player:setVar("AlZahbiFastShip",0)
         player:setPos(12.0933, 0, 120.6054, 0, 50)        -- Aht Urhgan
         return
