@@ -6,6 +6,7 @@
 -------------------------------------
 require("scripts/globals/settings");
 require("scripts/globals/coupon");
+local ID = require("scripts/zones/Port_Windurst/IDs");
 
 function onTrade(player,npc,trade)
     if (trade:getItemCount() == 1 and trade:hasItemQty(536,1) == true) then

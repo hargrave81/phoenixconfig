@@ -4,6 +4,7 @@ require("scripts/globals/settings")
 require("scripts/globals/status")
 require("scripts/globals/titles")
 require("scripts/globals/zone")
+require("scripts/globals/quests")
 -----------------------------------
 
 local startingRaceInfo =
@@ -98,7 +99,18 @@ local function CharCreate(player)
             player:addKeyItem(i)
         end
     end
-
+    
+    player:completeQuest(SANDORIA,dsp.quest.id.sandoria.GROWING_FLOWERS);    
+    player:moghouseFlag(1);
+    player:completeQuest(BASTOK,dsp.quest.id.bastok.A_LADY_S_HEART);
+    player:moghouseFlag(2);
+    player:completeQuest(WINDURST,dsp.quest.id.windurst.FLOWER_CHILD);
+    player:moghouseFlag(4);
+    player:completeQuest(JEUNO,dsp.quest.id.jeuno.PRETTY_LITTLE_THINGS);
+    player:moghouseFlag(8);
+    player:completeQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.KEEPING_NOTES);
+    player:moghouseFlag(16);
+    
     -- set initial level cap
     if INITIAL_LEVEL_CAP ~= 50 then
         player:levelCap(INITIAL_LEVEL_CAP)
@@ -150,9 +162,6 @@ function onGameIn(player, firstLogin, zoning)
         -- things checked ONLY during logon go here
         if firstLogin then
             CharCreate(player)
-        end
-        if player:getName() == {"Xertus","Xertaru","Gracie"} and not player:hasKeyItem(3081) then
-            player:addKeyItem(3081) -- fenrir whistle
         end
     else
         -- things checked ONLY during zone in go here

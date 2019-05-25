@@ -6,6 +6,8 @@
 -------------------------------------
 require("scripts/globals/npc_util")
 require("scripts/globals/settings")
+require("scripts/globals/coupon");
+local ID = require("scripts/zones/Windurst_Woods/IDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)

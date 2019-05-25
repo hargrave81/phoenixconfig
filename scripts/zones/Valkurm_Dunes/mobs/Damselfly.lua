@@ -10,7 +10,7 @@ require("scripts/globals/mobs");
 function onMobDeath(mob, player, isKiller)
     dsp.regime.checkRegime(player, mob, 9, 1, dsp.regime.type.FIELDS)
     dsp.regime.checkRegime(player, mob, 10, 2, dsp.regime.type.FIELDS)
-    if (math.random(1,100) < 90 and isKiller == true) then
+    if (math.random(1,100) > 90 and isKiller == true) then
         player:addTreasure(15147,mob);
     end
 end;
