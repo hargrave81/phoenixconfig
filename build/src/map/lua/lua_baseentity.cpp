@@ -13930,25 +13930,6 @@ inline int32 CLuaBaseEntity::castSpell(lua_State* L)
     return 0;
 }
 
-/************************************************************************
-*  Function: getLastMagicTime()
-*  Purpose : Gets the time in ms since the last spell was cast
-*  Example : mob:getLastMagicTime()
-*  Notes   : only valid for mobs and its descendants
-************************************************************************/
-
-inline int32 CLuaBaseEntity::getLastMagicTime(lua_State* L)
-{
-    DSP_DEBUG_BREAK_IF(!m_PBaseEntity);
-    auto PController = dynamic_cast<CMobController*>(m_PBaseEntity->PAI->GetController());
-    DSP_DEBUG_BREAK_IF(!PController);
-
-    int ms = std::chrono::duration_cast<std::chrono::milliseconds>(server_clock::now() - PController->GetLastMagicTime()).count();
-
-    lua_pushinteger(L, (lua_Integer)ms);
-
-    return 1;
-}
 
 /************************************************************************
 *  Function: useJobAbility()
