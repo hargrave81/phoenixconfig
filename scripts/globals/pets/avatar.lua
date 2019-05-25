@@ -37,7 +37,7 @@ end
 
 function onMobEngaged(pet)
     local master = pet:getMaster()    
-    master.PrintToPlayer("Engaging")
+    master:PrintToPlayer("Engaging")
     if master:hasStatusEffect(dsp.effect.FIELD_SUPPORT_FOOD) then
         local mLvl = master:getMainLvl()
         local foodPower = 3 + (mLvl / 10)
@@ -46,24 +46,24 @@ function onMobEngaged(pet)
     end
     -- return incoming delay value to return to legacy/monster mode        
     local delay = spirits[pet:getFamily()].getEngageDelay(pet, delay)
-    master.PrintToPlayer("Delay for Engage "..delay)
+    master:PrintToPlayer("Delay for Engage "..delay)
     pet:setMobMod(MOBMOD_MAGIC_COOL, delay/1000)
 end
 
 -- on each fight round, adjust delay to match smn skill
 function onMobFight(pet, target)
     -- return the value provided in delay to resume legacy monster mode
-    pet.getMaster().PrintToPlayer("Fighting")
+    pet:getMaster().PrintToPlayer("Fighting")
     local delay = pet:getMobMod(MOBMOD_MAGIC_COOL) * 1000
     delay = spirits[pet:getFamily()].getCastingTime(pet)
-    pet.getMaster().PrintToPlayer("Delay for Fight "..delay)
+    pet:getMaster().PrintToPlayer("Delay for Fight "..delay)
     pet:setMobMod(MOBMOD_MAGIC_COOL, delay/1000)
 end
 
 -- return true if you are casting a spell, otherwise return false
 function onMobRoam(pet) --, msSinceLastCast)    
     local msSinceLastCast = pet:getLastMagicTime()
-    pet.getMaster().PrintToPlayer("Checking Roam "..msSinceLastCast)
+    pet:getMaster().PrintToPlayer("Checking Roam "..msSinceLastCast)
 	spirits[pet:getFamily()].castSpell(pet, msSinceLastCast)
 	return
 end
