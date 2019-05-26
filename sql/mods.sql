@@ -112,6 +112,30 @@ INSERT INTO mob_spawn_points VALUES
 INSERT INTO nm_spawn_points
 VALUES (17199662,0,315.47,0.15,-74.82);
 
+
+
+/* genkei 1 */;
+/* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence */
+INSERT INTO mob_groups VALUES
+(15007,6505,126,240,0,4851,5000,1000,48,52,0); -- Qufim
+
+INSERT INTO mob_spawn_points VALUES 
+(17293665,'Jester_Malatrix','Jester Malatrix',15007,151.2537,20.2513,-196.434,39);
+
+INSERT INTO nm_spawn_points
+VALUES (17293665,0,151.2537,20.2513,-196.434);
+
+INSERT INTO mob_pools VALUES 
+(6505,'Jester_Malatrix','Jester_Malatrix',470,0x00007E0800000000000000000000000000000000,1,14,1,290,120,0,1,0,0,0,0,0,1,129,4,0,0,1,0,470);
+
+INSERT INTO mob_droplist VALUES
+(4851,0,0,1000,1088,400);
+INSERT INTO mob_droplist VALUES
+(4851,0,0,1000,1089,400);
+INSERT INTO mob_droplist VALUES
+(4851,0,0,1000,1090,400);
+
+
 /*
 --17293669
 --17293668
@@ -121,10 +145,10 @@ INSERT INTO mob_groups VALUES
 (15002,6500,126,2500,0,4850,25000,15000,33,38,0); -- Qufim
 
 INSERT INTO mob_spawn_points VALUES 
-(17293666,'Hurkan','Hurkan',15002,238.39,-19.48,386.78,39);
+(17293669,'Hurkan','Hurkan',15002,238.39,-19.48,386.78,39);
 
 INSERT INTO nm_spawn_points
-VALUES (17293666,0,238.39,-19.48,386.78);
+VALUES (17293669,0,238.39,-19.48,386.78);
 
 
 INSERT INTO mob_pools VALUES 

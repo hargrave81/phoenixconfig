@@ -1048,7 +1048,21 @@ dsp.regime.bookOnEventUpdate = function(player, option, regimeType)
 end
 
 dsp.regime.bookOnEventFinish = function(player, option, regimeType)    
-    player:addStatusEffect(dsp.effect.DEDICATION,150,0,9600,0,3000)
+    local mLvl = player:getMainLvl()
+    local lvlScale = 150
+    if mLvl > 70 then
+        lvlScale = 270
+    end
+    if mLvl > 60 then
+        lvlScale = 225
+    end
+    if mLvl > 50 then
+        lvlScale = 190
+    end
+    if mLvl > 40 then
+        lvlScale = 170
+    end
+    player:addStatusEffect(dsp.effect.DEDICATION,lvlScale,0,9600,0,90000)
     player:addStatusEffect(dsp.effect.REGEN, 1, 3, 9600)
     player:addStatusEffect(dsp.effect.REFRESH, 1, 3, 9600, 0, 3)    
     player:addStatusEffect(dsp.effect.ATTACK_BOOST, 34, 0, 9600)
@@ -1086,8 +1100,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
     -- purchase a service
     if opt.act then
         local act = opt.act
-        player:delCurrency("valor_point", opt.cost)
-        local mLvl = player:getMainLvl()
+        player:delCurrency("valor_point", opt.cost)        
         local foodPower = 3 + (mLvl / 10)
         if act == "CANCEL_REGIME" then
             clearPlayerVars(player)
