@@ -16,5 +16,5 @@ function onMobDeath(mob, player, isKiller)
 end;
 
 function onMobDespawn(mob)
-    dsp.mob.phOnDespawn(mob,ID.mob.VALKURM_EMPEROR_PH,5,3600); -- 1 hour
+    dsp.mob.phOnDespawn(mob,ID.mob.VALKURM_EMPEROR_PH,5,1800); -- 30m respawn
 end;
