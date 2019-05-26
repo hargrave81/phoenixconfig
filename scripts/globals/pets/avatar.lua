@@ -15,6 +15,7 @@ end;
 function onPetEngage(pet,delay)
     -- return incoming delay value to return to legacy/monster mode        
     local master = pet:getMaster()    
+    master.PrintToPlayer("Checking for field support");
     if master:hasStatusEffect(dsp.effect.FIELD_SUPPORT_FOOD) then
         local mLvl = master:getMainLvl()
         local foodPower = 3 + (mLvl / 10)
