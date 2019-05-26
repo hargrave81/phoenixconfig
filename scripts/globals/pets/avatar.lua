@@ -15,13 +15,11 @@ end;
 function onPetEngage(pet,delay)
     -- return incoming delay value to return to legacy/monster mode        
     local master = pet:getMaster()        
-    if master:hasStatusEffect(dsp.effect.FIELD_SUPPORT_FOOD) then
-        local mLvl = master:getMainLvl()
-        local foodPower = 3 + (mLvl / 10)
-        pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,9600,0,0)
-        pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower,0,9600,0,0)
-        master:PrintToPlayer("We just buffed your pet");
-    end
+    local mLvl = master:getMainLvl()
+    local foodPower = 4 + (mLvl / 7)
+    pet:addStatusEffect(dsp.effect.DEF_BOOST,foodPower,0,9600,0,0)
+    pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,9600,0,0)
+    pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower,0,9600,0,0)
     local fastCast = 0
     if (pet:getSystem() == 11) then      -- elemental spirit   
         local smnSkill = getSummoningSkillOverCap(pet)
