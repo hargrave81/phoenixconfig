@@ -25,7 +25,10 @@ function onSpellCast(caster, target, spell)
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
     params.effect = dsp.effect.SLEEP_II
+
     local resist = applyResistanceEffect(caster, target, spell, params)
+
+    caster:PrintToPlayer("dINT -> "..dINT.." resist ->"..currentResist.." calc =>"..resist)
 
     if resist >= 0.5 then
         if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
