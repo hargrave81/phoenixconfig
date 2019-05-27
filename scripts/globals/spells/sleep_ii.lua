@@ -21,7 +21,7 @@ function onSpellCast(caster, target, spell)
     end
 
     local params = {}
-    params.diff = dINT - currentResist * 2
+    params.diff = dINT - currentResist * 5
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
     params.effect = dsp.effect.SLEEP_II
