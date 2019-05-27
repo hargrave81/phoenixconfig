@@ -2,6 +2,7 @@
    EnitityFlag, AnimationSub, HasSpellScript,SpellList,NameVis, RoamFlag, Skill_List_id */;
 /* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence
 /* ARTIFACT GEAR */;
+
  INSERT INTO mob_pools VALUES 
 (6502,'Flame_of_Fate','Flame_of_Fate',275,0x0000000A00000000000000000000000000000000,
  1,4,3,240,100,0,1,0,1,0,0,0,0,0,0,0,1,1,0,275);

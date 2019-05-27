@@ -71,6 +71,13 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 (15198, 64, 6), -- Sprout Beret Combat skill up
 (15198, 65, 6), -- Sprout Beret Magic skill up
 (15198, 1, 1); -- Sprout Beret DEF
+
+
+UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6163; -- udpdate the G2 NMs
+UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6164;
+UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6165;
+
+
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
  WHERE familyid = 36 and systemid = 5;

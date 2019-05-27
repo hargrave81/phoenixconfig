@@ -65,7 +65,7 @@ function onTrigger(player,target)
 
         targ:addSpell(225, false, true);  -- poisonga
     end
-    if targ.getMainJob() == dsp.job.WHM then
+    if targ:getMainJob() == dsp.job.WHM then
         targ:addSpell(1, false, true);  -- cure
         targ:addSpell(2, false, true);
         targ:addSpell(3, false, true);
@@ -135,7 +135,7 @@ function onTrigger(player,target)
         -- targ:addSpell(98, false, true);  -- repose
         targ:addSpell(21, false, true);  -- holy
     end
-    if targ.getMainJob() == dsp.job.RDM then
+    if targ:getMainJob() == dsp.job.RDM then
         targ:addSpell(1, false, true);  -- cures
         targ:addSpell(2, false, true);
         targ:addSpell(3, false, true);
