@@ -23,6 +23,10 @@ function onPetEngage(pet,delay)
         pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower/2,0,9600,0,0)
     else
         pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*10,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.ATTACK_BOOST,foodPower,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.ACCURACY_BOOST,foodPower,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower,0,9600,0,0)
     end
     local fastCast = 0
     if (pet:getSystem() == 11) then      -- elemental spirit   
@@ -57,7 +61,6 @@ function onPetFight(pet,target,delay)
     end
     return delay
 end;
-
 
 -- return true if you are casting a spell, otherwise return false
 function onPetRoam(pet, msSinceLastCast)

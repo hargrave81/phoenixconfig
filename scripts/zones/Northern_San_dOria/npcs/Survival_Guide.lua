@@ -6,7 +6,7 @@
 require("scripts/globals/keyitems")
 require("scripts/globals/missions")
 require("scripts/globals/settings")
-local ID = require("scripts/zones/North_San_dOria/IDs")
+local ID = require("scripts/zones/Northern_San_dOria/IDs")
 -----------------------------------
 
 function onTrade(player,npc,trade)

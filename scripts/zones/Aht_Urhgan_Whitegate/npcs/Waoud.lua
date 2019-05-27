@@ -10,6 +10,8 @@ require("scripts/globals/status")
 require("scripts/globals/missions")
 require("scripts/globals/quests")
 require("scripts/globals/npc_util")
+require("scripts/globals/besieged")
+require("scripts/globals/teleports")
 local ID = require("scripts/zones/Aht_Urhgan_Whitegate/IDs")
 -----------------------------------
 
@@ -59,7 +61,7 @@ function onTrigger(player,npc)
         elseif player:needToZone() then
             player:startEvent(78,player:getGil()) -- dummy questions, costs you 1000 gil
         else
-            player:startEvent(705,player:getGil()) -- start AF1 quest
+            player:startEvent(705,player:getGil()) -- start AF1 quest            
         end
     elseif beginnings == QUEST_ACCEPTED then
         local brand1 = player:hasKeyItem(dsp.ki.BRAND_OF_THE_SPRINGSERPENT)
@@ -94,6 +96,7 @@ function onEventUpdate(player,csid,option)
                 end
             end
             success = 12
+            player:setVar("SuccessfullyAnswered", success)
         -- determine results
         elseif option == 40 then
             if     success <  2 then player:updateEvent(player:getGil(),0,0,0,0,0,0,10) -- Springserpent
@@ -146,7 +149,14 @@ function onEventFinish(player,csid,option)
         player:setVar("AnEmptyVesselProgress",4)
         -- skip going to Aydeewa
         npcUtil.completeQuest(player, AHT_URHGAN, dsp.quest.id.ahtUrhgan.AN_EMPTY_VESSEL, {title=dsp.title.BEARER_OF_THE_MARK_OF_ZAHAK, ki=dsp.ki.MARK_OF_ZAHAK, var={"AnEmptyVesselProgress", "EmptyVesselStone"}})
-        player:unlockJob(dsp.job.BLU)        
+        player:unlockJob(dsp.job.BLU)  
+        player:PrintToPlayer("You can now become a blue mage!")
+        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.AZOUPH)
+        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.DVUCCA)
+        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.MAMOOL)
+        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.HALVUNG)
+        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.ILRUSI)
+        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.NYZUL)
     elseif csid == 69 and option == 1 then
         player:needToZone(true)
         player:setVar("LastDivinationDay",vanaDay())
