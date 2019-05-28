@@ -1235,7 +1235,7 @@ function doElementalNuke(caster, spell, target, spellParams)
             currentResist = 0
         end
         target:setMod(mod, currentResist + 10 + spellParams.M0)        
-        caster:PrintToPlayer("resist ->"..currentResist.."  calc ->"..resist.."   Element=>"..mod)
+        --caster:PrintToPlayer("resist ->"..currentResist.."  calc ->"..resist.."   Element=>"..mod)
     end
     DMG = adjustForTarget(target, DMG, ele);
 
