@@ -17,16 +17,26 @@ function onPetEngage(pet,delay)
     local master = pet:getMaster()        
     local mLvl = master:getMainLvl()
     local foodPower = 3 + (mLvl / 10)
-    pet:addStatusEffect(dsp.effect.DEF_BOOST,foodPower*1.75,0,9600,0,0)
-    pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,9600,0,0)
-    if (pet:getSystem() == 11) then         -- elemental spirit
-        pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower/2,0,9600,0,0)
+    
+    local summoningSkill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
+    local boost = summoningSkill /summoner:getMaxSkillLevel(avatar:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
+    
+    pet:addStatusEffect(dsp.effect.DEF_BOOST,foodPower*1.75*boost,0,9600,0,0)
+    pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower*boost,0,9600,0,0)    
+    
+    if (pet:getSystem() == 11) then         -- elemental spirit        
+        pet:addStatusEffect(dsp.effect.INT_BOOST,(foodPower/2)*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.MND_BOOST,foodPower*boost,0,9600,0,0)
     else
-        pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower*2,0,9600,0,0)
-        pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*10,0,9600,0,0)
-        pet:addStatusEffect(dsp.effect.ATTACK_BOOST,foodPower*2,0,9600,0,0)
-        pet:addStatusEffect(dsp.effect.ACCURACY_BOOST,foodPower*2,0,9600,0,0)
-        pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower*2,0,9600,0,0)
+        if pet:getFamily() == 379 or pet:getFamily() == 34 then
+            foodPower = foodPower * .7
+        end
+        pet:addStatusEffect(dsp.effect.MND_BOOST,foodPower*2*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower*2*boost,0,9600,0,0)        
+        pet:addStatusEffect(dsp.effect.ATTACK_BOOST,foodPower*1.5*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.ACCURACY_BOOST,foodPower*1.5*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower*2.5*boost,0,9600,0,0)
     end
     local fastCast = 0
     if (pet:getSystem() == 11) then      -- elemental spirit   
