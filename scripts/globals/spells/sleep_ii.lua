@@ -27,9 +27,7 @@ function onSpellCast(caster, target, spell)
     params.effect = dsp.effect.SLEEP_II
     
 
-    local resist = applyResistanceEffect(caster, target, spell, params)    
-
-    caster:PrintToPlayer("sleep resist->"..currentResist.."  calc ->"..resist)
+    local resist = applyResistanceEffect(caster, target, spell, params)        
 
     if resist >= 0.5 then
         if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
