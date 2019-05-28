@@ -1081,23 +1081,25 @@ void CMobController::DecayResist()
                      Mod::SILENCERES,Mod::BINDRES,Mod::GRAVITYRES,Mod::SLOWRES,
                      Mod::STUNRES,Mod::CHARMRES,Mod::LULLABYRES};
     
+    CBattleEntity* _target = (CBattleEntity*)PMob->GetEntity(PMob->id, TYPE_PC | TYPE_MOB | TYPE_PET);
+
     for(int i = 0; i < 8; i++)
     {
         baseValue = PMob->getMobMod(100+(int)elMod[i]);
-        if(PMob->getMod(elMod[i]) > baseValue) 
+        if(_target->getMod(elMod[i]) > baseValue) 
         { 
             if(dsprand::GetRandomNumber(10) == 0)
-                PMob->setModifier(PMob->getMod(elMod[i])-1);
+                _target->setModifier(_target->getMod(elMod[i])-1);
         }
     }
 
     for(int i = 0; i < 11; i++)
     {
         baseValue = PMob->getMobMod((int)stMod[i]);
-        if(PMob->getMod(stMod[i]) > baseValue) 
+        if(_target->getMod(stMod[i]) > baseValue) 
         { 
             if(dsprand::GetRandomNumber(10) == 0)
-                PMob->setModifier(PMob->getMod(stMod[i])-1);
+                _target->setModifier(_target->getMod(stMod[i])-1);
         }
     }    
 }
