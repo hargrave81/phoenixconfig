@@ -22,9 +22,9 @@ function onTrigger(player)
     end
 
     local modNameByNum = {}
-    for k,v in pairs(dsp.mobMod) do
+    for k,v in pairs(dsp.mod) do
         modNameByNum[v]=k
-        local value = effectTarget:getMobMod(modId)
+        local value = effectTarget:getMod(modId)
         if value ~= nil and value > 0 then
             player:PrintToPlayer(string.format("%s's Mod %i (%s) is %i", effectTarget:getName(), v, k, value))
         end
