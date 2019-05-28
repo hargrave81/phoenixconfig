@@ -1088,7 +1088,7 @@ void CMobController::DecayResist()
         baseValue = PMob->getMobMod(100+(int)elMod[i]);
         if(_target->getMod(elMod[i]) > baseValue) 
         { 
-            if(dsprand::GetRandomNumber(15) == 0)
+            if(dsprand::GetRandomNumber(6) == 0)
                 _target->setModifier(elMod[i],_target->getMod(elMod[i])-1);
         }
     }
@@ -1098,7 +1098,7 @@ void CMobController::DecayResist()
         baseValue = PMob->getMobMod((int)stMod[i]);
         if(_target->getMod(stMod[i]) > baseValue) 
         { 
-            if(dsprand::GetRandomNumber(32) == 0)
+            if(dsprand::GetRandomNumber(22) == 0)
                 _target->setModifier(stMod[i],_target->getMod(stMod[i])-1);
         }
     }    
