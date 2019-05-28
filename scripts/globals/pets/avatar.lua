@@ -17,7 +17,7 @@ function onPetEngage(pet,delay)
     local master = pet:getMaster()        
     local mLvl = master:getMainLvl()
     local foodPower = 3 + (mLvl / 10)
-    pet:addStatusEffect(dsp.effect.DEF_BOOST*1.75,foodPower,0,9600,0,0)
+    pet:addStatusEffect(dsp.effect.DEF_BOOST,foodPower*1.75,0,9600,0,0)
     pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower,0,9600,0,0)
     if (pet:getSystem() == 11) then         -- elemental spirit
         pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower/2,0,9600,0,0)
