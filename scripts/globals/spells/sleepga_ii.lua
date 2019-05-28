@@ -30,7 +30,7 @@ function onSpellCast(caster, target, spell)
     if resist >= 0.5 then
         if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.SLEEPRES, currentResist - 3)
+            target:setMod(dsp.mod.SLEEPRES, currentResist + 5)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end

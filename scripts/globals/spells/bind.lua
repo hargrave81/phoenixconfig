@@ -17,7 +17,7 @@ function onSpellCast(caster, target, spell)
     -- Duration, including resistance.  May need more research.
     local duration = calculateDuration(60, spell:getSkillType(), spell:getSpellGroup(), caster, target)
 
-    local currentResist = target:getMobMod(dsp.mobMod.BUILD_RESIST)
+    local currentResist = target:getMod(dsp.mod.BINDRES)
     if currentResist == nil then
         currentResist = 0
     end
@@ -34,7 +34,7 @@ function onSpellCast(caster, target, spell)
         --Try to erase a weaker bind.
         if target:addStatusEffect(params.effect, target:speed(), 0 , duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMobMod(dsp.mobMod.BUILD_RESIST, currentResist + 1)
+            target:setMod(dsp.mod.BINDRES, currentResist + 5)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end
