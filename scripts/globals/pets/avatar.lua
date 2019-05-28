@@ -11,9 +11,7 @@ function onMobDeath(mob, player, isKiller)
 
 end;
 
--- on engage, return the delay reduction based on skill to cast on battle start
-function onPetEngage(pet,delay)
-    -- return incoming delay value to return to legacy/monster mode        
+function onMobSpawn(pet)
     local master = pet:getMaster()        
     local mLvl = master:getMainLvl()
     local foodPower = 3 + (mLvl / 10)
@@ -28,16 +26,27 @@ function onPetEngage(pet,delay)
         pet:addStatusEffect(dsp.effect.INT_BOOST,(foodPower/2)*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.MND_BOOST,foodPower*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*boost,0,9600,0,0)
     else
         if pet:getFamily() == 379 or pet:getFamily() == 34 then
             foodPower = foodPower * .7
         end
+        pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*2*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.MND_BOOST,foodPower*2*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower*2*boost,0,9600,0,0)        
         pet:addStatusEffect(dsp.effect.ATTACK_BOOST,foodPower*1.5*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.ACCURACY_BOOST,foodPower*1.5*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower*2.5*boost,0,9600,0,0)
     end
+    local diff = (pet:getMaxHP() - pet:getHP())
+    pet:addHP(diff)
+end
+
+-- on engage, return the delay reduction based on skill to cast on battle start
+function onPetEngage(pet,delay)
+    -- return incoming delay value to return to legacy/monster mode        
+    local master = pet:getMaster()        
+        
     local fastCast = 0
     if (pet:getSystem() == 11) then      -- elemental spirit   
         local smnSkill = getSummoningSkillOverCap(pet)
