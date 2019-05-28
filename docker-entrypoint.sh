@@ -9,6 +9,7 @@ MYSQL_PASSWORD=${MYSQL_PASSWORD:-darkstar}
 MYSQL_DATABASE=${MYSQL_DATABASE:-dspdb}
 SERVERNAME=${SERVERNAME:-DarkStar}
 APP=${APP:-GAME}
+MSG_SERVER=${MSG_SERVER:-172.17.0.1}
 
 ## modify configuration
 function modConfig() {
@@ -22,6 +23,7 @@ function modConfig() {
             sed -i "s/^\(mysql_login:\s*\).*\$/\1$MYSQL_LOGIN/" /darkstar/conf/$f
             sed -i "s/^\(mysql_password:\s*\).*\$/\1$MYSQL_PASSWORD/" /darkstar/conf/$f
             sed -i "s/^\(mysql_database:\s*\).*\$/\1$MYSQL_DATABASE/" /darkstar/conf/$f
+            sed -i "s/^\(msg_server_ip:\s*\).*\$/\1$MSG_SERVER/" /darkstar/conf/$f
         fi
     done
 
