@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Sleep II
+-- Spell: Gravity
 -----------------------------------------
 require("scripts/globals/magic")
 require("scripts/globals/msg")
@@ -11,35 +11,35 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
+    -- Pull base stats.
     local dINT = caster:getStat(dsp.mod.INT) - target:getStat(dsp.mod.INT)
 
-    local duration = calculateDuration(90, spell:getSkillType(), spell:getSpellGroup(), caster, target)
-    
-    local currentResist = target:getMod(dsp.mod.SLEEPRES)
+    local currentResist = target:getMod(dsp.mod.GRAVITYRES)
     if currentResist == nil then
         currentResist = 0
     end
+
+    local power = calculatePotency(26, spell:getSkillType(), caster, target)
+
+    -- Duration, including resistance.  Unconfirmed.
+    local duration = calculateDuration(120, spell:getSkillType(), spell:getSpellGroup(), caster, target)
 
     local params = {}
     params.diff = dINT
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = dsp.effect.SLEEP_II
-    
+    params.effect = dsp.effect.WEIGHT
+    local resist = applyResistanceEffect(caster, target, spell, params)
 
-    local resist = applyResistanceEffect(caster, target, spell, params)    
-
-    caster:PrintToPlayer("sleep resist->"..currentResist.."  calc ->"..resist)
-
-    if resist >= 0.5 then
-        if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
+    if resist >= 0.5 then --Do it!
+        if target:addStatusEffect(params.effect, power, 0, duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.SLEEPRES, currentResist + 16)
+            target:setMod(dsp.mod.GRAVITYRES, currentResist + 12)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end
     else
-        spell:setMsg(dsp.msg.basic.MAGIC_RESIST)
+        spell:setMsg(dsp.msg.basic.MAGIC_RESIST_2)
     end
 
     return params.effect

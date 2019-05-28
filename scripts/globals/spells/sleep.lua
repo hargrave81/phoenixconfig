@@ -29,11 +29,11 @@ function onSpellCast(caster, target, spell)
     local resist = applyResistanceEffect(caster, target, spell, params)    
     
     caster:PrintToPlayer("sleep resist->"..currentResist.."  calc ->"..resist)
-    
+
     if resist >= 0.5 then
         if target:addStatusEffect(params.effect, 1, 0, duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)            
-            target:setMod(dsp.mod.SLEEPRES, currentResist + 5)
+            target:setMod(dsp.mod.SLEEPRES, currentResist + 8)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end

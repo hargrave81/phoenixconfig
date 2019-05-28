@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Sleepga II
+-- Spell: Silence
 -----------------------------------------
 require("scripts/globals/magic")
 require("scripts/globals/msg")
@@ -11,28 +11,29 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
-    local dINT = caster:getStat(dsp.mod.INT) - target:getStat(dsp.mod.INT)
+    local dMND = (caster:getStat(dsp.mod.MND) - target:getStat(dsp.mod.MND))
 
-    local duration = calculateDuration(90, spell:getSkillType(), spell:getSpellGroup(), caster, target)
-
-    local currentResist = target:getMod(dsp.mod.SLEEPRES)
+    local currentResist = target:getMod(dsp.mod.SILENCERES)
     if currentResist == nil then
         currentResist = 0
     end
-    
+
+    local duration = calculateDuration(120, spell:getSkillType(), spell:getSpellGroup(), caster, target)
+
+    --Resist
     local params = {}
-    params.diff = dINT
+    params.diff = dMND
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = dsp.effect.SLEEP_II
+    params.effect = dsp.effect.SILENCE
     local resist = applyResistanceEffect(caster, target, spell, params)
 
-    if resist >= 0.5 then
-        if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
+    if resist >= 0.5 then --Do it!
+        if target:addStatusEffect(params.effect ,1, 0, duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.SLEEPRES, currentResist + 22)
+            target:setMod(dsp.mod.SILENCERES, currentResist + 10)
         else
-            spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
+            spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT) -- no effect
         end
     else
         spell:setMsg(dsp.msg.basic.MAGIC_RESIST)

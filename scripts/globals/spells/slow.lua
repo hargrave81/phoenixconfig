@@ -1,9 +1,10 @@
 -----------------------------------------
--- Spell: Sleepga II
+-- Spell: Slow
 -----------------------------------------
 require("scripts/globals/magic")
 require("scripts/globals/msg")
 require("scripts/globals/status")
+require("scripts/globals/utils")
 -----------------------------------------
 
 function onMagicCastingCheck(caster, target, spell)
@@ -11,26 +12,33 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
-    local dINT = caster:getStat(dsp.mod.INT) - target:getStat(dsp.mod.INT)
+    local dMND = caster:getStat(dsp.mod.MND) - target:getStat(dsp.mod.MND)
 
-    local duration = calculateDuration(90, spell:getSkillType(), spell:getSpellGroup(), caster, target)
-
-    local currentResist = target:getMod(dsp.mod.SLEEPRES)
+    local currentResist = target:getMod(dsp.mod.SLOWRES)
     if currentResist == nil then
         currentResist = 0
     end
-    
+
+    --Power
+    -- Lowest ~7.3%
+    -- Highest ~29.2%
+    local power = utils.clamp(math.floor(dMND * 73 / 5) + 1825, 730, 2920)
+    power = calculatePotency(power, spell:getSkillType(), caster, target)
+
+    --Duration
+    local duration = calculateDuration(180, spell:getSkillType(), spell:getSpellGroup(), caster, target)
+
     local params = {}
-    params.diff = dINT
+    params.diff = dMND
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = dsp.effect.SLEEP_II
+    params.effect = dsp.effect.SLOW
     local resist = applyResistanceEffect(caster, target, spell, params)
 
-    if resist >= 0.5 then
-        if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
+    if resist >= 0.5 then --Do it!
+        if target:addStatusEffect(params.effect, power, 0, duration * resist, 0, 1) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.SLEEPRES, currentResist + 22)
+            target:setMod(dsp.mod.SLOWRES, currentResist + 5)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end

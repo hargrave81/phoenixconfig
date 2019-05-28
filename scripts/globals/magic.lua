@@ -1208,12 +1208,40 @@ function doElementalNuke(caster, spell, target, spellParams)
     --add on bonuses (staff/day/weather/jas/mab/etc all go in this function)
     DMG = addBonuses(caster, spell, target, DMG, spellParams);
 
+    local currentResist = 0
+    local mod = dsp.mod.NONE
     --add in target adjustment
     local ele = spell:getElement();
+    if ele == dsp.magic.element.FIRE then
+        mod = dsp.mod.FIRERES
+    elseif ele == dsp.magic.element.EARTH then
+        mod = dsp.mod.EARTHRES
+    elseif ele == dsp.magic.element.WATER then
+        mod = dsp.mod.WATERRES
+    elseif ele == dsp.magic.element.WIND then
+        mod = dsp.mod.WINDRES
+    elseif ele == dsp.magic.element.ICE then
+        mod = dsp.mod.ICERES
+    elseif ele == dsp.magic.element.LIGHTNING then
+        mod = dsp.mod.THUNDERRES
+    elseif ele == dsp.magic.element.LIGHT then
+        mod = dsp.mod.LIGHTRES
+    elseif ele == dsp.magic.element.DARK then
+        mod = dsp.mod.DARKRES
+    end
+    if mod ~= dsp.mod.NONE then 
+        currentResist = target:getMod(mod)
+        if currentResist == nil then
+            currentResist = 0
+        end
+        target:setMod(mod, currentResist + 10 + spellParams.M0)
+    end
     DMG = adjustForTarget(target, DMG, ele);
 
     --add in final adjustments
     DMG = finalMagicAdjustments(caster, target, spell, DMG);
+
+
 
     return DMG;
 end

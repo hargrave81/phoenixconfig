@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Sleep II
+-- Spell: Poisonga
 -----------------------------------------
 require("scripts/globals/magic")
 require("scripts/globals/msg")
@@ -13,32 +13,35 @@ end
 function onSpellCast(caster, target, spell)
     local dINT = caster:getStat(dsp.mod.INT) - target:getStat(dsp.mod.INT)
 
-    local duration = calculateDuration(90, spell:getSkillType(), spell:getSpellGroup(), caster, target)
-    
-    local currentResist = target:getMod(dsp.mod.SLEEPRES)
+    local currentResist = target:getMod(dsp.mod.POISONRES)
     if currentResist == nil then
         currentResist = 0
     end
+
+    local skill = caster:getSkillLevel(dsp.skill.ENFEEBLING_MAGIC)
+    local power = math.max(skill / 25, 1)
+    if skill > 400 then
+        power = math.min((skill - 225) / 5, 55) -- Cap is 55 hp/tick
+    end
+    power = calculatePotency(power, spell:getSkillType(), caster, target)
+
+    local duration = calculateDuration(60, spell:getSkillType(), spell:getSpellGroup(), caster, target)
 
     local params = {}
     params.diff = dINT
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = dsp.effect.SLEEP_II
+    params.effect = dsp.effect.POISON
+    local resist = applyResistanceEffect(caster, target, spell, params)
     
-
-    local resist = applyResistanceEffect(caster, target, spell, params)    
-
-    caster:PrintToPlayer("sleep resist->"..currentResist.."  calc ->"..resist)
-
-    if resist >= 0.5 then
-        if target:addStatusEffect(params.effect, 2, 0, duration * resist) then
+    if resist >= 0.5 then -- effect taken
+        if target:addStatusEffect(params.effect, power, 3, duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.SLEEPRES, currentResist + 16)
+            target:setMod(dsp.mod.POISONRES, currentResist + 9)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end
-    else
+    else -- resist entirely.
         spell:setMsg(dsp.msg.basic.MAGIC_RESIST)
     end
 

@@ -1,9 +1,10 @@
 -----------------------------------------
--- Spell: Bind
+-- Spell: Blind
 -----------------------------------------
 require("scripts/globals/magic")
 require("scripts/globals/msg")
 require("scripts/globals/status")
+require("scripts/globals/utils")
 -----------------------------------------
 
 function onMagicCastingCheck(caster, target, spell)
@@ -12,29 +13,33 @@ end
 
 function onSpellCast(caster, target, spell)
     -- Pull base stats.
-    local dINT = caster:getStat(dsp.mod.INT) - target:getStat(dsp.mod.INT)
+    local dINT = caster:getStat(dsp.mod.INT) - target:getStat(dsp.mod.MND) -- blind uses caster INT vs target MND
 
-    -- Duration, including resistance.  May need more research.
-    local duration = calculateDuration(60, spell:getSkillType(), spell:getSpellGroup(), caster, target)
-
-    local currentResist = target:getMod(dsp.mod.BINDRES)
+    local currentResist = target:getMod(dsp.mod.BLINDRES)
     if currentResist == nil then
         currentResist = 0
     end
 
-    -- Resist
+    -- Base power
+    -- Min cap: 5 at -80 dINT
+    -- Max cap: 50 at 120 dINT
+    local basePotency = utils.clamp(math.floor(dINT * 9 / 40 + 23), 5, 50)
+    local potency = calculatePotency(basePotency, spell:getSkillType(), caster, target)
+
+    -- Duration, including resistance.  Unconfirmed.
+    local duration = calculateDuration(180, spell:getSkillType(), spell:getSpellGroup(), caster, target)
+
     local params = {}
     params.diff = dINT
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = dsp.effect.BIND
+    params.effect = dsp.effect.BLINDNESS
     local resist = applyResistanceEffect(caster, target, spell, params)
 
     if resist >= 0.5 then --Do it!
-        --Try to erase a weaker bind.
-        if target:addStatusEffect(params.effect, target:speed(), 0 , duration * resist) then
+        if target:addStatusEffect(params.effect, potency, 0 , duration * resist) then
             spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.BINDRES, currentResist + 10)
+            target:setMod(dsp.mod.BLINDRES, currentResist + 10)
         else
             spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
         end
