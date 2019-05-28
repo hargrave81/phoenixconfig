@@ -1074,16 +1074,16 @@ bool CMobController::IsSpellReady(float currentDistance)
 void CMobController::DecayResist()
 {
     int16 baseValue = 0;
-    int elMod[8] = {Mod::FIRERES,Mod::ICERES,Mod::WINDRES,Mod::EARTHRES,
+    Mod elMod[8] = {Mod::FIRERES,Mod::ICERES,Mod::WINDRES,Mod::EARTHRES,
                     Mod::THUNDERRES,Mod::WATERRES,Mod::LIGHTRES,Mod::DARKRES};
 
-    int stMod[11] = {Mod::SLEEPRES,Mod::POISONRES,Mod::PARALYZERES,Mod::BLINDRES,
+    Mod stMod[11] = {Mod::SLEEPRES,Mod::POISONRES,Mod::PARALYZERES,Mod::BLINDRES,
                      Mod::SILENCERES,Mod::BINDRES,Mod::GRAVITYRES,Mod::SLOWRES,
                      Mod::STUNRES,Mod::CHARMRES,Mod::LULLABYRES};
     
     for(int i = 0; i < 8; i++)
     {
-        baseValue = PMob->getMobMod(100+elMod[i]);
+        baseValue = PMob->getMobMod(100+(int)elMod[i]);
         if(PMob->getMod(elMod[i]) > baseValue) 
         { 
             if(dsprand::GetRandomNumber(10) == 0)
@@ -1093,7 +1093,7 @@ void CMobController::DecayResist()
 
     for(int i = 0; i < 11; i++)
     {
-        baseValue = PMob->getMobMod(stMod[i]);
+        baseValue = PMob->getMobMod((int)stMod[i]);
         if(PMob->getMod(stMod[i]) > baseValue) 
         { 
             if(dsprand::GetRandomNumber(10) == 0)
