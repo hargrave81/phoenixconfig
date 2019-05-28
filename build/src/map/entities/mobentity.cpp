@@ -553,25 +553,25 @@ void CMobEntity::Spawn()
     }
 
     // note base resists
-    setMobMod(100+(int)Mod::FIRERES,getMod(Mod::FIRERES));
-    setMobMod(100+(int)Mod::ICERES,getMod(Mod::ICERES));
-    setMobMod(100+(int)Mod::WINDRES,getMod(Mod::WINDRES));
-    setMobMod(100+(int)Mod::EARTHRES,getMod(Mod::EARTHRES));
-    setMobMod(100+(int)Mod::THUNDERRES,getMod(Mod::THUNDERRES));
-    setMobMod(100+(int)Mod::WATERRES,getMod(Mod::WATERRES));
-    setMobMod(100+(int)Mod::LIGHTRES,getMod(Mod::LIGHTRES));
-    setMobMod(100+(int)Mod::DARKRES,getMod(Mod::DARKRES));
-    setMobMod((int)Mod::SLEEPRES,getMod(Mod::SLEEPRES));
-    setMobMod((int)Mod::POISONRES,getMod(Mod::POISONRES));
-    setMobMod((int)Mod::PARALYZERES,getMod(Mod::PARALYZERES));
-    setMobMod((int)Mod::BLINDRES,getMod(Mod::BLINDRES));
-    setMobMod((int)Mod::SILENCERES,getMod(Mod::SILENCERES));
-    setMobMod((int)Mod::BINDRES,getMod(Mod::BINDRES));
-    setMobMod((int)Mod::GRAVITYRES,getMod(Mod::GRAVITYRES));
-    setMobMod((int)Mod::SLOWRES,getMod(Mod::SLOWRES));
-    setMobMod((int)Mod::STUNRES,getMod(Mod::STUNRES));
-    setMobMod((int)Mod::CHARMRES,getMod(Mod::CHARMRES));
-    setMobMod((int)Mod::LULLABYRES,getMod(Mod::LULLABYRES));
+    PMob->setMobMod(100+(int)Mod::FIRERES,PMob->getMod(Mod::FIRERES));
+    PMob->setMobMod(100+(int)Mod::ICERES,PMob->getMod(Mod::ICERES));
+    PMob->setMobMod(100+(int)Mod::WINDRES,PMob->getMod(Mod::WINDRES));
+    PMob->setMobMod(100+(int)Mod::EARTHRES,PMob->getMod(Mod::EARTHRES));
+    PMob->setMobMod(100+(int)Mod::THUNDERRES,PMob->getMod(Mod::THUNDERRES));
+    PMob->setMobMod(100+(int)Mod::WATERRES,PMob->getMod(Mod::WATERRES));
+    PMob->setMobMod(100+(int)Mod::LIGHTRES,PMob->getMod(Mod::LIGHTRES));
+    PMob->setMobMod(100+(int)Mod::DARKRES,PMob->getMod(Mod::DARKRES));
+    PMob->setMobMod((int)Mod::SLEEPRES,PMob->getMod(Mod::SLEEPRES));
+    PMob->setMobMod((int)Mod::POISONRES,PMob->getMod(Mod::POISONRES));
+    PMob->setMobMod((int)Mod::PARALYZERES,PMob->getMod(Mod::PARALYZERES));
+    PMob->setMobMod((int)Mod::BLINDRES,PMob->getMod(Mod::BLINDRES));
+    PMob->setMobMod((int)Mod::SILENCERES,PMob->getMod(Mod::SILENCERES));
+    PMob->setMobMod((int)Mod::BINDRES,PMob->getMod(Mod::BINDRES));
+    PMob->setMobMod((int)Mod::GRAVITYRES,PMob->getMod(Mod::GRAVITYRES));
+    PMob->setMobMod((int)Mod::SLOWRES,PMob->getMod(Mod::SLOWRES));
+    PMob->setMobMod((int)Mod::STUNRES,PMob->getMod(Mod::STUNRES));
+    PMob->setMobMod((int)Mod::CHARMRES,PMob->getMod(Mod::CHARMRES));
+    PMob->setMobMod((int)Mod::LULLABYRES,PMob->getMod(Mod::LULLABYRES));
     
     m_DespawnTimer = time_point::min();
     luautils::OnMobSpawn(this);
