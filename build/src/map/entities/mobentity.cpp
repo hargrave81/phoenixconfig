@@ -554,25 +554,25 @@ void CMobEntity::Spawn()
     
     //CBattleEntity* _target = (CBattleEntity*)PMob->GetEntity(PMob->id, TYPE_PC | TYPE_MOB | TYPE_PET);
     // note base resists
-    PMob->setMobMod(100+(int)Mod::FIRERES,CBattleEntity::getMod(Mod::FIRERES));
-    PMob->setMobMod(100+(int)Mod::ICERES,CBattleEntity::getMod(Mod::ICERES));
-    PMob->setMobMod(100+(int)Mod::WINDRES,CBattleEntity::getMod(Mod::WINDRES));
-    PMob->setMobMod(100+(int)Mod::EARTHRES,CBattleEntity::getMod(Mod::EARTHRES));
-    PMob->setMobMod(100+(int)Mod::THUNDERRES,CBattleEntity::getMod(Mod::THUNDERRES));
-    PMob->setMobMod(100+(int)Mod::WATERRES,CBattleEntity::getMod(Mod::WATERRES));
-    PMob->setMobMod(100+(int)Mod::LIGHTRES,CBattleEntity::getMod(Mod::LIGHTRES));
-    PMob->setMobMod(100+(int)Mod::DARKRES,CBattleEntity::getMod(Mod::DARKRES));
-    PMob->setMobMod((int)Mod::SLEEPRES,CBattleEntity::getMod(Mod::SLEEPRES));
-    PMob->setMobMod((int)Mod::POISONRES,CBattleEntity::getMod(Mod::POISONRES));
-    PMob->setMobMod((int)Mod::PARALYZERES,CBattleEntity::getMod(Mod::PARALYZERES));
-    PMob->setMobMod((int)Mod::BLINDRES,CBattleEntity::getMod(Mod::BLINDRES));
-    PMob->setMobMod((int)Mod::SILENCERES,CBattleEntity::getMod(Mod::SILENCERES));
-    PMob->setMobMod((int)Mod::BINDRES,CBattleEntity::getMod(Mod::BINDRES));
-    PMob->setMobMod((int)Mod::GRAVITYRES,CBattleEntity::getMod(Mod::GRAVITYRES));
-    PMob->setMobMod((int)Mod::SLOWRES,CBattleEntity::getMod(Mod::SLOWRES));
-    PMob->setMobMod((int)Mod::STUNRES,CBattleEntity::getMod(Mod::STUNRES));
-    PMob->setMobMod((int)Mod::CHARMRES,CBattleEntity::getMod(Mod::CHARMRES));
-    PMob->setMobMod((int)Mod::LULLABYRES,CBattleEntity::getMod(Mod::LULLABYRES));
+    setMobMod(100+(int)Mod::FIRERES,CBattleEntity::getMod(Mod::FIRERES));
+    setMobMod(100+(int)Mod::ICERES,CBattleEntity::getMod(Mod::ICERES));
+    setMobMod(100+(int)Mod::WINDRES,CBattleEntity::getMod(Mod::WINDRES));
+    setMobMod(100+(int)Mod::EARTHRES,CBattleEntity::getMod(Mod::EARTHRES));
+    setMobMod(100+(int)Mod::THUNDERRES,CBattleEntity::getMod(Mod::THUNDERRES));
+    setMobMod(100+(int)Mod::WATERRES,CBattleEntity::getMod(Mod::WATERRES));
+    setMobMod(100+(int)Mod::LIGHTRES,CBattleEntity::getMod(Mod::LIGHTRES));
+    setMobMod(100+(int)Mod::DARKRES,CBattleEntity::getMod(Mod::DARKRES));
+    setMobMod((int)Mod::SLEEPRES,CBattleEntity::getMod(Mod::SLEEPRES));
+    setMobMod((int)Mod::POISONRES,CBattleEntity::getMod(Mod::POISONRES));
+    setMobMod((int)Mod::PARALYZERES,CBattleEntity::getMod(Mod::PARALYZERES));
+    setMobMod((int)Mod::BLINDRES,CBattleEntity::getMod(Mod::BLINDRES));
+    setMobMod((int)Mod::SILENCERES,CBattleEntity::getMod(Mod::SILENCERES));
+    setMobMod((int)Mod::BINDRES,CBattleEntity::getMod(Mod::BINDRES));
+    setMobMod((int)Mod::GRAVITYRES,CBattleEntity::getMod(Mod::GRAVITYRES));
+    setMobMod((int)Mod::SLOWRES,CBattleEntity::getMod(Mod::SLOWRES));
+    setMobMod((int)Mod::STUNRES,CBattleEntity::getMod(Mod::STUNRES));
+    setMobMod((int)Mod::CHARMRES,CBattleEntity::getMod(Mod::CHARMRES));
+    setMobMod((int)Mod::LULLABYRES,CBattleEntity::getMod(Mod::LULLABYRES));
     
     m_DespawnTimer = time_point::min();
     luautils::OnMobSpawn(this);
