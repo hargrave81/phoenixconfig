@@ -17,7 +17,7 @@ function onMobSpawn(pet)
     local foodPower = 3 + (mLvl / 10)
     
     local summoningSkill = master:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
-    local boost = summoningSkill / master:getMaxSkillLevel(master:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
+    local boost = math.max(.5,summoningSkill / master:getMaxSkillLevel(master:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC))
     
     pet:addStatusEffect(dsp.effect.DEF_BOOST,foodPower*1.75*boost,0,9600,0,0)
     pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower*boost,0,9600,0,0)    

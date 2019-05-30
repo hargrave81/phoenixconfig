@@ -4,7 +4,7 @@ require("scripts/globals/titles")
 
 cmdprops =
 {
-    permission = 1,
+    permission = 5,
     parameters = "si"
 };
 
