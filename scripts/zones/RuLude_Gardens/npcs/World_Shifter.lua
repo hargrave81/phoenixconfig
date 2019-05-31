@@ -1,0 +1,5 @@
+-----------------------------------
+-- Area: Ru'Lude Gardens
+-- NPC: World Shifter
+-- Standard Merchant NPC
+-----------------------------------

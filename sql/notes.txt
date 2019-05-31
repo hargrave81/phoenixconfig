@@ -1,0 +1,4 @@
+Free index
+mob pool 6510
+treasure 4857
+mob group 15012
