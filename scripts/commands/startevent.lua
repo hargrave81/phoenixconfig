@@ -6,6 +6,7 @@ cmdprops =
 };
 
 function onTrigger(player,target, event)
-    target:startEvent(event);        
+    local targ = GetPlayerByName( target );    
+    targ:startEvent(event);        
 end;
 
