@@ -40,7 +40,7 @@ WHERE npcid = 17772696; /*  worldshifter */
 
 /* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence */
 INSERT INTO mob_groups VALUES
-(15008,6506,240,9000,0,4853,6000,1000,61,64,0); -- kazam
+(15008,6506,123,9000,0,4853,6000,1000,61,64,0); -- kazam
 
 INSERT INTO mob_spawn_points VALUES 
 (17281550,'Rhapsodic_Raaz','Rhapsodic Razz',15008,-233.2,.205,400.4,90);
@@ -80,7 +80,7 @@ INSERT INTO mob_groups VALUES
 (15009,6507,52,9000,0,4854,15000,3000,68,70,0); -- bhaflau thickets
 
 INSERT INTO mob_spawn_points VALUES 
-(16990586,'Mamuuja','Mamuuja',15009,-233.2,.205,400.4,90);
+(16990586,'Mamuuja','Mamuuja',15009,-167.8, -15.5, -591.7,90);
 
 INSERT INTO mob_pools VALUES 
 (6507,'Mamuuja','Mamuuja',470,0x00007E0800000000000000000000000000000000,1,4,1,340,120,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
@@ -127,7 +127,7 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15010,6508,153,9000,0,4855,15000,3000,65,67,0); -- the Boyahda Tree
+(15010,6508,153,9000,0,4855,15000,3000,63,65,0); -- the Boyahda Tree
 
 INSERT INTO mob_spawn_points VALUES 
 (17404353,'Hidhaegg','Hidhaegg',15010,160.58,8.76,-3.53,90);
@@ -186,10 +186,10 @@ INSERT INTO mob_groups VALUES
 (15011,6509,153,9000,0,4856,15000,3000,42,44,0); -- East Altepa
 
 INSERT INTO mob_spawn_points VALUES 
-(17404353,'Hidhaegg','Hidhaegg',15011,-36.6,-8,198.4,90);
+(17244587,'Rhapsodic_Raaz','RhapsodicRaaz',15011,-36.6,-8,198.4,90);
 
 INSERT INTO mob_pools VALUES 
-(6509,'Hidhaegg','Hidhaegg',470,0x00007E0800000000000000000000000000000000,1,4,1,340,70,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
+(6509,'Rhapsodic_Raaz','Rhapsodic_Raaz',470,0x00007E0800000000000000000000000000000000,1,4,1,340,70,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
 
 INSERT INTO mob_droplist VALUES
 (4856,0,0,1000,14401,200); -- duende cotehardie
