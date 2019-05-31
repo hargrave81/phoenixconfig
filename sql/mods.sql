@@ -70,7 +70,9 @@ INSERT INTO item_mods(itemId, modId, value) VALUES
 (17049, 30, 3), -- custom maple wand
 (15198, 64, 6), -- Sprout Beret Combat skill up
 (15198, 65, 6), -- Sprout Beret Magic skill up
+(15198, 945, 30), -- Increase blue spell learning
 (15198, 1, 1); -- Sprout Beret DEF
+
 
 
 UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6163; -- udpdate the G2 NMs
