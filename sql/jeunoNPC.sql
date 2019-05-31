@@ -77,7 +77,7 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15009,6507,52,9000,0,4854,15000,3000,68,70,0); -- bhaflau thickets
+(15009,6507,52,9000,0,4854,15000,3000,72,73,0); -- bhaflau thickets
 
 INSERT INTO mob_spawn_points VALUES 
 (16990586,'Mamuuja','Mamuuja',15009,-167.8, -15.5, -591.7,90);
@@ -183,7 +183,7 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15011,6509,153,9000,0,4856,15000,3000,42,44,0); -- East Altepa
+(15011,6509,114,9000,0,4856,15000,3000,42,44,0); -- East Altepa
 
 INSERT INTO mob_spawn_points VALUES 
 (17244587,'Rhapsodic_Raaz','RhapsodicRaaz',15011,-36.6,-8,198.4,90);
