@@ -1211,6 +1211,8 @@ function doElementalNuke(caster, spell, target, spellParams)
         -- we may decrease your overall dmg
         if caster.getMainJob() ~= dsp.job.RDM and caster.getMainJob() ~= dsp.job.BLM and caster.getMainJob() ~= dsp.job.SCH then
             DMG = DMG * .6;
+        elseif caster.getMainJob() == dsp.job.RDM then
+            DMG = DMG * .89;
         end
     end
 
