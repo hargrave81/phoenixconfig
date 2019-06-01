@@ -19,21 +19,21 @@
 --  17780783  odasel
 */
 
-
+use dspdb;
 UPDATE npc_list SET pos_x = -6.264, pos_z = -10.621, pos_y = 3, pos_rot = 0,
- content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
+ content_tag = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
 WHERE npcid = 17772722; /*  shinkan A */
 
 UPDATE npc_list SET pos_x = -10.404, pos_z = -10.621, pos_y = 3, pos_rot = 0,
- content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21 
+ content_tag = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21 
 WHERE npcid = 17772723; /*  shinkan B */
 
 UPDATE npc_list SET pos_x = -15.223, pos_z = -10.621, pos_y = 3, pos_rot = 0,
- content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
+ content_tag = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
 WHERE npcid = 17772724; /*  shinkan C */
 
 UPDATE npc_list SET pos_x = -10.589, pos_z = -2.057, pos_y = 3, pos_rot = 180,
- content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
+ content_tag = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
 WHERE npcid = 17772696; /*  worldshifter */
 
 
@@ -153,7 +153,7 @@ INSERT INTO mob_droplist VALUES
 
 INSERT INTO mob_droplist VALUES
 (4855,0,0,1000,15012,100);  -- cobra gloves
-INSERT INTO mob_dropl1st VALUES
+INSERT INTO mob_droplist VALUES
 (4855,0,0,1000,15011,100);  -- cobra mittens
 INSERT INTO mob_droplist VALUES
 (4855,0,0,1000,15010,100);  -- fourth hentzes
