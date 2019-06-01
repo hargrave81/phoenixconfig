@@ -11,6 +11,8 @@ function onMobSpawn(pet)
     pet:addStatusEffect(dsp.effect.STR_BOOST,foodPower*2,0,9600,0,0)
     pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower,0,9600,0,0)
     pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*2,0,9600,0,0)
+    pet:addStatusEffect(dsp.effect.ACCURACY_BOOST,foodPower,0,9600,0,0)
+    pet:addStatusEffect(dsp.effect.DEFENSE_BOOST,foodPower,0,9600,0,0)
     local diff = (pet:getMaxHP() - pet:getHP())
     pet:addHP(diff)
 end

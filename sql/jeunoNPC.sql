@@ -190,40 +190,55 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15011,6509,114,9000,0,4856,23000,5000,42,44,0); -- East Altepa
+(15011,6509,114,9000,0,4856,23000,5000,56,58,0); -- East Altepa
 
 INSERT INTO mob_spawn_points VALUES 
-(17244587,'Rhapsodic_Raaz','RhapsodicRaaz',15011,-36.6,-8,198.4,90);
+(17244587,'Rhapsodic_Raaz','Rhapsodic Raaz',15011,-36.6,-8,198.4,90);
 
 INSERT INTO mob_pools VALUES 
 (6509,'Rhapsodic_Raaz','Rhapsodic_Raaz',470,0x00007E0800000000000000000000000000000000,
 1,4,1,400,130,0,1,0,0,0,7,0,1,129,4,0,0,2,0,470);
 
+
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14401,50); -- duende cotehardie
+(4856,0,0,1000,4175,100); -- vile elixer +1
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14402,50); -- nokizaru Gi
+(4856,0,0,1000,1262,20); -- dark ore
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14403,50);  -- rapparee harness
+(4856,0,0,1000,4751,30); -- erase
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14404,50);  -- shm hara ate
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14405,50);  -- wayvern mail
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14406,50);  -- shikaree aketon
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14407,50);  -- cerise doublet
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14408,50);  -- glamor jupon
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14409,50);  -- gloom breastplate
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14410,50);  -- nimbus doublet
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14411,50);  -- aikido gi
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14412,50);  -- parade cuirass
-INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,14413,50);  -- gaudy harness
+(4856,0,0,1000,4714,30); -- phalanx
 
 
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14401,50); -- duende cotehardie
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14402,50); -- nokizaru Gi
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14403,50);  -- rapparee harness
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14404,50);  -- shm hara ate
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14405,50);  -- wayvern mail
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14406,50);  -- shikaree aketon
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14407,50);  -- cerise doublet
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14408,50);  -- glamor jupon
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14409,50);  -- gloom breastplate
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14410,50);  -- nimbus doublet
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14411,50);  -- aikido gi
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14412,50);  -- parade cuirass
+INSERT INTO mob_droplist VALUES
+(4857,0,0,1000,14413,50);  -- gaudy harness
+
+
+
+INSERT INTO mob_droplist VALUES (156,0,0,1000,836,50); -- add damascene cloth to  aquarius
+INSERT INTO mob_droplist VALUES (156,0,0,1000,836,300);
+INSERT INTO mob_droplist VALUES (156,0,0,1000,836,150);
