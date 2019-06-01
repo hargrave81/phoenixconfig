@@ -208,6 +208,8 @@ INSERT INTO mob_droplist VALUES
 (4856,0,0,1000,4751,30); -- erase
 INSERT INTO mob_droplist VALUES
 (4856,0,0,1000,4714,30); -- phalanx
+INSERT INTO mob_droplist VALUES
+(4856,0,0,1000,837,150); -- malboro fiber
 
 
 INSERT INTO mob_droplist VALUES
