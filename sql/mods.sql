@@ -129,7 +129,8 @@ INSERT INTO mob_groups VALUES
 (15007,6505,126,240,0,4851,4000,1000,48,50,0); -- Qufim
 
 UPDATE mob_family_system -- decrease the power of the dragon
- SET ACC = 2, DEF = 0, EVA = 2, MND = 5
+ SET ACC = 2, DEF = 0, EVA = 2, MND = 3, fire = 1.5, ice = 1.5, earth = 1.5, lightning = 1.5,
+ slash = .75, pierce = .75
  WHERE familyid = 470;
 
 INSERT INTO mob_spawn_points VALUES 

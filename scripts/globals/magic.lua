@@ -1125,6 +1125,7 @@ function doElementalNuke(caster, spell, target, spellParams)
     local V = 0;
     local M = 0;
 
+    
     if USE_OLD_MAGIC_DAMAGE and spellParams.V ~= nil and spellParams.M ~= nil then
         V = spellParams.V; -- Base value
         M = spellParams.M; -- Tier multiplier
@@ -1204,6 +1205,15 @@ function doElementalNuke(caster, spell, target, spellParams)
 
     --get the resisted damage
     DMG = DMG * resist;
+
+    -- fix for BLM sub job 
+    if caster.getSubJob() == dsp.job.BLM or caster.getSubJob() == dsp.job.RDM or caster.getSubJob() == dsp.job.SCH or caster.getSubJob() == dsp.job.DRK then
+        -- we may decrease your overall dmg
+        if caster.getMainJob() ~= dsp.job.RDM and caster.getMainJob() ~= dsp.job.BLM and caster.getMainJob() ~= dsp.job.SCH then
+            DMG = DMG * .6;
+        end
+    end
+
 
     --add on bonuses (staff/day/weather/jas/mab/etc all go in this function)
     DMG = addBonuses(caster, spell, target, DMG, spellParams);

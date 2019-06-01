@@ -20,16 +20,20 @@
 */
 
 
-UPDATE npc_list SET pos_x = -6.264, pos_y = -10.621, pos_z = 3, pos_rot = 0
+UPDATE npc_list SET pos_x = -6.264, pos_z = -10.621, pos_y = 3, pos_rot = 0,
+ content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
 WHERE npcid = 17772722; /*  shinkan A */
 
-UPDATE npc_list SET pos_x = -10.404, pos_y = -10.621, pos_z = 3, pos_rot = 0
+UPDATE npc_list SET pos_x = -10.404, pos_z = -10.621, pos_y = 3, pos_rot = 0,
+ content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21 
 WHERE npcid = 17772723; /*  shinkan B */
 
-UPDATE npc_list SET pos_x = -15.223, pos_y = -10.621, pos_z = 3, pos_rot = 0
+UPDATE npc_list SET pos_x = -15.223, pos_z = -10.621, pos_y = 3, pos_rot = 0,
+ content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
 WHERE npcid = 17772724; /*  shinkan C */
 
-UPDATE npc_list SET pos_x = -10.589, pos_y = -2.057, pos_z = 3, pos_rot = 180
+UPDATE npc_list SET pos_x = -10.589, pos_z = -2.057, pos_y = 3, pos_rot = 180,
+ content = null, name_prefix = 32, entityFlags= 27, status = 0, flag = 21
 WHERE npcid = 17772696; /*  worldshifter */
 
 
@@ -47,7 +51,7 @@ INSERT INTO mob_spawn_points VALUES
 
 
 INSERT INTO mob_pools VALUES 
-(6506,'Rhapsodic_Raaz','Rhapsodic_Razz',470,0x00007E0800000000000000000000000000000000,1,4,1,340,110,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
+(6506,'Rhapsodic_Raaz','Rhapsodic_Razz',470,0x00007E0800000000000000000000000000000000,1,4,1,390,130,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
 
 INSERT INTO mob_droplist VALUES
 (4853,0,0,1000,15292,40); -- pentitents rope
@@ -83,7 +87,7 @@ INSERT INTO mob_spawn_points VALUES
 (16990586,'Mamuuja','Mamuuja',15009,-167.8, -15.5, -591.7,90);
 
 INSERT INTO mob_pools VALUES 
-(6507,'Mamuuja','Mamuuja',470,0x00007E0800000000000000000000000000000000,1,4,1,340,120,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
+(6507,'Mamuuja','Mamuuja',470,0x00007E0800000000000000000000000000000000,1,4,1,330,150,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
 
 INSERT INTO mob_droplist VALUES
 (4854,0,0,1000,14527,80); -- yigit gomlek
@@ -133,7 +137,7 @@ INSERT INTO mob_spawn_points VALUES
 (17404353,'Hidhaegg','Hidhaegg',15010,160.58,8.76,-3.53,90);
 
 INSERT INTO mob_pools VALUES 
-(6508,'Hidhaegg','Hidhaegg',470,0x00007E0800000000000000000000000000000000,1,4,1,340,120,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
+(6508,'Hidhaegg','Hidhaegg',470,0x00007E0800000000000000000000000000000000,1,4,1,360,130,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
 
 INSERT INTO mob_droplist VALUES
 (4855,0,0,1000,14589,100); -- fourth brunne
@@ -189,7 +193,7 @@ INSERT INTO mob_spawn_points VALUES
 (17244587,'Rhapsodic_Raaz','RhapsodicRaaz',15011,-36.6,-8,198.4,90);
 
 INSERT INTO mob_pools VALUES 
-(6509,'Rhapsodic_Raaz','Rhapsodic_Raaz',470,0x00007E0800000000000000000000000000000000,1,4,1,340,70,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
+(6509,'Rhapsodic_Raaz','Rhapsodic_Raaz',470,0x00007E0800000000000000000000000000000000,1,4,1,400,110,0,1,0,0,0,0,0,1,129,4,0,0,2,0,470);
 
 INSERT INTO mob_droplist VALUES
 (4856,0,0,1000,14401,200); -- duende cotehardie
