@@ -40,6 +40,10 @@ function onSpellCast(caster,target,spell)
 
     if (target:addStatusEffect(typeEffect,power,0,duration) == false) then
         spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
+    else
+        if caster:getMod(dsp.mod.MAGIC_SKILLUP_RATE) < 30 then
+            caster:addMod(dsp.mod.MAGIC_SKILLUP_RATE, 30)
+        end
     end
 
     return typeEffect

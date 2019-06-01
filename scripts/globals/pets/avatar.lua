@@ -31,7 +31,7 @@ function onMobSpawn(pet)
         if pet:getFamily() == 379 or pet:getFamily() == 34 then
             foodPower = foodPower * .7
         end
-        pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*2*boost,0,9600,0,0)
+        pet:addStatusEffect(dsp.effect.MAX_HP_BOOST,foodPower*2.5*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.MND_BOOST,foodPower*2*boost,0,9600,0,0)
         pet:addStatusEffect(dsp.effect.INT_BOOST,foodPower*2*boost,0,9600,0,0)        
         pet:addStatusEffect(dsp.effect.ATTACK_BOOST,foodPower*1.5*boost,0,9600,0,0)

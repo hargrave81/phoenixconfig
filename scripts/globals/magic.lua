@@ -1207,12 +1207,12 @@ function doElementalNuke(caster, spell, target, spellParams)
     DMG = DMG * resist;
 
     -- fix for BLM sub job 
-    if caster.getSubJob() == dsp.job.BLM or caster.getSubJob() == dsp.job.RDM or caster.getSubJob() == dsp.job.SCH or caster.getSubJob() == dsp.job.DRK then
+    if caster:getSubJob() == dsp.job.BLM or caster:getSubJob() == dsp.job.RDM or caster:getSubJob() == dsp.job.SCH or caster:getSubJob() == dsp.job.DRK then
         -- we may decrease your overall dmg
-        if caster.getMainJob() ~= dsp.job.RDM and caster.getMainJob() ~= dsp.job.BLM and caster.getMainJob() ~= dsp.job.SCH then
-            DMG = DMG * .6;
-        elseif caster.getMainJob() == dsp.job.RDM then
-            DMG = DMG * .89;
+        if caster:getMainJob() ~= dsp.job.RDM and caster:getMainJob() ~= dsp.job.BLM and caster:getMainJob() ~= dsp.job.SCH then
+            DMG = DMG * .64;
+        elseif caster:getMainJob() == dsp.job.RDM then
+            DMG = DMG * .91;
         end
     end
 
