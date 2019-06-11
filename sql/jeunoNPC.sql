@@ -40,38 +40,38 @@ WHERE npcid = 17772696; /*  worldshifter */
 
 
 /* Moogles for Promy Dem */
-UPDATE NPC_LIST SET pos_x = 180.81, pos_y = 0,pos_z = -49.21, pos_rot = 180 WHERE npcid = 16851287;
-UPDATE NPC_LIST SET pos_x = -184.32, pos_y = 0,pos_z = -41.89, pos_rot = 90 WHERE npcid = 16851288;
-UPDATE NPC_LIST SET pos_x = -190.12, pos_y = 0,pos_z = 465.67, pos_rot = 90 WHERE npcid = 16851289;
-UPDATE NPC_LIST SET pos_x = 268.07, pos_y = 0,pos_z = 432.32, pos_rot = 180 WHERE npcid = 16851290;
+UPDATE NPC_LIST SET pos_x = 180.81, pos_y = 0,pos_z = -49.21, pos_rot = 128 WHERE npcid = 16851287;
+UPDATE NPC_LIST SET pos_x = -184.32, pos_y = 0,pos_z = -41.89, pos_rot = 64 WHERE npcid = 16851288;
+UPDATE NPC_LIST SET pos_x = -190.12, pos_y = 0,pos_z = 465.67, pos_rot = 64 WHERE npcid = 16851289;
+UPDATE NPC_LIST SET pos_x = 268.07, pos_y = 0,pos_z = 432.32, pos_rot = 128 WHERE npcid = 16851290;
 
-UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 90 WHERE npcid = 16855178;
+UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 64 WHERE npcid = 16855178;
 
 
 /* holla */
-UPDATE NPC_LIST SET pos_x = 60.85, pos_y = 0,pos_z = 88.06, pos_rot = 90 WHERE npcid = 16843070;
-UPDATE NPC_LIST SET pos_x = -128.2, pos_y = 0,pos_z = 17.49, pos_rot = 90 WHERE npcid = 16843071;
-UPDATE NPC_LIST SET pos_x = 233.51, pos_y = 0,pos_z = 308.43, pos_rot = 90 WHERE npcid = 16843072;
-UPDATE NPC_LIST SET pos_x = 115.32, pos_y = 0,pos_z = -309.42, pos_rot = 90 WHERE npcid = 16843073;
+UPDATE NPC_LIST SET pos_x = 60.85, pos_y = 0,pos_z = 88.06, pos_rot = 64 WHERE npcid = 16843070;
+UPDATE NPC_LIST SET pos_x = -128.2, pos_y = 0,pos_z = 17.49, pos_rot = 64 WHERE npcid = 16843071;
+UPDATE NPC_LIST SET pos_x = 233.51, pos_y = 0,pos_z = 308.43, pos_rot = 64 WHERE npcid = 16843072;
+UPDATE NPC_LIST SET pos_x = 115.32, pos_y = 0,pos_z = -309.42, pos_rot = 64 WHERE npcid = 16843073;
 
-UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 90 WHERE npcid = 16846971;
+UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 64 WHERE npcid = 16846971;
 
 /* mea */
-UPDATE NPC_LIST SET pos_x = -86.02, pos_y = 0,pos_z = 171.34, pos_rot = 90 WHERE npcid = 16859470;
-UPDATE NPC_LIST SET pos_x = -135.13, pos_y = -0.4,pos_z = -226.23, pos_rot = 90 WHERE npcid = 16859471;
-UPDATE NPC_LIST SET pos_x = 64.56, pos_y = 0.06,pos_z = -75.23, pos_rot = 90 WHERE npcid = 16859472;
-UPDATE NPC_LIST SET pos_x = -107.21, pos_y = 0,pos_z = 393.25, pos_rot = 90 WHERE npcid = 16859473;
+UPDATE NPC_LIST SET pos_x = -86.02, pos_y = 0,pos_z = 171.34, pos_rot = 64 WHERE npcid = 16859470;
+UPDATE NPC_LIST SET pos_x = -135.13, pos_y = -0.4,pos_z = -226.23, pos_rot = 64 WHERE npcid = 16859471;
+UPDATE NPC_LIST SET pos_x = 64.56, pos_y = 0.06,pos_z = -75.23, pos_rot = 64 WHERE npcid = 16859472;
+UPDATE NPC_LIST SET pos_x = -107.21, pos_y = 0,pos_z = 393.25, pos_rot = 64 WHERE npcid = 16859473;
 
-UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 90 WHERE npcid = 16863343;
+UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 64 WHERE npcid = 16863343;
 
 
 /* vhalz */
-UPDATE NPC_LIST SET pos_x = -10.97, pos_y = 0.05,pos_z = 132.22, pos_rot = 45 WHERE npcid = 16867736;
-UPDATE NPC_LIST SET pos_x = 125.81, pos_y = 0,pos_z = 305.55, pos_rot = 90 WHERE npcid = 16867737;
+UPDATE NPC_LIST SET pos_x = -10.97, pos_y = 0.05,pos_z = 132.22, pos_rot = 32 WHERE npcid = 16867736;
+UPDATE NPC_LIST SET pos_x = 125.81, pos_y = 0,pos_z = 305.55, pos_rot = 64 WHERE npcid = 16867737;
 UPDATE NPC_LIST SET pos_x = 424.14, pos_y = 0,pos_z = -274.18, pos_rot = 0 WHERE npcid = 16867738;
-UPDATE NPC_LIST SET pos_x = 267.78, pos_y = -0.35,pos_z = 142.59, pos_rot = 270 WHERE npcid = 16867739;
+UPDATE NPC_LIST SET pos_x = 267.78, pos_y = -0.35,pos_z = 142.59, pos_rot = 192 WHERE npcid = 16867739;
 
-UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 90 WHERE npcid = 16871609;
+UPDATE NPC_LIST SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 64 WHERE npcid = 16871609;
 
 
 /* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence */
