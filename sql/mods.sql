@@ -28,6 +28,10 @@ INSERT INTO item_mods values (20514,25,4); -- acc +4
 INSERT INTO item_mods values (20674,73,4); -- store TP +4
 INSERT INTO item_mods values (20573,73,4); -- store TP +4
 INSERT INTO item_mods values (20514,73,4); -- store TP +4
+
+-- update dual wield for dancer
+UPDATE traits SET content_tag = NULL WHERE traitid = 18 and job = 19;
+
 --
 -- Inserting data into table item_mods
 --
