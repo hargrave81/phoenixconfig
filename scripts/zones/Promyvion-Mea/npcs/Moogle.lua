@@ -20,8 +20,11 @@ function onTrigger(player, npc)
         player:addStatusEffect(dsp.effect.ATTACK_BOOST, 34, 0, 1200)
         player:addStatusEffect(dsp.effect.EVASION_BOOST, 10, 0, 1200)
         player:addStatusEffect(dsp.effect.ACCURACY_BOOST, 15, 0, 1200)
-        player:addStatusEffect(dsp.effect.ABYSSEA_DEX, 5, 0, 1200)
-        player:addStatusEffect(dsp.effect.ABYSSEA_STR, 5, 0, 1200)
+        player:addStatusEffect(dsp.effect.DEX_BOOST, 5, 0, 1200)
+        player:addStatusEffect(dsp.effect.STR_BOOST, 5, 0, 1200)
+        
+        player:addStatusEffect(dsp.effect.DEFENSE_BOOST, 40, 0, 1200)
+
         if player:hasStatusEffect(dsp.effect.PROTECT) == false then
             player:addStatusEffect(dsp.effect.PROTECT, 30, 0, 1200)
         end
