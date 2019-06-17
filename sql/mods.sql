@@ -84,6 +84,9 @@ UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6
 UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6165;
 
 
+INSERT INTO synth_recipes VALUES (5001,1,0,0,0,0,0,0,0,0,102,4102,4244,17545,17547,17549,17551,17553,17555,17557,17559,18632,18632,18633,18633,1,1,1,1); -- Iridal Staff
+INSERT INTO synth_recipes VALUES (5002,1,0,0,0,0,0,0,0,0,102,4102,4244,17546,17548,17550,17552,17554,17556,17558,17560,18633,18633,18633,18633,1,1,1,1); -- Chatoyant Staff
+
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
  WHERE familyid = 36 and systemid = 5;
