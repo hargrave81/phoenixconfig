@@ -13,6 +13,12 @@ function onTrigger(player,npc)
     else
         player:PrintToPlayer("Safe travels")
         player:addStatusEffectEx(dsp.effect.TELEPORT)
-        player:setPos(24.91, 8.5, 120.2, 120, 190);
+        if player:hasItem(4181) == false then -- instant warp
+            player:addItem(4181);
+        end
+        if player:hasItem(4182) == false then -- instant reraise
+            player:addItem(4182);
+        end
+        player:setPos(24.91, 8.5, 120.2, 120, 190);        
     end
 end
