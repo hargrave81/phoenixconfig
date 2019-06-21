@@ -50,9 +50,12 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
         mobChainCt = mobChainCt + 1
         player:setVar("MobChainCount", mobChainCt)
     else
+        if mobChainCt > 5 then
+            player:PrintToPlayer("You sense that you've lost the elemental advantage.")
+        end
         mobChainCt = 1
         player:setVar("MobChainCount", mobChainCt)
-        player:setVar("MobChainFamily", mob:getSystem())
+        player:setVar("MobChainFamily", mob:getSystem())                
     end
     if mobChainCt > 5 then
         if math.random(1,4) > 1 then
