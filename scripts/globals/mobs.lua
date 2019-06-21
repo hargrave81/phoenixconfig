@@ -44,8 +44,8 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
     end
 
     -- detect mob chain
-    local mobChainFam = player:getVar("MobChainingFamily")
-    local mobChainCt = player:getVar("MobChainingCount")
+    local mobChainFam = player:getVar("MobChainFamily")
+    local mobChainCt = player:getVar("MobChainCount")
     if mob:getFamily() == mobChainFam then
         mobChainCt = mobChainCt + 1
         player:setVar("MobChainCount", mobChainCt)
@@ -87,12 +87,27 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
             if page == 7 or page == 8 or page == 9 then
                 player:addStatusEffect(buffs3[math.random(1,7)], power, 0, 800)
             end
-            if page == 3 or page == 6 or page >= 9 then
-                
-                
+            if page == 3 or page == 6 or page >= 9 then                                
             end
             if page == 2 or page == 5 or page == 8 then
                 player:addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
+            end
+            
+            if player:getPet() then
+                if page == 1 or page == 2 or page == 3 then
+                    player:getPet():addStatusEffect(buffs1[math.random(1,3)], power * 20, 0, 800)
+                end
+                if page == 4 or page == 5 or page == 6 then
+                    player:getPet():addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
+                end
+                if page == 7 or page == 8 or page == 9 then
+                    player:getPet():addStatusEffect(buffs3[math.random(1,7)], power, 0, 800)
+                end
+                if page == 3 or page == 6 or page >= 9 then                                
+                end
+                if page == 2 or page == 5 or page == 8 then
+                    player:getPet():addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
+                end 
             end
         end
     end
