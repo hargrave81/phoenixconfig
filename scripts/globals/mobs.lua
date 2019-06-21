@@ -46,13 +46,13 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
     -- detect mob chain
     local mobChainFam = player:getVar("MobChainFamily")
     local mobChainCt = player:getVar("MobChainCount")
-    if mob:getFamily() == mobChainFam then
+    if mob:getSystem() == mobChainFam then
         mobChainCt = mobChainCt + 1
         player:setVar("MobChainCount", mobChainCt)
     else
         mobChainCt = 1
         player:setVar("MobChainCount", mobChainCt)
-        player:setVar("MobChainFamily", mob:getFamily())
+        player:setVar("MobChainFamily", mob:getSystem())
     end
     if mobChainCt > 5 then
         local chest = false
@@ -71,23 +71,24 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
             if power > 50 then 
                 power = 50            
             end                       
-            local buffs1=  {88,89,33}  -- * 20 (HP, MP, HASTE)
-            local buffs2 = {43,42} -- half power (refresh regen)
-            local buffs3 = {90,91,93,154,219,555,551} -- full power (acc, atk, eva,def,macc,matk)
+            local buffs1=  {88,89,33}  -- * 12 (HP, MP, HASTE)
+            local buffs2 = {43,42,288} -- half power (refresh regen)
+            local buffs3 = {90,91,93,154,219,555,551} -- double power (acc, atk, eva,def,macc,matk)
             local buffs4 = {219,40,41} -- triple power (ruby, protect, shell)
-            local mods = {1,8,9,10,11,12,13,14,23,24,25,26,28,29,30,31,62,63,64,65,68,69,70,165,174,175,288,290,945} -- bunch of mods
+            local buffs5 = {80,81,82,83,84,85,86,90,92,190,191,555,799} -- bunch of mods
             player:PrintToPlayer("The death of the monster exposed elemental powers that have strengthened you!")
             local page = math.random(1,12)
             if page == 1 or page == 2 or page == 3 then
-                player:addStatusEffect(buffs1[math.random(1,3)], power * 20, 0, 800)
+                player:addStatusEffect(buffs1[math.random(1,3)], power * 12, 0, 800)
             end
             if page == 4 or page == 5 or page == 6 then
                 player:addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
             end
             if page == 7 or page == 8 or page == 9 then
-                player:addStatusEffect(buffs3[math.random(1,7)], power, 0, 800)
+                player:addStatusEffect(buffs3[math.random(1,7)], power * 2, 0, 800)
             end
             if page == 3 or page == 6 or page >= 9 then                                
+                player:addStatusEffect(buffs5[math.random(1,13)], power, 0, 800)
             end
             if page == 2 or page == 5 or page == 8 then
                 player:addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
@@ -95,15 +96,16 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
             
             if player:getPet() then
                 if page == 1 or page == 2 or page == 3 then
-                    player:getPet():addStatusEffect(buffs1[math.random(1,3)], power * 20, 0, 800)
+                    player:getPet():addStatusEffect(buffs1[math.random(1,3)], power * 12, 0, 800)
                 end
                 if page == 4 or page == 5 or page == 6 then
                     player:getPet():addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
                 end
                 if page == 7 or page == 8 or page == 9 then
-                    player:getPet():addStatusEffect(buffs3[math.random(1,7)], power, 0, 800)
+                    player:getPet():addStatusEffect(buffs3[math.random(1,7)], power*2, 0, 800)
                 end
-                if page == 3 or page == 6 or page >= 9 then                                
+                if page == 3 or page == 6 or page >= 9 then     
+                    player:getPet():addStatusEffect(buffs5[math.random(1,13)], power, 0, 800)                           
                 end
                 if page == 2 or page == 5 or page == 8 then
                     player:getPet():addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
