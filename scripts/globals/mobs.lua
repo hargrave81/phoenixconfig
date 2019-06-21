@@ -66,6 +66,17 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
                     break
                 end
             end    
+            if chest == false then
+                local yourZone = player:getZoneID()
+                for i, cityId in pairs(bonus) do
+                    if (cityId == yourZone) then
+                        if math.random(1,4) > 2 then -- less likely in dungeons
+                            chest = true
+                        end
+                        break
+                    end
+                end    
+            end
             if chest then
                 local chainLevel = mobChainCt / 5
                 local power = math.floor(chainLevel * 8)
