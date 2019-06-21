@@ -55,61 +55,63 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
         player:setVar("MobChainFamily", mob:getSystem())
     end
     if mobChainCt > 5 then
-        local chest = false
-        local bonus = {9,11,12,16,18,20,22,27,28,29,30,62,65,72,92,96,99,131,138,140,141,142,143,145,147,148,149,150,151,153,155,157,159,160,161,162,164,166,167,169,171,172,173,174,175,176,184,190,191,192,193,194,195,196,197,198,200,204,205,208,212,213,258,268,269,270,272,273,274};
-        local bonus2 = {1,2,3,4,5,7,15,24,25,33,43,44,45,46,47,51,52,53,54,58,59,61,79,81,82,83,84,85,88,89,90,91,95,97,98,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,130,132,136,137,215,216,217,218,223,224,225,226,227,228,253,254,255,260,261,262,263,265,266,267,288,289};
-        local yourZone = player:getZoneID()
-        for i, cityId in pairs(bonus2) do
-            if (cityId == yourZone) then
-                chest = true
-                break
-            end
-        end    
-        if chest then
-            local chainLevel = mobChainCt / 5
-            local power = math.floor(chainLevel * 8)
-            if power > 50 then 
-                power = 50            
-            end                       
-            local buffs1=  {88,89,33}  -- * 12 (HP, MP, HASTE)
-            local buffs2 = {43,42,288} -- half power (refresh regen)
-            local buffs3 = {90,91,93,154,219,555,551} -- double power (acc, atk, eva,def,macc,matk)
-            local buffs4 = {219,40,41} -- triple power (ruby, protect, shell)
-            local buffs5 = {80,81,82,83,84,85,86,90,92,190,191,555,799} -- bunch of mods
-            player:PrintToPlayer("The death of the monster exposed elemental powers that have strengthened you!")
-            local page = math.random(1,12)
-            if page == 1 or page == 2 or page == 3 then
-                player:addStatusEffect(buffs1[math.random(1,3)], power * 12, 0, 800)
-            end
-            if page == 4 or page == 5 or page == 6 then
-                player:addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
-            end
-            if page == 7 or page == 8 or page == 9 then
-                player:addStatusEffect(buffs3[math.random(1,7)], power * 2, 0, 800)
-            end
-            if page == 3 or page == 6 or page >= 9 then                                
-                player:addStatusEffect(buffs5[math.random(1,13)], power, 0, 800)
-            end
-            if page == 2 or page == 5 or page == 8 then
-                player:addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
-            end
-            
-            if player:getPet() then
+        if math.random(1,4) > 2 then
+            local chest = false
+            local bonus = {9,11,12,16,18,20,22,27,28,29,30,62,65,72,92,96,99,131,138,140,141,142,143,145,147,148,149,150,151,153,155,157,159,160,161,162,164,166,167,169,171,172,173,174,175,176,184,190,191,192,193,194,195,196,197,198,200,204,205,208,212,213,258,268,269,270,272,273,274};
+            local bonus2 = {1,2,3,4,5,7,15,24,25,33,43,44,45,46,47,51,52,53,54,58,59,61,79,81,82,83,84,85,88,89,90,91,95,97,98,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,130,132,136,137,215,216,217,218,223,224,225,226,227,228,253,254,255,260,261,262,263,265,266,267,288,289};
+            local yourZone = player:getZoneID()
+            for i, cityId in pairs(bonus2) do
+                if (cityId == yourZone) then
+                    chest = true
+                    break
+                end
+            end    
+            if chest then
+                local chainLevel = mobChainCt / 5
+                local power = math.floor(chainLevel * 8)
+                if power > 50 then 
+                    power = 50            
+                end                       
+                local buffs1=  {88,89,33}  -- * 12 (HP, MP, HASTE)
+                local buffs2 = {43,42,288} -- half power (refresh regen)
+                local buffs3 = {90,91,93,154,219,555,551} -- double power (acc, atk, eva,def,macc,matk)
+                local buffs4 = {219,40,41} -- triple power (ruby, protect, shell)
+                local buffs5 = {80,81,82,83,84,85,86,90,92,190,191,555,799} -- bunch of mods
+                player:PrintToPlayer("The death of the monster exposed elemental powers that have strengthened you!")
+                local page = math.random(1,12)
                 if page == 1 or page == 2 or page == 3 then
-                    player:getPet():addStatusEffect(buffs1[math.random(1,3)], power * 12, 0, 800)
+                    player:addStatusEffect(buffs1[math.random(1,3)], power * 12, 0, 800)
                 end
                 if page == 4 or page == 5 or page == 6 then
-                    player:getPet():addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
+                    player:addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
                 end
                 if page == 7 or page == 8 or page == 9 then
-                    player:getPet():addStatusEffect(buffs3[math.random(1,7)], power*2, 0, 800)
+                    player:addStatusEffect(buffs3[math.random(1,7)], power * 2, 0, 800)
                 end
-                if page == 3 or page == 6 or page >= 9 then     
-                    player:getPet():addStatusEffect(buffs5[math.random(1,13)], power, 0, 800)                           
+                if page == 3 or page == 6 or page >= 9 then                                
+                    player:addStatusEffect(buffs5[math.random(1,13)], power, 0, 800)
                 end
                 if page == 2 or page == 5 or page == 8 then
-                    player:getPet():addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
-                end 
+                    player:addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
+                end
+                
+                if player:getPet() then
+                    if page == 1 or page == 2 or page == 3 then
+                        player:getPet():addStatusEffect(buffs1[math.random(1,3)], power * 12, 0, 800)
+                    end
+                    if page == 4 or page == 5 or page == 6 then
+                        player:getPet():addStatusEffect(buffs2[math.random(1,2)], math.floor(power / 2), 0, 800)
+                    end
+                    if page == 7 or page == 8 or page == 9 then
+                        player:getPet():addStatusEffect(buffs3[math.random(1,7)], power*2, 0, 800)
+                    end
+                    if page == 3 or page == 6 or page >= 9 then     
+                        player:getPet():addStatusEffect(buffs5[math.random(1,13)], power, 0, 800)                           
+                    end
+                    if page == 2 or page == 5 or page == 8 then
+                        player:getPet():addStatusEffect(buffs4[math.random(1,3)], power * 3, 0, 800)
+                    end 
+                end
             end
         end
     end
