@@ -5,7 +5,8 @@ ENV DS_BRANCH=master
 RUN apt-get update && \
   apt-get install -y git rsync && \
   mkdir /sqlupdate && \
-  mkdir /sqlupdate/extra
+  mkdir /sqlupdate/extra \
+  apt install git-all
 
 COPY updateserver.sh /sqlupdate
 

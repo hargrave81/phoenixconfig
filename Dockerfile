@@ -1,6 +1,6 @@
 FROM hargrave81/phoenixbase
 
-ENV DS_BRANCH=master
+ENV DS_BRANCH=phoenixreborn
 
 USER root
 

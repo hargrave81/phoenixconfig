@@ -85,12 +85,16 @@ function onMobDeathEx(mob, player, isKiller, isWeaponSkillKill)
                 local power = math.floor(chainLevel * 8)
                 if power > 70 then 
                     power = 70            
-                end                       
+                end      
+                local magicUser = false
+                if player:getMainJob() == dsp.job.WHM or player:getMainJob() == dsp.job.BLM or player:getMainJob() == dsp.job.SCH or player:getMainJob() == dsp.job.DRK or player:getMainJob() == dsp.job.PLD or player:getMainJob() == dsp.job.BLU then
+                    magicUser = true
+                end
                 local buffs1=  {88,89,33}  -- * 12 (HP, MP, HASTE)
                 local buffs2 = {43,42,288} -- half power (refresh regen)
-                local buffs3 = {90,91,93,154,219,555,551} -- double power (acc, atk, eva,def,macc,matk)
+                local buffs3 = {90,91,93,154,219,555,551} -- double power (acc, atk, eva,def,macc,matk)                
                 local buffs4 = {219,40,41} -- triple power (ruby, protect, shell)
-                local buffs5 = {80,81,82,83,84,85,86,90,92,190,191,555,799} -- bunch of mods
+                local buffs5 = {80,81,82,83,84,85,86,90,92,190,191,799} -- bunch of mods                
                 player:PrintToPlayer("The death of the monster exposed elemental powers that have strengthened you!")
                 local page = math.random(1,12)
                 if page == 1 or page == 2 or page == 3 then
