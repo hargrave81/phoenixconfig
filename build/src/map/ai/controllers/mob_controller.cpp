@@ -950,7 +950,7 @@ bool CMobController::Engage(uint16 targid)
         // Don't cast magic or use special ability right away
         if(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY) != 0)
         {
-            m_LastMagicTime = m_Tick - std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) + dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY)));
+            m_LastMagicTime = m_Tick + std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY) - dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL)));
         }
 
         if(PMob->getBigMobMod(MOBMOD_SPECIAL_DELAY) != 0)
@@ -1002,6 +1002,7 @@ void CMobController::TapDeaggroTime()
 bool CMobController::Cast(uint16 targid, SpellID spellid)
 {
     FaceTarget(targid);
+    m_LastMagicTime = m_Tick - std::chrono::milliseconds(dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) / 2));
     return CController::Cast(targid, spellid);
 }
 
