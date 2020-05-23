@@ -14,11 +14,11 @@ function onTrade(player,npc,trade)
 end
 
 function onZoneIn(player,prevZone)
-    player:setVar("WindyMissionFast",0);
+    player:setCharVar("WindyMissionFast",0);
 end
 
 function onTrigger(player,npc)
-    if player:getVar("WindyMissionFast") == 1 then
+    if player:getCharVar("WindyMissionFast") == 1 then
         local logInfo = GetMissionLogInfo(2); -- get where they are currently
         local areaMissionIds = dsp.mission.id[dsp.mission.area[2]]
         local missionId = 0
@@ -71,11 +71,11 @@ function onTrigger(player,npc)
             player:addKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_WINDURST)
         end
         player:addMission(2, 14)
-        player:setVar("WindyMissionFast",0)        
+        player:setCharVar("WindyMissionFast",0)        
     else
         if player:getNation() == 2 and player:getRank() < 5 and player:getMainLvl() >= 30  then
             player:PrintToPlayer("Talk to me one more time and I'll auto rank you up!")
-            player:setVar("WindyMissionFast",1)
+            player:setCharVar("WindyMissionFast",1)
         elseif player:getMainLvl() < 30 then
             player:PrintToPlayer("Go get some more experience first bub!")
         else

@@ -23,7 +23,7 @@ function onTrigger(player,npc)
         17340,  60,    -- bullet
         17318,  20,    -- wooden arrow        
     }
-    local giftReady = vanaDay() > player:getVar("LastGoblinGift")
+    local giftReady = vanaDay() > player:getCharVar("LastGoblinGift")
     
     player:PrintToPlayer("Rolling Dice  gift"..giftReady)
     player:showText(npc,ID.text.OLWYN_SHOP_DIALOG)

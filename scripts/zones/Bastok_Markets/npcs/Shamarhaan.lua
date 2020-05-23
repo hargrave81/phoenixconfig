@@ -14,7 +14,7 @@ end;
 
 function onTrigger(player,npc)
     local NoStringsAttached = player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED);
-    local NoStringsAttachedProgress = player:getVar("NoStringsAttachedProgress");
+    local NoStringsAttachedProgress = player:getCharVar("NoStringsAttachedProgress");
 
     if (player:getMainLvl() >= ADVANCED_JOB_LEVEL and NoStringsAttached == QUEST_AVAILABLE) then
         player:startEvent(434); -- initial cs to start the quest, go and see Iruki-Waraki at Whitegate
@@ -32,9 +32,9 @@ function onEventFinish(player,csid,option)
 
     if (csid == 434) then        
         player:addQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED);
-        player:setVar("NoStringsAttachedProgress",6)
-        player:setVar("CreationStarted_Day",0)
-        player:setVar("CreationStarted_Year",0)
+        player:setCharVar("NoStringsAttachedProgress",6)
+        player:setCharVar("CreationStarted_Day",0)
+        player:setCharVar("CreationStarted_Year",0)
         npcUtil.completeQuest(player, AHT_URHGAN,dsp.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED, {item=17859, title=dsp.title.PROUD_AUTOMATON_OWNER, var="NoStringsAttachedProgress"})
         player:unlockJob(dsp.job.PUP)
         player:messageSpecial(ID.text.YOU_CAN_BECOME_PUP) -- "You can now become a puppetmaster."

@@ -33,8 +33,8 @@ function onTrigger(player,npc)
     elseif (bladeDarkness == QUEST_COMPLETED and player:getQuestStatus(BASTOK,dsp.quest.id.bastok.BLADE_OF_DEATH) == QUEST_AVAILABLE) then
         player:startEvent(130)
     elseif ((player:hasCompletedMission(BASTOK, dsp.mission.id.bastok.ON_MY_WAY) == true)
-    or ((player:getCurrentMission(BASTOK) == dsp.mission.id.bastok.ON_MY_WAY) and (player:getVar("MissionStatus") == 3)))
-        and (player:getVar("[B7-2]Werei") == 0) then
+    or ((player:getCurrentMission(BASTOK) == dsp.mission.id.bastok.ON_MY_WAY) and (player:getCharVar("MissionStatus") == 3)))
+        and (player:getCharVar("[B7-2]Werei") == 0) then
         player:startEvent(177)
     else
         --DEFAULT
@@ -45,7 +45,7 @@ end
 function onEventFinish(player,csid,option)
     if (csid == 99) then
         player:addQuest(BASTOK, dsp.quest.id.bastok.BLADE_OF_DARKNESS)   
-        player:setVar("ChaosbringerKills",100)
+        player:setCharVar("ChaosbringerKills",100)
         npcUtil.completeQuest(player, BASTOK, dsp.quest.id.bastok.BLADE_OF_DARKNESS, {title=dsp.title.DARK_SIDER, var="ZeruhnMines_Zeid_CS"})
         player:addItem(16607)        
         player:messageSpecial(ID.text.ITEM_OBTAINED, 16607)
@@ -56,7 +56,7 @@ function onEventFinish(player,csid,option)
         player:addKeyItem(dsp.ki.LETTER_FROM_ZEID)
         player:messageSpecial(ID.text.KEYITEM_OBTAINED,dsp.ki.LETTER_FROM_ZEID)
     elseif (csid == 177) then
-        player:setVar("[B7-2]Werei", 1)
+        player:setCharVar("[B7-2]Werei", 1)
     else
         dsp.wsquest.handleEventFinish(wsQuest,player,csid,option,ID.text.GROUND_STRIKE_LEARNED)
     end

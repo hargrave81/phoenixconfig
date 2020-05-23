@@ -14,11 +14,11 @@ function onTrade(player,npc,trade)
 end
 
 function onZoneIn(player,prevZone)
-    player:setVar("BastokMissionFast",0);
+    player:setCharVar("BastokMissionFast",0);
 end
 
 function onTrigger(player,npc)
-    if player:getVar("BastokMissionFast") == 1 then
+    if player:getCharVar("BastokMissionFast") == 1 then
         local logInfo = GetMissionLogInfo(1); -- get where they are currently
         local areaMissionIds = dsp.mission.id[dsp.mission.area[1]]
         local missionId = 0
@@ -68,11 +68,11 @@ function onTrigger(player,npc)
             player:addKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_BASTOK)
         end
         player:addMission(1, 14)
-        player:setVar("BastokMissionFast",0)        
+        player:setCharVar("BastokMissionFast",0)        
     else
         if player:getNation() == 1 and player:getRank() < 5 and  player:getMainLvl() >= 30  then
             player:PrintToPlayer("Talk to me one more time and I'll auto rank you up!")
-            player:setVar("BastokMissionFast",1)
+            player:setCharVar("BastokMissionFast",1)
         elseif player:getMainLvl() < 30 then
             player:PrintToPlayer("Go get some more experience first bub!")
         else

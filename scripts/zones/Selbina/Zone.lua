@@ -21,7 +21,7 @@ end
 
 function onZoneIn(player,prevZone)
     local cs = -1
-    player:setVar("SelbinaFastShip",0)
+    player:setCharVar("SelbinaFastShip",0)
     if player:getXPos() == 0 and player:getYPos() == 0 and player:getZPos() == 0 then
         if prevZone == dsp.zone.SHIP_BOUND_FOR_SELBINA or prevZone == dsp.zone.SHIP_BOUND_FOR_SELBINA_PIRATES then
             cs = 202
@@ -31,7 +31,7 @@ function onZoneIn(player,prevZone)
         end
     end
 
-    if player:hasKeyItem(dsp.ki.SEANCE_STAFF) and player:getVar("Enagakure_Killed") == 1 then
+    if player:hasKeyItem(dsp.ki.SEANCE_STAFF) and player:getCharVar("Enagakure_Killed") == 1 then
         cs = 1101
     end
 

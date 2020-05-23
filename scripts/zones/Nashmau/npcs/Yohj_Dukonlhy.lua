@@ -19,14 +19,14 @@ function onTrigger(player,npc)
         timer = timer - waiting; -- Ship hasn't arrived, subtract waiting time to get time to arrival
     end
 
-    if player:getVar("AlZahbiFastShip") == 1 then        
-        player:setVar("AlZahbiFastShip",0)
+    if player:getCharVar("AlZahbiFastShip") == 1 then        
+        player:setCharVar("AlZahbiFastShip",0)
         player:setPos(12.0933, 0, 120.6054, 0, 50)        -- Aht Urhgan
         return
     end
 
     player:PrintToPlayer("Talk to me again to be warped to the next destination.")
-    player:setVar("AlZahbiFastShip",1)
+    player:setCharVar("AlZahbiFastShip",1)
 
     player:startEvent(231,timer,direction);
 end;

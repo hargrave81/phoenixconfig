@@ -30,7 +30,7 @@ end
 
 function onZoneIn(player,prevZone)
     local cs = -1
-    player:setVar("MhauraFastShip",0)
+    player:setCharVar("MhauraFastShip",0)
     local currentday = tonumber(os.date("%j"))
     if player:getXPos() == 0 and player:getYPos() == 0 and player:getZPos() == 0 then
         if prevZone == dsp.zone.SHIP_BOUND_FOR_MHAURA or prevZone == dsp.zone.OPEN_SEA_ROUTE_TO_MHAURA or prevZone == dsp.zone.SHIP_BOUND_FOR_MHAURA_PIRATES then
@@ -40,7 +40,7 @@ function onZoneIn(player,prevZone)
             player:setPos(0.003,-6.252,117.971,65)
         end
     end
-    if player:getCurrentMission(COP) == dsp.mission.id.cop.DAWN and player:getVar("PromathiaStatus")==3 and player:getVar("Promathia_kill_day") ~= currentday and player:getVar("COP_shikarees_story")== 0 then
+    if player:getCurrentMission(COP) == dsp.mission.id.cop.DAWN and player:getCharVar("PromathiaStatus")==3 and player:getCharVar("Promathia_kill_day") ~= currentday and player:getCharVar("COP_shikarees_story")== 0 then
         cs = 322
     end
     return cs
@@ -81,6 +81,6 @@ function onEventFinish(player,csid,option)
             player:setPos(8, -1, 5, 62, 249) -- Something went wrong, dump them on the dock for safety.
         end
     elseif csid == 322 then
-        player:setVar("COP_shikarees_story",1)
+        player:setCharVar("COP_shikarees_story",1)
     end
 end

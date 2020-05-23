@@ -23,17 +23,17 @@ function onTrigger(player,npc)
 
     if LuckOfTheDraw == QUEST_AVAILABLE and player:getMainLvl() >= ADVANCED_JOB_LEVEL then        -- corsair job quest
         player:startEvent(547)
-        player:setVar("LuckOfTheDraw",1)
+        player:setCharVar("LuckOfTheDraw",1)
         player:addQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.LUCK_OF_THE_DRAW)        
-    elseif player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.LUCK_OF_THE_DRAW) == QUEST_COMPLETED and player:getVar("LuckOfTheDraw") ==5 then    -- Ending CS for Corsair Optional
+    elseif player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.LUCK_OF_THE_DRAW) == QUEST_COMPLETED and player:getCharVar("LuckOfTheDraw") ==5 then    -- Ending CS for Corsair Optional
         player:startEvent(552)
-        player:setVar("LuckOfTheDraw",6)
-    elseif player:getVar("EquippedforAllOccasions") ==4 and player:getVar("LuckOfTheDraw") ==6 then --Af1 Final CS
+        player:setCharVar("LuckOfTheDraw",6)
+    elseif player:getCharVar("EquippedforAllOccasions") ==4 and player:getCharVar("LuckOfTheDraw") ==6 then --Af1 Final CS
         player:startEvent(772)
-        player:setVar("EquippedforAllOccasions",5)
-        player:setVar("LuckOfTheDraw",0)
+        player:setCharVar("EquippedforAllOccasions",5)
+        player:setCharVar("LuckOfTheDraw",0)
     elseif player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.LUCK_OF_THE_DRAW) == QUEST_COMPLETED and player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.EQUIPPED_FOR_ALL_OCCASIONS == QUEST_COMPLETED) then
-        player:setVar("EquippedforAllOccasions",0)
+        player:setCharVar("EquippedforAllOccasions",0)
     elseif player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.AGAINST_ALL_ODDS) == QUEST_ACCEPTED and not player:hasKeyItem(dsp.ki.LIFE_FLOAT) then
         player:startEvent(604) -- reacquire life float
     else
@@ -55,7 +55,7 @@ function onEventFinish(player,csid,option)
             player:delQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.LUCK_OF_THE_DRAW)        
             player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,5493);
         else
-            player:setVar("LuckOfTheDraw",5); -- var will remain for af quests
+            player:setCharVar("LuckOfTheDraw",5); -- var will remain for af quests
             player:addItem(5493);
             player:messageSpecial(ID.text.ITEM_OBTAINED,5493);
             player:delKeyItem(dsp.ki.FORGOTTEN_HEXAGUN);

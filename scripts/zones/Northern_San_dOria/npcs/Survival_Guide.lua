@@ -14,11 +14,11 @@ function onTrade(player,npc,trade)
 end
 
 function onZoneIn(player,prevZone)
-    player:setVar("SandyMissionFast",0);
+    player:setCharVar("SandyMissionFast",0);
 end
 
 function onTrigger(player,npc)
-    if player:getVar("SandyMissionFast") == 1 then
+    if player:getCharVar("SandyMissionFast") == 1 then
         local logInfo = GetMissionLogInfo(0); -- get where they are currently
         local areaMissionIds = dsp.mission.id[dsp.mission.area[0]]
         local missionId = 0
@@ -68,11 +68,11 @@ function onTrigger(player,npc)
             player:addKeyItem(dsp.keyItem.MESSAGE_TO_JEUNO_SANDORIA)
         end
         player:addMission(0, 14)
-        player:setVar("SandyMissionFast",0)        
+        player:setCharVar("SandyMissionFast",0)        
     else
         if player:getNation() == 0 and player:getRank() < 5 and player:getMainLvl() >= 30 then
             player:PrintToPlayer("Talk to me one more time and I'll auto rank you up!")
-            player:setVar("SandyMissionFast",1)
+            player:setCharVar("SandyMissionFast",1)
         elseif player:getMainLvl() < 30 then
             player:PrintToPlayer("Go get some more experience first bub!")
         else
