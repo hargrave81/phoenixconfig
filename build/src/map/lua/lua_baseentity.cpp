@@ -2212,36 +2212,6 @@ inline int32 CLuaBaseEntity::setWeather(lua_State *L)
     return 0;
 }
 
-/************************************************************************
-*  Function: setHomePoint()
-*  Purpose : Sets a PC's homepoint.
-*  Example : player:setHomePoint()
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::setHomePoint(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
-    PChar->profile.home_point.p = PChar->loc.p;
-    PChar->profile.home_point.destination = PChar->getZone();
-
-    const char *fmtQuery = "UPDATE chars \
-                            SET home_zone = %u, home_rot = %u, home_x = %.3f, home_y = %.3f, home_z = %.3f \
-                            WHERE charid = %u;";
-
-    Sql_Query(SqlHandle, fmtQuery,
-        PChar->profile.home_point.destination,
-        PChar->profile.home_point.p.rotation,
-        PChar->profile.home_point.p.x,
-        PChar->profile.home_point.p.y,
-        PChar->profile.home_point.p.z,
-        PChar->id);
-    return 0;
-}
 
 /************************************************************************
 *  Function: ChangeMusic()
@@ -14290,8 +14260,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getWeather),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setWeather),
 
-    // PC Instructions
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setHomePoint),
+    // PC Instructions    
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,ChangeMusic),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,sendMenu),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,sendGuild),
@@ -14431,7 +14400,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,changesJob),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,unlockJob),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,sjRestriction),
-    
+
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getMainLvl),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getSubLvl),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setLevel),

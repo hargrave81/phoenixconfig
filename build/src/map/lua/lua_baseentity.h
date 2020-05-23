@@ -133,8 +133,7 @@ public:
     int32 getWeather(lua_State*);            // Get Weather condition
     int32 setWeather(lua_State*);            // Set Weather condition (GM COMMAND)
 
-    // PC Instructions
-    int32 setHomePoint(lua_State*);          // Sets character's homepoint
+    // PC Instructions    
     int32 ChangeMusic(lua_State* L);         // Sets the specified music Track for specified music block.
     int32 sendMenu(lua_State*);              // Displays a menu (AH,Raise,Tractor,MH etc)
     int32 sendGuild(lua_State*);             // Sends guild shop menu
