@@ -83,9 +83,12 @@ UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6
 UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6164;
 UPDATE mob_groups SET HP = 10000, minLevel = 56, maxLevel = 56 WHERE groupid = 6165;
 
-
-INSERT INTO synth_recipes VALUES (5001,1,0,0,0,0,0,0,0,0,102,4102,4244,17545,17547,17549,17551,17553,17555,17557,17559,18632,18632,18633,18633,1,1,1,1); -- Iridal Staff
-INSERT INTO synth_recipes VALUES (5002,1,0,0,0,0,0,0,0,0,102,4102,4244,17546,17548,17550,17552,17554,17556,17558,17560,18633,18633,18633,18633,1,1,1,1); -- Chatoyant Staff
+--                                ID     KeyItem                    HQCrystal                                                                            ResultName
+--                                     DeSynth             Crystal                                                                                   HQ2Qty
+--                                         Al  Cl  Gld Sm                Ing1  Ing2  Ing3  Ing4  Ing5  Ing6  Ing7  Ing8  Result                  Qty   HQ3Qty
+--                                           Bn  Ck  Lt  Wd                                                                    HQ1   HQ2   HQ3     HQ1Qty
+INSERT INTO synth_recipes VALUES (5001,1,0,0,0,0,0,0,0,0,0,102,4102,4244,17545,17547,17549,17551,17553,17555,17557,17559,18632,18632,18633,18633,1,1,1,1,'Iridal Staff'); -- Iridal Staff
+INSERT INTO synth_recipes VALUES (5002,1,0,0,0,0,0,0,0,0,0,102,4102,4244,17546,17548,17550,17552,17554,17556,17558,17560,18633,18633,18633,18633,1,1,1,1,'Chatoyant Staff'); -- Chatoyant Staff
 
 UPDATE mob_family_system -- ENHANCE  fenrir 
  SET ACC = 5, EVA = 5, HP = 180
@@ -107,7 +110,7 @@ INSERT INTO mob_pools VALUES
 --17216131
 --17216132 */;
 INSERT INTO mob_groups VALUES
-(15000,6500,107,2500,0,4850,15000,10000,10,14,0); -- south gustaburg
+(15000,6500,107,'Hurkan',2500,0,4850,15000,10000,10,14,0); -- south gustaburg
 
 
 INSERT INTO mob_spawn_points VALUES 
@@ -121,7 +124,7 @@ VALUES (17216132,0,392.23,0.19,-254.11);
 --17199663
 --17199664 */;
 INSERT INTO mob_groups VALUES
-(15001,6500,103,2500,0,4850,20000,15000,26,29,0); -- Valkurm Dunes
+(15001,6500,103,'Hurkan',2500,0,4850,20000,15000,26,29,0); -- Valkurm Dunes
 
 INSERT INTO mob_spawn_points VALUES 
 (17199662,'Hurkan','Hurkan',15001,315.47,0.15,-74.82,39);
@@ -133,7 +136,7 @@ VALUES (17199662,0,315.47,0.15,-74.82);
 /* genkei 1 */;
 /* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence */
 INSERT INTO mob_groups VALUES
-(15007,6505,126,240,0,4851,4000,1000,48,50,0); -- Qufim
+(15007,6505,126,'Jester_Malatrix',240,0,4851,4000,1000,48,50,0); -- Qufim
 
 UPDATE mob_family_system -- decrease the power of the dragon
  SET ACC = 2, DEF = 0, EVA = 2, MND = 3, fire = 1.5, ice = 1.5, earth = 1.5, lightning = 1.5,
@@ -163,7 +166,7 @@ INSERT INTO mob_droplist VALUES
 --17293667
 --17293666 */;
 INSERT INTO mob_groups VALUES
-(15002,6500,126,2500,0,4850,25000,15000,33,38,0); -- Qufim
+(15002,6500,126,'Hurkan',2500,0,4850,25000,15000,33,38,0); -- Qufim
 
 INSERT INTO mob_spawn_points VALUES 
 (17293669,'Hurkan','Hurkan',15002,-242.3832,-19.1947,376.1273,39);
@@ -183,7 +186,7 @@ INSERT INTO mob_pools VALUES
 --17195571
 --17195570 */;
 INSERT INTO mob_groups VALUES
-(15003,6501,102,2500,0,4850,40000,20000,28,32,0); -- La Theine Plateau
+(15003,6501,102,'Primogenial_Marolith',2500,0,4850,40000,20000,28,32,0); -- La Theine Plateau
 
 INSERT INTO mob_spawn_points VALUES 
 (17195576,'Primogenial_Marolith','Primogenial_Marolith',15003, 428.29,23.69,-203.57,39);

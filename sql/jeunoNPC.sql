@@ -76,7 +76,7 @@ UPDATE npc_list SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 64, fla
 
 /* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence */
 INSERT INTO mob_groups VALUES
-(15008,6506,123,9000,0,4853,6000,1000,61,64,0); -- kazam
+(15008,6506,123,'Rhapsodic_Raaz',9000,0,4853,6000,1000,61,64,0); -- kazam
 
 INSERT INTO mob_spawn_points VALUES 
 (17281550,'Rhapsodic_Raaz','Rhapsodic Razz',15008,-233.2,.205,400.4,90);
@@ -114,7 +114,7 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15009,6507,52,9000,0,4854,15000,3000,72,73,0); -- bhaflau thickets
+(15009,6507,52,'Mamuuja',9000,0,4854,15000,3000,72,73,0); -- bhaflau thickets
 
 INSERT INTO mob_spawn_points VALUES 
 (16990586,'Mamuuja','Mamuuja',15009,-167.8, -15.5, -591.7,90);
@@ -165,7 +165,7 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15010,6508,153,9000,0,4855,15000,3000,63,65,0); -- the Boyahda Tree
+(15010,6508,153,'Hidhaegg',9000,0,4855,15000,3000,63,65,0); -- the Boyahda Tree
 
 INSERT INTO mob_spawn_points VALUES 
 (17404353,'Hidhaegg','Hidhaegg',15010,160.58,8.76,-3.53,90);
@@ -222,7 +222,7 @@ INSERT INTO mob_droplist VALUES
 
 
 INSERT INTO mob_groups VALUES
-(15011,6509,114,9000,0,4856,23000,5000,56,58,0); -- East Altepa
+(15011,6509,114,'Rhapsodic_Raaz',9000,0,4856,23000,5000,56,58,0); -- East Altepa
 
 INSERT INTO mob_spawn_points VALUES 
 (17244587,'Rhapsodic_Raaz','Rhapsodic Raaz',15011,-36.6,-8,198.4,90);
