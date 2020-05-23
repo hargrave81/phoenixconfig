@@ -39,11 +39,13 @@
 
 #include "../ability.h"
 #include "../alliance.h"
+#include "../battlefield.h"
 #include "../enmity_container.h"
 #include "../guild.h"
 #include "../instance.h"
 #include "../item_container.h"
 #include "../latent_effect_container.h"
+#include "../linkshell.h"
 #include "../map.h"
 #include "../message.h"
 #include "../mob_modifier.h"
@@ -529,13 +531,13 @@ inline int32 CLuaBaseEntity::messageSystem(lua_State* L)
 }
 
 /************************************************************************
-*  Function: getVar()
+*  Function: getCharVar()
 *  Purpose : Returns a var value assigned to a PC (in char_vars.sql)
-*  Example : local status = player:getVar("[ZM]Status")
+*  Example : local status = player:getCharVar("[ZM]Status")
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getVar(lua_State *L)
+inline int32 CLuaBaseEntity::getCharVar(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -544,18 +546,18 @@ inline int32 CLuaBaseEntity::getVar(lua_State *L)
 
     const char* varname = lua_tostring(L, 1);
 
-    lua_pushinteger(L, charutils::GetVar((CCharEntity*)m_PBaseEntity, varname));
+    lua_pushinteger(L, charutils::GetCharVar((CCharEntity*)m_PBaseEntity, varname));
     return 1;
 }
 
 /************************************************************************
-*  Function: setVar()
+*  Function: setCharVar()
 *  Purpose : Updates PC's variable to an explicit value
-*  Example : player:setVar("[ZM]Status", 4)
+*  Example : player:setCharVar("[ZM]Status", 4)
 *  Notes   : Passing a '0' value will delete the variable
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setVar(lua_State *L)
+inline int32 CLuaBaseEntity::setCharVar(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -581,13 +583,13 @@ inline int32 CLuaBaseEntity::setVar(lua_State *L)
 }
 
 /************************************************************************
-*  Function: addVar()
+*  Function: addCharVar()
 *  Purpose : Increments PC's variable by an explicit amount
-*  Example : player:addVar("[ZM]Status", 1) -- if 4, becomes 5
+*  Example : player:addCharVar("[ZM]Status", 1) -- if 4, becomes 5
 *  Notes   : Can use values greater than 1 to increment more
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::addVar(lua_State *L)
+inline int32 CLuaBaseEntity::addCharVar(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -668,7 +670,7 @@ inline int32 CLuaBaseEntity::resetLocalVars(lua_State* L)
 /************************************************************************
 *  Function: getMaskBit()
 *  Purpose : Returns a single bit from a masked player variable
-*  Example : player:getMaskBit(player:getVar("CleanSignPost"),1)) then
+*  Example : player:getMaskBit(player:getCharVar("CleanSignPost"),1)) then
 *  Notes   :
 ************************************************************************/
 
@@ -729,7 +731,7 @@ inline int32 CLuaBaseEntity::setMaskBit(lua_State *L)
 /************************************************************************
 *  Function: countMaskBits()
 *  Purpose : Counts the number of true bits in a bit-masked variable
-*  Example : Unused, but ex: player:countMaskBits(player:getVar("Ex"))
+*  Example : Unused, but ex: player:countMaskBits(player:getCharVar("Ex"))
 *  Notes   : Useful for quests such as Flyers for Regine
 ************************************************************************/
 
@@ -2710,9 +2712,9 @@ inline int32 CLuaBaseEntity::showPosition(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
     ((CCharEntity*)m_PBaseEntity)->pushPacket(new CMessageStandardPacket(
-        (uint32)m_PBaseEntity->loc.p.x,
-        (uint32)m_PBaseEntity->loc.p.y,
-        (uint32)m_PBaseEntity->loc.p.z,
+        (int32)m_PBaseEntity->loc.p.x,
+        (int32)m_PBaseEntity->loc.p.y,
+        (int32)m_PBaseEntity->loc.p.z,
         m_PBaseEntity->loc.p.rotation,
         MsgStd::Compass));
     return 0;
@@ -2914,6 +2916,266 @@ inline int32 CLuaBaseEntity::teleport(lua_State *L)
 }
 
 /************************************************************************
+*  Function: addTeleport(uint8 type, uint32 destination)
+*  Purpose : Grants acces to a new teleport for a PC
+*  Example : player:addTeleport(dsp.teleport.type.HOMEPOINT,16);
+*  Notes   : Param 2 is bits to shift, not exponentiated value
+************************************************************************/
+
+inline int32 CLuaBaseEntity::addTeleport(lua_State *L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+    uint8  type = (uint8 )lua_tointeger(L, 1);
+    uint32 bit  = 1 << (uint32)lua_tointeger(L, 2);
+    uint8  set  = lua_isnil(L, 3) ? 0 : (uint8)lua_tointeger(L, 3);
+    
+    if ((type == TELEPORT_HOMEPOINT || type == TELEPORT_SURVIVAL) && (lua_isnil(L, 3) || set > 3))
+    {
+        ShowError("Lua::addteleport : Attempt to index array out-of-bounds or parameter is nil.");
+        return 0;
+    }
+
+    switch (type)
+    {
+        case TELEPORT_OUTPOST_SANDY:   PChar->teleport.outpostSandy   |= bit; break;
+        case TELEPORT_OUTPOST_BASTOK:  PChar->teleport.outpostBastok  |= bit; break;
+        case TELEPORT_OUTPOST_WINDY:   PChar->teleport.outpostWindy   |= bit; break;
+        case TELEPORT_RUNIC_PORTAL:    PChar->teleport.runicPortal    |= bit; break;
+        case TELEPORT_PAST_MAW:        PChar->teleport.pastMaw        |= bit; break;
+        case TELEPORT_CAMPAIGN_SANDY:  PChar->teleport.campaignSandy  |= bit; break;
+        case TELEPORT_CAMPAIGN_BASTOK: PChar->teleport.campaignBastok |= bit; break;
+        case TELEPORT_CAMPAIGN_WINDY:  PChar->teleport.campaignWindy  |= bit; break;
+        case TELEPORT_HOMEPOINT:       PChar->teleport.homepoint.access[set] |= bit; break;
+        case TELEPORT_SURVIVAL:        PChar->teleport.survival.access[set]  |= bit; break;
+        default:
+            ShowError("LuaBaseEntity::addTeleport : Parameter 1 out of bounds.\n");
+            return 0;
+    }
+    charutils::SaveTeleport(PChar, type);
+    return 0;
+}
+
+/************************************************************************
+*  Function: getTeleport(uint8 type)
+*  Purpose : Returns bit mask or table for supplied type of teleport
+*  Example : player:getTeleport(dsp.teleport.type.HOMEPOINT)
+*  Notes   : 
+************************************************************************/
+
+inline int32 CLuaBaseEntity::getTeleport(lua_State *L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    uint8 type = (uint8)lua_tointeger(L, 1);
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+    switch (type)
+    {
+        case TELEPORT_OUTPOST_SANDY:   lua_pushinteger(L, PChar->teleport.outpostSandy);   break;
+        case TELEPORT_OUTPOST_BASTOK:  lua_pushinteger(L, PChar->teleport.outpostBastok);  break;
+        case TELEPORT_OUTPOST_WINDY:   lua_pushinteger(L, PChar->teleport.outpostWindy);   break;
+        case TELEPORT_RUNIC_PORTAL:    lua_pushinteger(L, PChar->teleport.runicPortal);    break;
+        case TELEPORT_PAST_MAW:        lua_pushinteger(L, PChar->teleport.pastMaw);        break;
+        case TELEPORT_CAMPAIGN_SANDY:  lua_pushinteger(L, PChar->teleport.campaignSandy);  break;
+        case TELEPORT_CAMPAIGN_BASTOK: lua_pushinteger(L, PChar->teleport.campaignBastok); break;
+        case TELEPORT_CAMPAIGN_WINDY:  lua_pushinteger(L, PChar->teleport.campaignWindy);  break;
+        case TELEPORT_HOMEPOINT:
+            lua_newtable(L);
+            for (uint8 x = 0; x < 4; x++)
+            {
+                lua_pushnumber(L, PChar->teleport.homepoint.access[x]);
+                lua_rawseti(L, -2, x + 1);
+            }
+            break;
+        case TELEPORT_SURVIVAL: 
+            lua_newtable(L);
+            for (uint8 x = 0; x < 4; x++)
+            {
+                lua_pushnumber(L, PChar->teleport.survival.access[x]);
+                lua_rawseti(L, -2, x + 1);
+            }
+            break;
+        default:
+            ShowError("LuaBaseEntity::getteleport : Parameter 1 out of bounds.\n");
+            return 0;
+    }
+    return 1;
+}
+
+/************************************************************************
+*  Function: hasTeleport(uint8 type, uint8 bit, uint8 set (optional))
+*  Purpose : Returns true if player has HP, false otherwise
+*  Example : player:hasTeleport(dsp.teleport.type.HOMEPOINT, bit, set)
+*  Notes   : 
+************************************************************************/
+
+inline int32 CLuaBaseEntity::hasTeleport(lua_State *L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+    uint8 type = (uint8)lua_tointeger(L, 1);
+    uint8 bit  = (uint8)lua_tointeger(L, 2);
+    uint8 set  = lua_isnil(L, 3) ? 0 : (uint8)lua_tointeger(L, 3);
+    
+    if (type == TELEPORT_HOMEPOINT || type == TELEPORT_SURVIVAL)
+    {
+        if (lua_isnil(L, 3) || set > 3)
+        {
+            ShowError("Lua::addTeleport : Attempt to index array out-of-bounds or parameter is nil.");
+            return 0;
+        }
+        
+        if (type == TELEPORT_HOMEPOINT)
+            lua_pushboolean(L, PChar->teleport.homepoint.access[set] & (1 << bit));
+        else
+            lua_pushboolean(L, PChar->teleport.survival.access[set]  & (1 << bit));
+        return 1;
+    }
+
+    switch (type)
+    {
+        case TELEPORT_OUTPOST_SANDY:   lua_pushboolean(L, PChar->teleport.outpostSandy   & (1 << bit)); break;
+        case TELEPORT_OUTPOST_BASTOK:  lua_pushboolean(L, PChar->teleport.outpostBastok  & (1 << bit)); break;
+        case TELEPORT_OUTPOST_WINDY:   lua_pushboolean(L, PChar->teleport.outpostWindy   & (1 << bit)); break;
+        case TELEPORT_RUNIC_PORTAL:    lua_pushboolean(L, PChar->teleport.runicPortal    & (1 << bit)); break;
+        case TELEPORT_PAST_MAW:        lua_pushboolean(L, PChar->teleport.pastMaw        & (1 << bit)); break;
+        case TELEPORT_CAMPAIGN_SANDY:  lua_pushboolean(L, PChar->teleport.campaignSandy  & (1 << bit)); break;
+        case TELEPORT_CAMPAIGN_BASTOK: lua_pushboolean(L, PChar->teleport.campaignBastok & (1 << bit)); break;
+        case TELEPORT_CAMPAIGN_WINDY:  lua_pushboolean(L, PChar->teleport.campaignWindy  & (1 << bit)); break;
+        default:
+            ShowError("LuaBaseEntity::hasTeleport : Parameter 1 out of bounds.\n");
+            return 0;
+    }
+    return 1;
+}
+
+/************************************************************************
+*  Function: setTeleportMenu(uint8 type)
+*  Purpose : Store favorite homepoints or menu layout
+*  Example : player:setTeleportMenu(dsp.teleport.type.HOMEPOINT)
+*  Notes   : 
+************************************************************************/
+
+inline int32 CLuaBaseEntity::setTeleportMenu(lua_State *L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+    uint8 type = (uint8)lua_tointeger(L, 1);
+    if (!lua_istable(L, 2))
+    {
+        ShowError("LuaBaseEntity::setteleportMenu : Table not passed in Parameter 2.\n");
+        return 0;
+    }
+    
+    if (type != TELEPORT_HOMEPOINT && type != TELEPORT_SURVIVAL)
+    {
+        ShowError("LuaBaseEntity::setteleportMenu : Incorrect value for Parameter 1.\n");
+        return 0;
+    }
+
+    uint8 x = 0;
+    auto index = lua_gettop(L);
+    lua_pushnil(L);
+
+    while (lua_next(L,index))
+    {
+        if (type == TELEPORT_HOMEPOINT)
+            PChar->teleport.homepoint.menu[x++] = (int32)lua_tointeger(L, -1);
+        else
+            PChar->teleport.survival.menu[x++]  = (int32)lua_tointeger(L, -1);
+        lua_pop(L, 1);
+    }
+
+    charutils::SaveTeleport(PChar, type);
+    return 0;
+}
+
+/************************************************************************
+*  Function: getTeleportMenu(uint8)
+*  Purpose : Return lua table containing integer values for favs + layout
+*  Example : player:getTeleportMenu(dsp.teleport.teleport.HOMEPOINT)
+*  Notes   : 
+************************************************************************/
+
+inline int32 CLuaBaseEntity::getTeleportMenu(lua_State *L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+    uint8 type = (uint8)lua_tointeger(L, 1);
+
+    if (type != TELEPORT_HOMEPOINT && type != TELEPORT_SURVIVAL)
+    {
+        ShowError("LuaBaseEntity::getTeleportMenu : Incorrect value or parameter 1.\n");
+        return 0;
+    }
+
+	lua_newtable(L);
+
+    for (uint8 x = 0; x < 10; x++)
+    {
+        if (type == TELEPORT_HOMEPOINT)
+            lua_pushnumber(L, PChar->teleport.homepoint.menu[x]);
+        else
+            lua_pushnumber(L, PChar->teleport.survival.menu[x]);
+        lua_rawseti(L, -2, x + 1);
+    }
+    return 1;
+}
+
+/************************************************************************
+*  Function: setHomePoint()
+*  Purpose : Sets a PC's homepoint.
+*  Example : player:setHomePoint(dsp.teleport.type.HOMEPOINT)
+*  Notes   :
+************************************************************************/
+
+inline int32 CLuaBaseEntity::setHomePoint(lua_State *L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+    PChar->profile.home_point.p = PChar->loc.p;
+    PChar->profile.home_point.destination = PChar->getZone();
+
+    const char *fmtQuery = "UPDATE chars \
+                            SET home_zone = %u, home_rot = %u, home_x = %.3f, home_y = %.3f, home_z = %.3f \
+                            WHERE charid = %u;";
+
+    Sql_Query(SqlHandle, fmtQuery,
+        PChar->profile.home_point.destination,
+        PChar->profile.home_point.p.rotation,
+        PChar->profile.home_point.p.x,
+        PChar->profile.home_point.p.y,
+        PChar->profile.home_point.p.z,
+        PChar->id);
+    return 0;
+}
+
+/************************************************************************
 *  Function: resetPlayer()
 *  Purpose : Delete player's account session and send them to Lower Jeuno
 *  Example : player:resetPlayer()
@@ -3091,6 +3353,7 @@ inline int32 CLuaBaseEntity::bringPlayer(lua_State* L)
     return 1;
 }
 
+
 /************************************************************************
 *  Function:getNationTeleport()
 *  Purpose : Returns the teleport point for a given value
@@ -3228,6 +3491,7 @@ inline int32 CLuaBaseEntity::hasItem(lua_State *L)
     return 1;
 }
 
+
 /************************************************************************
 *  Function: addLinkshell()
 *  Purpose : Adds a linkshell to a player
@@ -3315,23 +3579,23 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
             lua_pushboolean(L, 1);
             return 1;
         }
+
         uint16 id = (uint16)lua_tointeger(L, -1);
         lua_getfield(L, 1, "quantity");
-        uint32 quantity = (uint32)lua_tointeger(L, -1);
+        int32 quantity = (int32)lua_tointeger(L, -1);
         if (quantity == 0) quantity = 1;
         lua_pop(L, 2);
 
-        if (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() != 0)
+        while  (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() != 0 && quantity > 0)
         {
-            CItem* PItem = itemutils::GetItem(id);
-
-            if (PItem != nullptr)
+            if (CItem* PItem = itemutils::GetItem(id))
             {
                 PItem->setQuantity(quantity);
+                quantity -= PItem->getStackSize();
 
                 lua_getfield(L, 1, "silent");
                 bool silent = false;
-                if (!lua_isnil(L,-1))
+                if (!lua_isnil(L, -1))
                 {
                     silent = lua_toboolean(L, -1);
                 }
@@ -3348,31 +3612,32 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
                 {
                     lua_getfield(L, 1, "trial");
                     uint16 trial = (uint16)lua_tointeger(L, -1);
-                    if (trial != 0) ((CItemArmor*)PItem)->setTrialNumber(trial);
+                    if (trial != 0) ((CItemEquipment*)PItem)->setTrialNumber(trial);
                     lua_getfield(L, 1, "augments");
-                    if (lua_istable(L,-1))
+                    if (lua_istable(L, -1))
                     {
                         auto table = lua_gettop(L);
                         lua_pushnil(L);
-                        while (lua_next(L,table) != 0)
+                        while (lua_next(L, table) != 0)
                         {
                             uint16 augid = (uint16)lua_tointeger(L, -2);
                             uint8 augval = (uint8)lua_tointeger(L, -1);
-                            ((CItemArmor*)PItem)->PushAugment(augid, augval);
+                            ((CItemEquipment*)PItem)->PushAugment(augid, augval);
                             lua_pop(L, 1);
                         }
                     }
                     lua_pop(L, 2);
                 }
                 SlotID = charutils::AddItem(PChar, LOC_INVENTORY, PItem, silent);
+                if (SlotID == ERROR_SLOTID)
+                    break;
             }
             else
             {
                 ShowWarning(CL_YELLOW"charplugin::AddItem: Item <%i> is not found in a database\n" CL_RESET, id);
+                break;
             }
         }
-        lua_pushboolean(L, (SlotID != ERROR_SLOTID));
-        return 1;
     }
     else
     {
@@ -3386,7 +3651,7 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
 
         bool silence = false;
         uint16 itemID = (uint16)lua_tointeger(L, 1);
-        uint32 quantity = 1;
+        int32 quantity = 1;
         uint16 augment0 = 0; uint8 augment0val = 0;
         uint16 augment1 = 0; uint8 augment1val = 0;
         uint16 augment2 = 0; uint8 augment2val = 0;
@@ -3394,12 +3659,12 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
         uint16 trialNumber = 0;
 
         if (!lua_isnil(L, 2) && lua_isboolean(L, 2))
-            silence = (uint32)lua_toboolean(L, 2);
+            silence = lua_toboolean(L, 2);
         else if (!lua_isnil(L, 2) && lua_isnumber(L, 2))
         {
-            quantity = (uint32)lua_tointeger(L, 2);
+            quantity = (int32)lua_tointeger(L, 2);
             if (!lua_isnil(L, 3) && lua_isboolean(L, 3))
-                silence = (uint32)lua_toboolean(L, 3);
+                silence = lua_toboolean(L, 3);
         }
 
         if (!lua_isnil(L, 3) && lua_isnumber(L, 3))
@@ -3422,33 +3687,36 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
         if (!lua_isnil(L, 11) && lua_isnumber(L, 11))
             trialNumber = (uint16)lua_tointeger(L, 11);
 
-        if (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() != 0 && quantity != 0)
+        while (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() != 0 && quantity > 0)
         {
-            CItem* PItem = itemutils::GetItem(itemID);
-
-            if (PItem != nullptr)
+            if (CItem* PItem = itemutils::GetItem(itemID))
             {
                 PItem->setQuantity(quantity);
+                quantity -= PItem->getStackSize();
 
                 if (PItem->isType(ITEM_EQUIPMENT))
                 {
-                    if (augment0 != 0) ((CItemArmor*)PItem)->setAugment(0, augment0, augment0val);
-                    if (augment1 != 0) ((CItemArmor*)PItem)->setAugment(1, augment1, augment1val);
-                    if (augment2 != 0) ((CItemArmor*)PItem)->setAugment(2, augment2, augment2val);
-                    if (augment3 != 0) ((CItemArmor*)PItem)->setAugment(3, augment3, augment3val);
-                    if (trialNumber != 0) ((CItemArmor*)PItem)->setTrialNumber(trialNumber);
+                    if (augment0 != 0) ((CItemEquipment*)PItem)->setAugment(0, augment0, augment0val);
+                    if (augment1 != 0) ((CItemEquipment*)PItem)->setAugment(1, augment1, augment1val);
+                    if (augment2 != 0) ((CItemEquipment*)PItem)->setAugment(2, augment2, augment2val);
+                    if (augment3 != 0) ((CItemEquipment*)PItem)->setAugment(3, augment3, augment3val);
+                    if (trialNumber != 0) ((CItemEquipment*)PItem)->setTrialNumber(trialNumber);
                 }
                 SlotID = charutils::AddItem(PChar, LOC_INVENTORY, PItem, silence);
+
+                // Paranoid check
+                if (SlotID == ERROR_SLOTID)
+                    break;
             }
             else
             {
                 ShowWarning(CL_YELLOW"charplugin::AddItem: Item <%i> is not found in a database\n" CL_RESET, itemID);
+                break;
             }
         }
-        lua_pushboolean(L, (SlotID != ERROR_SLOTID));
-        return 1;
     }
-    lua_pushboolean(L, false);
+
+    lua_pushboolean(L, (SlotID != ERROR_SLOTID));
     return 1;
 }
 
@@ -3583,7 +3851,7 @@ inline int32 CLuaBaseEntity::createWornItem(lua_State *L)
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
     uint8 slotID = PChar->getStorage(LOC_INVENTORY)->SearchItem((uint16)lua_tointeger(L, 1));
 
-    if (slotID != -1)
+    if (slotID != ERROR_SLOTID)
     {
         CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(slotID);
         PItem->m_extra[0] = 1;
@@ -3717,6 +3985,44 @@ inline int32 CLuaBaseEntity::getCurrentGPItem(lua_State* L)
     lua_pushinteger(L, GPItem.second);
 
     return 2;
+}
+
+/************************************************************************
+*  Function: breakLinkshell()
+*  Purpose : Breaks linkshell and all pearls/sacks
+*  Example : player:breakLinkshell(LSname)
+*  Notes   : Used by GMs to break a linkshell
+************************************************************************/
+
+inline int32 CLuaBaseEntity::breakLinkshell(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isstring(L, 1));
+
+    auto lsname = lua_tostring(L, 1);
+    bool found = false;
+
+    int32 ret = Sql_Query(SqlHandle, "SELECT broken, linkshellid FROM linkshells WHERE name = '%s'", lsname);
+	if( ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    {
+        uint8 broken = Sql_GetUIntData(SqlHandle,0);
+        if (broken)
+        {
+            lua_pushboolean(L, true);
+            return 1;
+        }
+        uint32 lsid = Sql_GetUIntData(SqlHandle,1);
+        CLinkshell* PLinkshell = linkshell::GetLinkshell(lsid);
+        if (!PLinkshell)
+            PLinkshell = linkshell::LoadLinkshell(lsid);
+        int8 EncodedName[16];
+        EncodeStringLinkshell((int8*)lsname, EncodedName);
+        PLinkshell->BreakLinkshell(EncodedName, true);
+        linkshell::UnloadLinkshell(lsid);
+        found = true;
+    }
+
+    lua_pushboolean(L, found);
+    return 1;
 }
 
 /************************************************************************
@@ -3858,7 +4164,7 @@ inline int32 CLuaBaseEntity::tradeComplete(lua_State *L)
 *  Function: canEquipItem()
 *  Purpose : Returns true if a player can equip the item
 *  Example : if (player:canEquipItem(JOY_TOY)) then
-*  Notes   : CItemArmor* is a pointer to weapons or armor
+*  Notes   : CItemEquipment* is a pointer to weapons or armor
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::canEquipItem(lua_State *L)
@@ -3875,7 +4181,7 @@ inline int32 CLuaBaseEntity::canEquipItem(lua_State *L)
     if (!lua_isnil(L, 2) && lua_isboolean(L, 2))
         checkLevel = lua_toboolean(L, 2);
 
-    CItemArmor* PItem = (CItemArmor*)itemutils::GetItem(itemID);
+    CItemEquipment* PItem = (CItemEquipment*)itemutils::GetItem(itemID);
     CBattleEntity* PChar = (CBattleEntity*)m_PBaseEntity;
 
     if (!(PItem->getJobs() & (1 << (PChar->GetMJob() - 1))))
@@ -3916,11 +4222,11 @@ inline int32 CLuaBaseEntity::equipItem(lua_State *L)
     else
         containerID = (uint8)lua_tointeger(L, 2);
     uint8 SLOT = PChar->getStorage(containerID)->SearchItem(itemID);
-    CItemArmor* PItem;
+    CItemEquipment* PItem;
 
     if (SLOT != ERROR_SLOTID)
     {
-        PItem = (CItemArmor*)PChar->getStorage(containerID)->GetItem(SLOT);
+        PItem = (CItemEquipment*)PChar->getStorage(containerID)->GetItem(SLOT);
         charutils::EquipItem(PChar, SLOT, PItem->getSlotType(), containerID);
         charutils::SaveCharEquip(PChar);
         charutils::SaveCharLook(PChar);
@@ -4247,7 +4553,7 @@ inline int32 CLuaBaseEntity::storeWithPorterMoogle(lua_State *L)
             {
                 // TODO: Items need to be checked for an in-progress magian trial before storing.
                 //auto item = PChar->getStorage(LOC_INVENTORY)->GetItem(slotId);
-                //if (item->isType(ITEM_EQUIPMENT) && ((CItemArmor*)item)->getTrialNumber() != 0)
+                //if (item->isType(ITEM_EQUIPMENT) && ((CItemEquipment*)item)->getTrialNumber() != 0)
                 charutils::UpdateItem(PChar, LOC_INVENTORY, slotId, -1);
                 //else
                 //{
@@ -4687,9 +4993,8 @@ inline int32 CLuaBaseEntity::setNation(lua_State *L)
 
 /************************************************************************
 *  Function: getAllegiance()
-*  Purpose : Not really sure...used as a comparison between caster and mob
+*  Purpose : Gets allegiance of entity (mob/player/ballista team)
 *  Example : if (target:getAllegiance() == caster:getAllegiance()) then
-*  Notes   : Only used in cure formulas (blue spells too)
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::getAllegiance(lua_State* L)
@@ -4703,9 +5008,8 @@ inline int32 CLuaBaseEntity::getAllegiance(lua_State* L)
 
 /************************************************************************
 *  Function: setAllegiance()
-*  Purpose : Maybe in determining if a cure spell/ability will heal the mob?
+*  Purpose : Sets allegiance of entity (mob/player/ballista team)
 *  Example : target:setAllegiance(???)
-*  Notes   : Not currently implemented in any script
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::setAllegiance(lua_State* L)
@@ -5189,6 +5493,7 @@ inline int32 CLuaBaseEntity::unlockJob(lua_State *L)
     }
     return 0;
 }
+
 
 /************************************************************************
 *  Function: sjRestriction()
@@ -6142,15 +6447,15 @@ inline int32 CLuaBaseEntity::completeQuest(lua_State *L)
     {
         uint8 complete = PChar->m_questLog[questLogID].complete[questID / 8] & (1 << (questID % 8));
 
-        if (complete == 0)
+        if (!complete)
         {
             PChar->m_questLog[questLogID].current[questID / 8] &= ~(1 << (questID % 8));
             PChar->m_questLog[questLogID].complete[questID / 8] |= (1 << (questID % 8));
 
             PChar->pushPacket(new CQuestMissionLogPacket(PChar, questLogID, LOG_QUEST_CURRENT));
             PChar->pushPacket(new CQuestMissionLogPacket(PChar, questLogID, LOG_QUEST_COMPLETE));
+            charutils::SaveQuestsList(PChar);
         }
-        charutils::SaveQuestsList(PChar);
     }
     else
     {
@@ -6640,7 +6945,7 @@ inline int32 CLuaBaseEntity::addExp(lua_State *L)
 
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    charutils::AddExperiencePoints(false, (CCharEntity*)m_PBaseEntity, m_PBaseEntity, (uint32)lua_tointeger(L, 1), 0, false);
+    charutils::AddExperiencePoints(false, (CCharEntity*)m_PBaseEntity, m_PBaseEntity, (uint32)lua_tointeger(L, 1));
     return 0;
 }
 
@@ -8725,6 +9030,39 @@ inline int32 CLuaBaseEntity::getAllianceSize(lua_State* L)
 }
 
 /************************************************************************
+*  Function: getLeaderID()
+*  Purpose : Returns the fallback id of the Alliance/Party or player
+*  Example : local leaderid = player:getLeaderID()
+*  Notes   : if the player is in an alliance, returns alliance ID
+*  Notes   : if the player is in a party and no alliance, returns party ID
+*  Notes   : if the player is not in a party, returns player ID
+************************************************************************/
+
+inline int32 CLuaBaseEntity::getLeaderID(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    if (const CCharEntity* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+        if (PChar->PParty != nullptr)
+        {
+            if (PChar->PParty->m_PAlliance != nullptr)
+            {
+                lua_pushnumber(L, PChar->PParty->m_PAlliance->m_AllianceID);
+                return 1;
+            }
+            lua_pushnumber(L, PChar->PParty->GetPartyID());
+            return 1;
+        }
+        lua_pushnumber(L, PChar->id);
+        return 1;
+    }
+    lua_pushnil(L);
+    return 1;
+}
+
+/************************************************************************
 *  Function: reloadParty()
 *  Purpose : Display a new party in the event of alliance form/disband
 *  Example : Creates/Destroys the other parties being displayed
@@ -8808,14 +9146,16 @@ inline int32 CLuaBaseEntity::checkFovAllianceAllowed(lua_State *L)
 }
 
 /************************************************************************
-*  Function: checkValorCredit()
-*  Purpose : Used to determine if kill counts towards regime
-*  Example : if (player:checkValorCredit(mob)) then
+*  Function: checkKillCredit()
+*  Purpose : Used to determine if kill counts towards regimes/etc.
+*  Example : if (player:checkKillCredit(mob)) then
+*          : optionally specify lv diff and distance e.g.
+*          : player:checkKillCredit(mob, 15, 100)
 *  Notes   : Returns true if player is in range of sync target upon kill
 *  Notes   : and the mob is able to give exp to the members
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::checkValorCredit(lua_State *L)
+inline int32 CLuaBaseEntity::checkKillCredit(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
@@ -8831,18 +9171,22 @@ inline int32 CLuaBaseEntity::checkValorCredit(lua_State *L)
 
     bool credit = false;
     int lvlDiff = (int)(PMob->GetMLevel()) - (int)(PChar->GetMLevel());
+    int maxDiff = (!lua_isnil(L, 2) && lua_isnumber(L, 2)) ? (int)lua_tonumber(L, 2) : 15;
+    float range = (!lua_isnil(L, 3) && lua_isnumber(L, 3)) ? (float)lua_tonumber(L, 3) : 100;
 
-    if (charutils::GetRealExp(PMob->m_HiPCLvl, PMob->GetMLevel()) && distance(PMob->loc.p, PChar->loc.p) < 100 && lvlDiff < 15)
+    if (charutils::CheckMob(PMob->m_HiPCLvl, PMob->GetMLevel()) > EMobDifficulty::TooWeak && distance(PMob->loc.p, PChar->loc.p) < range && lvlDiff < maxDiff)
     {
         if (PChar->PParty && PChar->PParty->GetSyncTarget())
         {
-            if (distance(PMob->loc.p, PChar->PParty->GetSyncTarget()->loc.p) < 100 && PChar->PParty->GetSyncTarget()->health.hp)
+            if (distance(PMob->loc.p, PChar->PParty->GetSyncTarget()->loc.p) < range && PChar->PParty->GetSyncTarget()->health.hp)
             {
                 credit = true;
             }
         }
         else
+        {
             credit = true;
+        }
     }
 
     lua_pushboolean(L, credit);
@@ -8995,23 +9339,15 @@ inline int32 CLuaBaseEntity::copyConfrontationEffect(lua_State* L)
 /************************************************************************
 *  Function: getBattlefield()
 *  Purpose : Returns a Battlefield Instance Object to the entity
-*  Example : local inst = player:getBattlefield():getBattlefieldNumber();
-*  Notes   : Mainly used for Mobs
+*  Example : local battlefield = player:getBattlefield();
+*  Notes   : Used to check if entity is inside a battlefield
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::getBattlefield(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
 
-    CBattlefield* PBattlefield = m_PBaseEntity->PBCNM;
-    if (m_PBaseEntity->loc.zone && m_PBaseEntity->loc.zone->m_BattlefieldHandler)
-    {
-        auto PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity);
-        CStatusEffect* PStatusEffect = nullptr;
-
-        if (PChar && (PStatusEffect = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_BATTLEFIELD)))
-            PBattlefield = m_PBaseEntity->loc.zone->m_BattlefieldHandler->getBattlefield(PChar->loc.zone->GetCharByID(PStatusEffect->GetSubID()));
-    }
+    auto PBattlefield = m_PBaseEntity->PBattlefield;
 
     if (PBattlefield)
     {
@@ -9032,569 +9368,106 @@ inline int32 CLuaBaseEntity::getBattlefield(lua_State* L)
 
 /************************************************************************
 *  Function: getBattlefieldID()
-*  Purpose : Returns the integer ID for the battlefield
-*  Example : local battle = player:getBattlefieldID()
+*  Purpose : Returns the integer ID for the battlefield, -1 if not found
+*  Example : local battlefieldId = player:getBattlefieldID()
 *  Notes   :
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::getBattlefieldID(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_BattlefieldHandler == nullptr);
-
-    uint8 inst = 255;
-
-    if (PChar->loc.zone != nullptr && PChar->loc.zone->m_BattlefieldHandler != nullptr)
-    {
-        inst = PChar->loc.zone->m_BattlefieldHandler->findBattlefieldIDFor(PChar);
-    }
-
-    lua_pushinteger(L, inst);
+    lua_pushinteger(L, m_PBaseEntity->PBattlefield ? m_PBaseEntity->PBattlefield->GetID() : -1);
     return 1;
 }
 
 /************************************************************************
-*  Function: isInBattlefieldList()
-*  Purpose : Returns true if Mob is in the battlefield instance table
-*  Example : if (mob:isInBattlefieldList()) then
-*  Notes   :
+*  Function: registerBattlefield()
+*  Purpose : Attempts to register an existing battlefield or create a new one.
+*  Example : local returnCode = player:registerBattlefield(id, area, initiatorId)
+*  Notes   : Returns BATTLEFIELD_RETURNCODE (see scripts/globals/battlefield.lua or src/map/battlefield.h)
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isInBattlefieldList(lua_State *L)
+inline int32 CLuaBaseEntity::registerBattlefield(lua_State* L)
 {
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr || m_PBaseEntity->loc.zone->m_BattlefieldHandler == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CMobEntity* PMob = (CMobEntity*)m_PBaseEntity;
+    auto PChar = static_cast<CCharEntity*>(m_PBaseEntity);
+    auto PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
 
-    if (PMob->loc.zone->m_BattlefieldHandler->checkMonsterInList(PMob))
-        lua_pushboolean(L, true);
-    else
-        lua_pushboolean(L, false);
+    int battlefield = -1;
+    uint8 area = 0;
+    uint32 initiator = 0;
 
+    battlefield = !lua_isnil(L, 1) ? (int)lua_tointeger(L, 1) : -1;
+    area = !lua_isnil(L, 2) ? (uint8)lua_tointeger(L, 2) : 1;
+    initiator = !lua_isnil(L, 3) ? (uint32)lua_tointeger(L, 3) : 0;
+
+    lua_pushinteger(L, PZone->m_BattlefieldHandler->RegisterBattlefield(PChar, (uint16)battlefield, area, initiator));
     return 1;
 }
 
-/************************************************************************
-*  Function: addInBattlefieldList()
-*  Purpose : Inserts a Mob into the instanced battlefield list
-*  Example : mob:addInBattlefieldList()
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::addInBattlefieldList(lua_State *L)
+inline int32 CLuaBaseEntity::battlefieldAtCapacity(lua_State *L)
 {
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
-
-    CMobEntity* PMob = (CMobEntity*)m_PBaseEntity;
-
-    PMob->loc.zone->m_BattlefieldHandler->insertMonsterInList(PMob);
-
-    return 0;
-}
-
-/************************************************************************
-*  Function: addPlayerToSpecialBattlefield()
-*  Purpose : Registers a player for a new special battlefield BCNM
-*  Example : player:addPlayerToSpecialBattlefield(playerLimbusID)
-*  Notes   : Used only for Limbus events
-************************************************************************/
-
-inline int32 CLuaBaseEntity::addPlayerToSpecialBattlefield(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr || m_PBaseEntity->loc.zone->m_BattlefieldHandler == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
+    auto PChar = static_cast<CCharEntity*>(m_PBaseEntity);
+    auto PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
 
     DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
 
-    int bcnm = PZone->m_BattlefieldHandler->SpecialBattlefieldAddPlayer((uint16)lua_tointeger(L, 1), PChar);
-
-    if (bcnm != -1)
-    {
-        ShowDebug("Registration successful!\n");
-        lua_pushinteger(L, bcnm);
-    }
-    else
-    {
-        ShowDebug("Unable to register BCNM.\n");
-        lua_pushinteger(L, -1);
-    }
-
-    return 1;
-}
-
-/************************************************************************
-*  Function: getSpecialBattlefieldLeftTime()
-*  Purpose : Returns the time left in the current special battlefield
-*  Example : local time = getSpecialBattlefieldLeftTime()
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::getSpecialBattlefieldLeftTime(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    duration Leftime;
-
-
-    if (PZone != nullptr && PZone->m_BattlefieldHandler != nullptr)
-    {
-        Leftime = PZone->m_BattlefieldHandler->SpecialBattlefieldLeftTime((uint16)lua_tointeger(L, 1), server_clock::now());
-    }
-
-    lua_pushinteger(L, (lua_Integer)std::chrono::duration_cast<std::chrono::seconds>(Leftime).count());
-    return 1;
-}
-
-/************************************************************************
-*  Function: addTimeToSpecialBattlefield()
-*  Purpose : Adds a specified amount of time to the battlefield timer
-*  Example : player:addTimeToSpecialBattlefield(5,5)
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::addTimeToSpecialBattlefield(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    PZone->m_BattlefieldHandler->GiveTimeToBattlefield((uint16)lua_tointeger(L, 1), std::chrono::minutes(lua_tointeger(L, 2)));
-
-    return 1;
-}
-
-/************************************************************************
-*  Function: isSpecialBattlefieldEmpty()
-*  Purpose : Returns an integer 1 or 0 if a battlefield is occupied or not
-*  Example : player:isSpecialBattlefieldEmpty(GetInstanceRegion(instanceID))
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::isSpecialBattlefieldEmpty(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    uint8 full = 1;
-
+    bool full = false;
 
     if (PZone != nullptr && PZone->m_BattlefieldHandler != nullptr &&
-        PZone->m_BattlefieldHandler->hasSpecialBattlefieldEmpty((uint16)lua_tointeger(L, 1)))
+        PZone->m_BattlefieldHandler->ReachedMaxCapacity((int)lua_tointeger(L, 1)))
     {
-
-        full = 0;
+        full = true;
     }
-    lua_pushinteger(L, full);
+    lua_pushboolean(L, full);
     return 1;
 }
 
 /************************************************************************
-*  Function: RestoreAndHealOnBattlefield()
-*  Purpose : Restores HP/MP to full and removes Ability/Magic cooldowns
-*  Example : player:RestoreAndHealOnBattlefield()
-*  Notes   : Checks to see if Player is in battlefield before applying
-************************************************************************/
-
-inline int32 CLuaBaseEntity::RestoreAndHealOnBattlefield(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    // only reset for players
-    if (m_PBaseEntity->objtype == TYPE_PC)
-    {
-        CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-        PChar->loc.zone->m_BattlefieldHandler->RestoreOnBattlefield((uint16)lua_tointeger(L, 1));
-        return 0;
-    }
-    return 0;
-}
-
-/************************************************************************
-*  Function: bcnmRegister()
-*  Purpose : Attempts to register a BCNM Battlefield
-*  Example : inst = player:bcnmRegister(1280)
-*  Notes   : Used by Dynamis and BCNM
-************************************************************************/
-
-inline int32 CLuaBaseEntity::bcnmRegister(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    int bcnm = 0;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    int ZoneID = PZone->GetID();
-
-    if (ZoneID == 37 || ZoneID == 38)
-    {
-        if (PZone->m_BattlefieldHandler->hasFreeSpecialBattlefield((uint16)lua_tointeger(L, 1)))
-        {
-            ShowDebug("Free Special Battlefield found for BCNMID %i \n", lua_tointeger(L, 1));
-            bcnm = PZone->m_BattlefieldHandler->registerBcnm((uint16)lua_tointeger(L, 1), PChar);
-
-            if (bcnm != -1)
-            {
-                ShowDebug("Registration successful!\n");
-                lua_pushinteger(L, bcnm);
-            }
-            else
-            {
-                ShowDebug("Unable to register BCNM Special Battlefield.\n");
-                lua_pushinteger(L, bcnm);
-            }
-        }
-        else
-        {
-            ShowDebug("BCNM Registration Failed : No free Special battlefields for BCNMID %i \n", lua_tointeger(L, 1));
-            lua_pushinteger(L, -1);
-        }
-    }
-    else
-        if (PZone->m_BattlefieldHandler->hasFreeBattlefield())
-        {
-
-            if ((ZoneID > 184 && ZoneID < 189) || (ZoneID > 133 && ZoneID < 136) || (ZoneID > 38 && ZoneID < 43))
-            {
-                ShowDebug("Free Dynamis Battlefield found for BCNMID %i \n", lua_tointeger(L, 1));
-                bcnm = PZone->m_BattlefieldHandler->registerDynamis((uint16)lua_tointeger(L, 1), PChar);
-            }
-            else
-            {
-                ShowDebug("Free BCNM Battlefield found for BCNMID %i \n", lua_tointeger(L, 1));
-                bcnm = PZone->m_BattlefieldHandler->registerBcnm((uint16)lua_tointeger(L, 1), PChar);
-            }
-
-            if (bcnm != -1)
-            {
-                ShowDebug("Registration successful!\n");
-                lua_pushinteger(L, bcnm);
-            }
-            else
-            {
-                ShowDebug("Unable to register BCNM Battlefield.\n");
-                lua_pushinteger(L, bcnm);
-            }
-        }
-        else
-        {
-            ShowDebug("BCNM Registration Failed : No free battlefields for BCNMID %i \n", lua_tointeger(L, 1));
-            lua_pushinteger(L, -1);
-        }
-
-    return 1;
-}
-
-/************************************************************************
-*  Function: bcnmEnter()
-*  Purpose : Places an entity into the battlefield and applies effects
-*  Example : player:bcnmEnter(1280) -- Enter Dynamis Bastok
-*  Notes   : Used by Dynamis and BCNM
-************************************************************************/
-
-inline int32 CLuaBaseEntity::bcnmEnter(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    int ZoneID = PZone->GetID();
-
-    if ((ZoneID > 184 && ZoneID < 189) || (ZoneID > 133 && ZoneID < 136) || (ZoneID > 38 && ZoneID < 43))
-    {
-        if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_DYNAMIS))
-        {
-            uint16 effect_bcnmid = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_DYNAMIS)->GetPower();
-            if (PZone->m_BattlefieldHandler->enterBcnm(effect_bcnmid, PChar))
-            {
-                lua_pushinteger(L, 1);
-                return 1;
-            }
-        }
-    }
-    else
-    {
-        if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
-        {
-            uint16 effect_bcnmid = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_BATTLEFIELD)->GetPower();
-            if (PZone->m_BattlefieldHandler->enterBcnm(effect_bcnmid, PChar))
-            {
-                lua_pushinteger(L, 1);
-                return 1;
-            }
-        }
-    }
-    ShowDebug("%s is unable to enter.\n", PChar->GetName());
-    lua_pushinteger(L, 0);
-    return 1;
-}
-
-/************************************************************************
-*  Function: bcnmLeave()
-*  Purpose : Leaves a BCNM and removes battlefield effect
-*  Example : player:bcnmLeave(1980)
+*  Function: enterBattlefield(area)
+*  Purpose : Places an entity into a battlefield they are registered for (or tries enter a specific area if not full)
+*  Example : player:enterBattlefield(area)
 *  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::bcnmLeave(lua_State *L)
+inline int32 CLuaBaseEntity::enterBattlefield(lua_State* L)
 {
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr || m_PBaseEntity->loc.zone->m_BattlefieldHandler == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_BattlefieldHandler == nullptr);
-
-    if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
-    {
-        uint16 effect_bcnmid = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_BATTLEFIELD)->GetPower();
-        auto typeOfExit = lua_tointeger(L, 1);
-        if (typeOfExit == 1 && PChar->loc.zone->m_BattlefieldHandler->leaveBcnm(effect_bcnmid, PChar))
-        {
-            ShowDebug("BCNM Leave :: %s left BCNMID %i \n", PChar->GetName(), effect_bcnmid);
-        }
-        else if (typeOfExit == 2 && PChar->loc.zone->m_BattlefieldHandler->winBcnm(effect_bcnmid, PChar))
-        {
-            ShowDebug("BCNM Leave :: Won BCNMID %i \n", effect_bcnmid);
-        }
-    }
+    CBattlefield* PBattlefield = nullptr;
+    if (lua_isnil(L, 1) || !lua_isnumber(L, 1))
+        PBattlefield = m_PBaseEntity->loc.zone->m_BattlefieldHandler->GetBattlefield(m_PBaseEntity, true);
     else
-    {
-        ShowDebug("BCNM Leave :: %s does not have EFFECT_BATTLEFIELD. \n", PChar->GetName());
-    }
+        PBattlefield = m_PBaseEntity->loc.zone->m_BattlefieldHandler->GetBattlefieldByArea((uint8)lua_tointeger(L, 1));
 
-    lua_pushinteger(L, 0);
+    lua_pushboolean(L, PBattlefield ? PBattlefield->InsertEntity(m_PBaseEntity, true) : false);
     return 1;
 }
 
 /************************************************************************
-*  Function: isInBcnm()
-*  Purpose : Returns true if an entity is in a BCNM
-*  Example : if (player:isInBcnm()) then
-*  Notes   :
+*  Function: leaveBattlefield()
+*  Purpose : Removes an entity from battlefield and removes battlefield status
+*  Example : player:leaveBattlefield(leaveCode)
+*  Notes   : leaveCode can be found in scripts/globals/battlefield.lua or src/map/battlefield.h
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::isInBcnm(lua_State *L)
+inline int32 CLuaBaseEntity::leaveBattlefield(lua_State* L)
 {
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr || m_PBaseEntity->loc.zone->m_BattlefieldHandler == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
-    if (PChar->PBCNM)
-    {
-        lua_pushinteger(L, 1);
-        return 1;
-    }
-    lua_pushinteger(L, 0);
-    return 1;
-}
-
-/************************************************************************
-*  Function: isBcnmsFull()
-*  Purpose : Returns true if battlefields are full; false if they are free
-*  Example : if player:isBcnmsFull() == 1 then
-*  Notes   : Up to three are available, if 3/3 are used up, returns false
-************************************************************************/
-
-inline int32 CLuaBaseEntity::isBcnmsFull(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    uint8 full = 1;
-
-    if (PZone != nullptr && PZone->m_BattlefieldHandler != nullptr &&
-        PZone->m_BattlefieldHandler->hasFreeBattlefield())
-    {
-
-        full = 0;
-    }
-    lua_pushinteger(L, full);
-    return 1;
-}
-
-/************************************************************************
-*  Function: getBCNMloot()
-*  Purpose : Releases the treasure into the treasure pool for all members
-*  Example : player:getBCNMloot()
-*  Notes   : Actives upon open treasure box in BCNM
-************************************************************************/
-
-inline int32 CLuaBaseEntity::getBCNMloot(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_BattlefieldHandler == nullptr);
-
-    uint8 inst = 255;
-
-    if (PChar->loc.zone != nullptr && PChar->loc.zone->m_BattlefieldHandler != nullptr)
-    {
-        inst = PChar->loc.zone->m_BattlefieldHandler->findBattlefieldIDFor(PChar);
-        PChar->loc.zone->m_BattlefieldHandler->openTreasureChest(PChar);
-    }
-
-    lua_pushinteger(L, inst);
-    return 1;
-}
-
-/************************************************************************
-*  Function: BCNMSetLoot()
-*  Purpose : Sets a loot list for a special instance
-*  Example : player:BCNMSetLoot(lootID, InstanceRegion, CofferID);
-*  Notes   : Passes LootID, Instance Region, and CofferID to SetLootToBCNM
-************************************************************************/
-
-inline int32 CLuaBaseEntity::BCNMSetLoot(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_BattlefieldHandler == nullptr);
-    if (PChar->loc.zone != nullptr && PChar->loc.zone->m_BattlefieldHandler != nullptr)
-    {
-        PChar->loc.zone->m_BattlefieldHandler->SetLootToBCNM((uint16)lua_tointeger(L, 1), (uint16)lua_tointeger(L, 2), (uint32)lua_tointeger(L, 3));
-    }
-    return 0;
-}
-
-/************************************************************************
-*  Function: getDynamisUniqueID()
-*  Purpose : Returns a unique Dynamis ID
-*  Example :
-*  Notes   : Unimplemented at this time
-************************************************************************/
-
-inline int32 CLuaBaseEntity::getDynamisUniqueID(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
+    auto leavecode = (uint8)lua_tointeger(L, 1);
 
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    lua_pushinteger(L, PZone->m_BattlefieldHandler->getUniqueDynaID((uint16)lua_tointeger(L, 1)));
-
-    return 1;
-}
-
-/************************************************************************
-*  Function: addPlayerToDynamis()
-*  Purpose : Transports a player into Dynamis
-*  Example : inst = player:addPlayerToDynamis(1284);
-*  Notes   : Variable is the BCNM ID
-************************************************************************/
-
-inline int32 CLuaBaseEntity::addPlayerToDynamis(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    int bcnm = PZone->m_BattlefieldHandler->dynamisAddPlayer((uint16)lua_tointeger(L, 1), PChar);
-
-    if (bcnm != -1)
-    {
-        ShowDebug("Registration successful!\n");
-        lua_pushinteger(L, bcnm);
-    }
-    else
-    {
-        ShowDebug("Unable to register BCNM Battlefield.\n");
-        lua_pushinteger(L, -1);
-    }
-
-    return 1;
-}
-
-/************************************************************************
-*  Function: addTimeToDynamis()
-*  Purpose : Adds more time to the countdown clock on the battlefield
-*  Example : player:addTimeToDynamis(10) -- Add 10 minutes
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::addTimeToDynamis(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
-
-    DSP_DEBUG_BREAK_IF(PZone->m_BattlefieldHandler == nullptr);
-
-    PZone->m_BattlefieldHandler->dynamisMessage(448, (uint16)lua_tointeger(L, 1));
-
-    return 1;
-}
-
-/************************************************************************
-*  Function: launchDynamisSecondPart()
-*  Purpose : Spawns Mobs Part 2 when Mega Boss is defeated
-*  Example : player:launchDynamisSecondPart()
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::launchDynamisSecondPart(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_BattlefieldHandler == nullptr);
-
-    PChar->loc.zone->m_BattlefieldHandler->launchDynamisSecondPart();
-
+    lua_pushinteger(L, m_PBaseEntity->loc.zone->m_BattlefieldHandler->RemoveFromBattlefield(m_PBaseEntity, m_PBaseEntity->PBattlefield, leavecode));
     return 1;
 }
 
@@ -9612,43 +9485,6 @@ inline int32 CLuaBaseEntity::isInDynamis(lua_State *L)
 
     lua_pushboolean(L, ((CBattleEntity*)m_PBaseEntity)->isInDynamis());
     return 1;
-}
-
-/************************************************************************
-*  Function: getStatPoppedMobs()
-*  Purpose : Returns true if Dyna Statue has popped Mobs
-*  Example : if (mob:getStatPoppedMobs() == false) then
-*  Notes   : See scripts/globals/dynamis.lua
-************************************************************************/
-
-inline int32 CLuaBaseEntity::getStatPoppedMobs(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
-
-    bool isPopped = ((CMobEntity*)m_PBaseEntity)->m_StatPoppedMobs;
-
-    lua_pushboolean(L, isPopped);
-    return 1;
-}
-
-/************************************************************************
-*  Function: setStatPoppedMobs()
-*  Purpose : Sets the Stat Pops to popped
-*  Example : mob:setStatPoppedMobs(true)
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::setStatPoppedMobs(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
-
-    if (!lua_isnil(L, 1) && lua_isboolean(L, 1))
-        ((CMobEntity*)m_PBaseEntity)->m_StatPoppedMobs = true;
-    else
-        ((CMobEntity*)m_PBaseEntity)->m_StatPoppedMobs = false;
-    return 0;
 }
 
 /************************************************************************
@@ -11848,7 +11684,7 @@ inline int32 CLuaBaseEntity::getWeaponDmgRank(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    uint16 weapondam = ((CBattleEntity*)m_PBaseEntity)->GetMainWeaponRank() * 9;
+    uint16 weapondam = ((CBattleEntity*)m_PBaseEntity)->GetMainWeaponRank();
 
     lua_pushinteger(L, weapondam);
     return 1;
@@ -11885,7 +11721,7 @@ inline int32 CLuaBaseEntity::getOffhandDmgRank(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    uint16 weapondam = ((CBattleEntity*)m_PBaseEntity)->GetSubWeaponRank() * 9;
+    uint16 weapondam = ((CBattleEntity*)m_PBaseEntity)->GetSubWeaponRank();
 
     lua_pushinteger(L, weapondam);
     return 1;
@@ -11910,18 +11746,18 @@ inline int32 CLuaBaseEntity::getRangedDmg(lua_State *L)
 }
 
 /************************************************************************
-*  Function: getRangedDmgForRank()
+*  Function: getRangedDmgRank()
 *  Purpose : Used in determining fSTR caculcation in weaponskills.lua
-*  Example : attacker:getRangedDmgForRank()
-*  Notes   :   To Do: Rename to getRangedDmgRank to match convention
+*  Example : attacker:getRangedDmgRank()
+*  Notes   :
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::getRangedDmgForRank(lua_State *L)
+inline int32 CLuaBaseEntity::getRangedDmgRank(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    uint16 weaponrank = ((CBattleEntity*)m_PBaseEntity)->GetRangedWeaponRank() * 9;
+    uint16 weaponrank = ((CBattleEntity*)m_PBaseEntity)->GetRangedWeaponRank();
 
     lua_pushinteger(L, weaponrank);
     return 1;
@@ -12162,6 +11998,33 @@ int32 CLuaBaseEntity::takeWeaponskillDamage(lua_State* L)
     auto targetTPMultiplier = (float)lua_tonumber(L, 9);
 
     lua_pushinteger(L, (lua_Integer)battleutils::TakeWeaponskillDamage(PChar, static_cast<CBattleEntity*>(m_PBaseEntity), damage, attackType, damageType, slot, primary, tpMultiplier, bonusTP, targetTPMultiplier));
+    return 1;
+}
+
+/************************************************************************
+*  Function: int32 TakeSpellDamage()
+*  Purpose : Calls Battle Utils to calculate final spell damage against a foe
+*  Example : target:takeSpellDamage(caster, spell, finaldmg, attackType, damageType)
+*  Notes   : Global function of same name in bluemagic.lua, calls this member function from within
+************************************************************************/
+
+int32 CLuaBaseEntity::takeSpellDamage(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isuserdata(L, 2));
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 3) || !lua_isnumber(L, 3));
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 3) || !lua_isnumber(L, 4));
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 3) || !lua_isnumber(L, 5));
+
+
+    auto PChar = static_cast<CCharEntity*>(Lunar<CLuaBaseEntity>::check(L, 1)->m_PBaseEntity);
+    auto PSpell = Lunar<CLuaSpell>::check(L, 2)->GetSpell();
+    auto damage = (int32)lua_tointeger(L, 3);
+    ATTACKTYPE attackType = (ATTACKTYPE)lua_tointeger(L, 4);
+    DAMAGETYPE damageType = (DAMAGETYPE)lua_tointeger(L, 5);
+
+    lua_pushinteger(L, (lua_Integer)battleutils::TakeSpellDamage(static_cast<CBattleEntity*>(m_PBaseEntity), PChar, PSpell, damage, attackType, damageType));
     return 1;
 }
 
@@ -12859,7 +12722,7 @@ inline int32 CLuaBaseEntity::removeAllManeuvers(lua_State* L)
 }
 
 /************************************************************************
-*  Function: updateAttachmentsPerformance()
+*  Function: updateAttachments()
 *  Purpose : Updates all of the attachments
 *  Example : master:updateAttachments()
 *  Notes   : Called when Optic Fiber has changed.
@@ -12868,7 +12731,7 @@ inline int32 CLuaBaseEntity::removeAllManeuvers(lua_State* L)
 inline int32 CLuaBaseEntity::updateAttachments(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_PC);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
     CCharEntity* PEntity = (CCharEntity*)m_PBaseEntity;
 
@@ -13130,7 +12993,7 @@ inline int32 CLuaBaseEntity::spawn(lua_State* L)
         }
         else
         {
-            ShowDebug(CL_CYAN"SpawnMob: <%s> is already spawned\n" CL_RESET, PMob->GetName());
+            ShowDebug(CL_CYAN"SpawnMob: %u <%s> is already spawned\n" CL_RESET, PMob->id, PMob->GetName());
         }
     }
     return 0;
@@ -13892,7 +13755,6 @@ inline int32 CLuaBaseEntity::actionQueueEmpty(lua_State* L)
 *  Function: castSpell()
 *  Purpose : Prompts an NPC or Mob entity to cast a specified spell
 *  Example : mob:castSpell(spell)
-*  Notes   : Currently only used by a few select mobs
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::castSpell(lua_State* L)
@@ -13930,6 +13792,25 @@ inline int32 CLuaBaseEntity::castSpell(lua_State* L)
     return 0;
 }
 
+/************************************************************************
+*  Function: getLastMagicTime()
+*  Purpose : Gets the time in ms since the last spell was cast
+*  Example : mob:getLastMagicTime()
+*  Notes   : only valid for mobs and its descendants
+************************************************************************/
+
+inline int32 CLuaBaseEntity::getLastMagicTime(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(!m_PBaseEntity);
+    auto PController = dynamic_cast<CMobController*>(m_PBaseEntity->PAI->GetController());
+    DSP_DEBUG_BREAK_IF(!PController);
+
+    int ms = std::chrono::duration_cast<std::chrono::milliseconds>(server_clock::now() - PController->GetLastMagicTime()).count();
+
+    lua_pushinteger(L, (lua_Integer)ms);
+
+    return 1;
+}
 
 /************************************************************************
 *  Function: useJobAbility()
@@ -14156,7 +14037,6 @@ int32 CLuaBaseEntity::setDropID(lua_State* L)
 *  Function: addTreasure()
 *  Purpose : Manually adds treasure to a party's treasure pool
 *  Example : targ:addTreasure(itemId, dropper)
-*  Notes   : Exclusively used for addtreasure.lua GM command
 ************************************************************************/
 
 inline int32 CLuaBaseEntity::addTreasure(lua_State *L)
@@ -14171,14 +14051,24 @@ inline int32 CLuaBaseEntity::addTreasure(lua_State *L)
     {
         if (!lua_isnil(L, 2) && lua_isuserdata(L, 2))
         {
+            uint16 droprate = 1000;
+            if (!lua_isnil(L,3) && lua_isnumber(L,3))
+            {
+                droprate = (uint16)lua_tointeger(L, 3);
+            }
             // The specified PEntity can be a Mob or NPC
             CLuaBaseEntity* PLuaBaseEntity = Lunar<CLuaBaseEntity>::check(L, 2);
             CBaseEntity* PEntity = PLuaBaseEntity->GetBaseEntity();
-            PChar->PTreasurePool->AddItem((uint16)lua_tointeger(L, 1), PEntity);
+            charutils::DistributeItem(PChar, PEntity, (uint16)lua_tointeger(L, 1), droprate);
         }
         else // Entity can be nullptr - this is intentional
         {
-            PChar->PTreasurePool->AddItem((uint16)lua_tointeger(L, 1), nullptr);
+            uint16 droprate = 1000;
+            if (!lua_isnil(L,2) && lua_isnumber(L,1))
+            {
+                droprate = (uint16)lua_tointeger(L, 2);
+            }
+            charutils::DistributeItem(PChar, nullptr, (uint16)lua_tointeger(L, 1), droprate);
         }
     }
 
@@ -14294,7 +14184,7 @@ inline int32 CLuaBaseEntity::itemStolen(lua_State *L)
 
 /************************************************************************
 *  Function: getTHlevel()
-*  Purpose : Returns the Monster's current Treasure Hunter Tier
+*  Purpose : Return mob's current Treasure Hunter tier if alive, or its last if dead.
 *  Example : local TH = target:getTHlevel()
 *  Notes   :
 ************************************************************************/
@@ -14305,7 +14195,7 @@ inline int32 CLuaBaseEntity::getTHlevel(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
 
     CMobEntity* PMob = (CMobEntity*)m_PBaseEntity;
-    lua_pushinteger(L, PMob->m_THLvl);
+    lua_pushinteger(L, PMob->isDead() ? PMob->m_THLvl : PMob->PEnmityContainer->GetHighestTH());
     return 1;
 }
 
@@ -14328,9 +14218,9 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,messageSystem),
 
     // Variables
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getVar),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setVar),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addVar),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCharVar),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setCharVar),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addCharVar),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getLocalVar),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setLocalVar),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,resetLocalVars),
@@ -14433,6 +14323,12 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,warp),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,teleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addTeleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getTeleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasTeleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setTeleportMenu),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getTeleportMenu),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setHomePoint),    
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,resetPlayer),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,goToEntity),
@@ -14456,6 +14352,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,createShop),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,addShopItem),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCurrentGPItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,breakLinkshell),
 
     // Trading
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getContainerSize),
@@ -14534,7 +14431,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,changesJob),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,unlockJob),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,sjRestriction),
-
+    
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getMainLvl),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getSubLvl),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setLevel),
@@ -14679,6 +14576,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasPartyJob),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyMember),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyLeader),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getLeaderID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,forMembersInRange),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,addPartyEffect),
@@ -14694,7 +14592,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkSoloPartyAlliance),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkFovAllianceAllowed),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkValorCredit),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkKillCredit),
 
     // Instances
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getInstance),
@@ -14705,34 +14603,14 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getConfrontationEffect),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,copyConfrontationEffect),
 
-    // Battledfields
+    // Battlefields
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBattlefield),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBattlefieldID),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,isInBattlefieldList),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addInBattlefieldList),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addPlayerToSpecialBattlefield),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getSpecialBattlefieldLeftTime),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addTimeToSpecialBattlefield),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,isSpecialBattlefieldEmpty),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,RestoreAndHealOnBattlefield),
-
-    // BCNM
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,bcnmRegister),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,bcnmEnter),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,bcnmLeave),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,isInBcnm),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,isBcnmsFull),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBCNMloot),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,BCNMSetLoot),
-
-    // Dynamis
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getDynamisUniqueID),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addPlayerToDynamis),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addTimeToDynamis),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,launchDynamisSecondPart),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,registerBattlefield),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,battlefieldAtCapacity),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,enterBattlefield),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,leaveBattlefield),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isInDynamis),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getStatPoppedMobs),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setStatPoppedMobs),
 
     // Battle Utilities
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isAlive),
@@ -14845,7 +14723,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getOffhandDmg),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getOffhandDmgRank),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRangedDmg),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRangedDmgForRank),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRangedDmgRank),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getAmmoDmg),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,removeAmmo),
@@ -14857,6 +14735,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getWSSkillchainProp),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,takeWeaponskillDamage),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,takeSpellDamage),
 
     // Pets and Automations
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,spawnPet),
