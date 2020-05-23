@@ -180,10 +180,7 @@ public:
     int32 goToEntity(lua_State*);            // Warps self to NPC or Mob; works across multiple game servers
     int32 gotoPlayer(lua_State*);            // warps self to target player
     int32 bringPlayer(lua_State*);           // warps target to self
-
-int32 getNationTeleport(lua_State*);     // Get teleport you can use by nation: getNationTeleport(nation)
-    int32 addNationTeleport(lua_State*);     // Add new teleport: addNationTeleport(nation,number)
-
+    
     // Items
     int32 addLinkshell(lua_State*);          // Adds LS to player
     int32 getEquipID(lua_State*);            // Gets the Item Id of the item in specified slot

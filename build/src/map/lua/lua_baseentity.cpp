@@ -3323,78 +3323,6 @@ inline int32 CLuaBaseEntity::bringPlayer(lua_State* L)
     return 1;
 }
 
-
-/************************************************************************
-*  Function:getNationTeleport()
-*  Purpose : Returns the teleport point for a given value
-*  Example : player:getNationTeleport(guardnation)
-*  Notes   :
-************************************************************************/
-
-inline int32 CLuaBaseEntity::getNationTeleport(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
-
-    int32 nation = (int32)lua_tointeger(L, 1);
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
-    switch (nation)
-    {
-        case 0: lua_pushinteger(L, PChar->nationtp.sandoria); return 1; break;
-        case 1: lua_pushinteger(L, PChar->nationtp.bastok); return 1; break;
-        case 2: lua_pushinteger(L, PChar->nationtp.windurst); return 1; break;
-        case 3: lua_pushinteger(L, PChar->nationtp.ahturhgan); return 1; break;
-        case 4: lua_pushinteger(L, PChar->nationtp.maw); return 1; break;
-        case 5: lua_pushinteger(L, PChar->nationtp.pastsandoria); return 1; break;
-        case 6: lua_pushinteger(L, PChar->nationtp.pastbastok); return 1; break;
-        case 7: lua_pushinteger(L, PChar->nationtp.pastwindurst); return 1; break;
-        default:
-            ShowDebug(CL_CYAN"lua::getNationTeleport no region with this number!\n" CL_RESET);
-            return 0;
-    }
-}
-
-/************************************************************************
-*  Function: addNationTeleport()
-*  Purpose : Grants acces to a new teleport for a PC
-*  Example :  player:addNationTeleport(MAW,16);
-*  Notes   : Used in new Maws, Aht Urghan, etc
-************************************************************************/
-
-inline int32 CLuaBaseEntity::addNationTeleport(lua_State *L)
-{
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
-
-    uint16 nation = (uint16)lua_tointeger(L, 1);
-    uint32 newTP = (uint32)lua_tointeger(L, 2);
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
-    switch (nation)
-    {
-        case 0: PChar->nationtp.sandoria |= newTP; break;
-        case 1: PChar->nationtp.bastok |= newTP; break;
-        case 2: PChar->nationtp.windurst |= newTP; break;
-        case 3: PChar->nationtp.ahturhgan |= newTP; break;
-        case 4: PChar->nationtp.maw |= newTP; break;
-        case 5: PChar->nationtp.pastsandoria |= newTP; break;
-        case 6: PChar->nationtp.pastbastok |= newTP; break;
-        case 7: PChar->nationtp.pastwindurst |= newTP; break;
-        default:
-            ShowDebug(CL_CYAN"lua::addNationTeleport no region with this number!\n" CL_RESET);
-            return 0;
-    }
-
-    charutils::SaveCharUnlocks(PChar);
-    return 0;
-}
-
 /************************************************************************
 *  Function: getEquipID()
 *  Purpose : Returns the Item ID for an item
@@ -14304,8 +14232,6 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoPlayer),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,bringPlayer),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNationTeleport),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addNationTeleport),
 
     // Items
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getEquipID),
