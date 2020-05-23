@@ -4,7 +4,7 @@
 -- ------------------------------------------------------
 -- Server version	5.6.21-log
 
-UPDATE zone_settings set zoneip = '10.0.0.55'
+UPDATE zone_settings set zoneip = '76.226.176.47'
 WHERE zoneip = '127.0.0.1';
 --
 -- Updating data of table item_mods

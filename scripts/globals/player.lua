@@ -2,6 +2,7 @@ require("scripts/globals/gear_sets")
 require("scripts/globals/keyitems")
 require("scripts/globals/settings")
 require("scripts/globals/status")
+require("scripts/globals/teleports")
 require("scripts/globals/titles")
 require("scripts/globals/zone")
 require("scripts/globals/quests")
@@ -52,7 +53,7 @@ local function CharCreate(player)
             player:addItem(v)
             player:equipItem(v)
         end
-    end    
+    end
 
     -- add job-specific starting gear
     for _, v in pairs(startingJobGear[player:getMainJob()]) do
@@ -70,7 +71,7 @@ local function CharCreate(player)
     end
 
     --player:addLinkshell("TheReborn")
-    --player:messageSpecial(ITEM_OBTAINED,515)
+    --player:messageSpecial(ITEM_OBTAINED,515)    -- unlock advanced jobs
 
     -- unlock advanced jobs
     if ADVANCED_JOB_LEVEL == 0 then
@@ -99,7 +100,7 @@ local function CharCreate(player)
             player:addKeyItem(i)
         end
     end
-    
+
     player:completeQuest(SANDORIA,dsp.quest.id.sandoria.GROWING_FLOWERS);    
     player:moghouseFlag(1);
     player:completeQuest(BASTOK,dsp.quest.id.bastok.A_LADY_S_HEART);
@@ -110,7 +111,7 @@ local function CharCreate(player)
     player:moghouseFlag(8);
     player:completeQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.KEEPING_NOTES);
     player:moghouseFlag(16);
-    
+
     -- set initial level cap
     if INITIAL_LEVEL_CAP ~= 50 then
         player:levelCap(INITIAL_LEVEL_CAP)
@@ -120,18 +121,6 @@ local function CharCreate(player)
     if START_INVENTORY > 30 then
         player:changeContainerSize(dsp.inv.INVENTORY, START_INVENTORY - 30)
         player:changeContainerSize(dsp.inv.MOGSATCHEL, START_INVENTORY - 30)
-    end
-
-    if UNLOCK_OUTPOST_WARPS >= 1 then
-        player:addNationTeleport(dsp.nation.SANDORIA, 2097120)
-        player:addNationTeleport(dsp.nation.BASTOK,   2097120)
-        player:addNationTeleport(dsp.nation.WINDURST, 2097120)
-
-        if UNLOCK_OUTPOST_WARPS == 2 then -- Tu'Lia and Tavnazia
-            player:addNationTeleport(dsp.nation.SANDORIA, 10485760)
-            player:addNationTeleport(dsp.nation.BASTOK,   10485760)
-            player:addNationTeleport(dsp.nation.WINDURST, 10485760)
-        end
     end
 
     --[[
@@ -148,7 +137,9 @@ local function CharCreate(player)
 
     player:addItem(536) -- adventurer coupon
     player:addTitle(dsp.title.NEW_ADVENTURER)
-    --player:setVar("MoghouseExplication", 4) -- needs Moghouse intro
+    player:setCharVar("MoghouseExplication", 1) -- needs Moghouse intro
+    player:setCharVar("spokeKindlix", 1) -- Kindlix introduction
+    player:setCharVar("spokePyropox", 1) -- Pyropox introduction
     player:setNewPlayer(true) -- apply new player flag
 end
 
@@ -171,7 +162,7 @@ function onGameIn(player, firstLogin, zoning)
     checkForGearSet(player)
 
     -- god mode
-    if player:getVar("GodMode") == 1 then
+    if player:getCharVar("GodMode") == 1 then
         player:addStatusEffect(dsp.effect.MAX_HP_BOOST,1000,0,0)
         player:addStatusEffect(dsp.effect.MAX_MP_BOOST,1000,0,0)
         player:addStatusEffect(dsp.effect.MIGHTY_STRIKES,1,0,0)
@@ -198,7 +189,7 @@ function onGameIn(player, firstLogin, zoning)
     end
 
     -- !hide
-    if player:getVar("GMHidden") == 1 then
+    if player:getCharVar("GMHidden") == 1 then
         player:setGMHidden(true)
     end
 

@@ -25,14 +25,18 @@ ENABLE_ASA     = 0;
 ENABLE_ABYSSEA = 0;
 ENABLE_SOA     = 0;
 ENABLE_ROV     = 0;
-
 ENABLE_VOIDWATCH = 0; -- Not an expansion, but has its own storyline.
 
 -- FIELDS OF VALOR/Grounds of Valor settings
 ENABLE_FIELD_MANUALS  = 1; -- Enables Fields of Valor
 ENABLE_GROUNDS_TOMES  = 1; -- Enables Grounds of Valor
 REGIME_WAIT = 0; -- Make people wait till 00:00 game time as in retail. If it's 0, there is no wait time.
-LOW_LEVEL_REGIME = 0; -- Allow people to kill regime targets even if they give no exp, allowing people to farm regime targets at 75 in low level areas.
+
+-- TREASURE CASKETS
+-- Retail droprate = 0.1 (10%) with no other effects active
+-- Set to 0 to disable caskets.
+-- max is clamped to 1.0 (100%)
+CASKET_DROP_RATE = 0.1;
 
 -- Setting to lock content more accurately to the content you have defined above
 -- This generally results in a more accurate presentation of your selected expansions
@@ -51,7 +55,7 @@ OPENING_CUTSCENE_ENABLE = 0; -- Set to 1 to enable opening cutscenes, 0 to disab
 SUBJOB_QUEST_LEVEL = 18; -- Minimum level to accept either subjob quest.  Set to 0 to start the game with subjobs unlocked.
 ADVANCED_JOB_LEVEL = 30; -- Minimum level to accept advanced job quests.  Set to 0 to start the game with advanced jobs.
 ALL_MAPS = 1; -- Set to 1 to give starting characters all the maps.
-UNLOCK_OUTPOST_WARPS = 1; -- Set to 1 to give starting characters all outpost warps.  2 to add Tu'Lia and Tavnazia.
+UNLOCK_OUTPOST_WARPS = 2; -- Set to 1 to give starting characters all outpost warps.  2 to add Tu'Lia and Tavnazia.
 
 SHOP_PRICE      = 1.000; -- Multiplies prices in NPC shops.
 GIL_RATE        = 1.100; -- Multiplies gil earned from quests.  Won't always display in game.
@@ -83,7 +87,7 @@ HEALING_TP_CHANGE       = -25; -- Change in TP for each healing tick. Default is
 
 -- SE implemented coffer/chest illusion time in order to prevent coffer farming. No-one in the same area can open a chest or coffer for loot (gil, gems & items)
 -- till a random time between MIN_ILLSION_TIME and MAX_ILLUSION_TIME. During this time players can loot keyitem and item related to quests (AF, maps... etc.)
-COFFER_MAX_ILLUSION_TIME = 1800;  -- 1 hour
+COFFER_MAX_ILLUSION_TIME = 1000;  -- 1 hour
 COFFER_MIN_ILLUSION_TIME = 600;  -- 30 minutes
 CHEST_MAX_ILLUSION_TIME  = 1800;  -- 1 hour
 CHEST_MIN_ILLUSION_TIME  = 600;  -- 30 minutes
@@ -91,12 +95,12 @@ CHEST_MIN_ILLUSION_TIME  = 600;  -- 30 minutes
 -- Sets spawn type for: Behemoth, Fafnir, Adamantoise, King Behemoth, Nidhog, Aspidochelone.
 -- Use 0 for timed spawns, 1 for force pop only, 2 for both
 LandKingSystem_NQ = 2;
-LandKingSystem_HQ = 1;
+LandKingSystem_HQ = 2;
 
 -- DYNAMIS SETTINGS
     BETWEEN_2DYNA_WAIT_TIME = 12;       -- Hours before player can re-enter Dynamis. Default is 1 Earthday (24 hours).
         DYNA_MIDNIGHT_RESET = false;     -- if true, makes the wait time count by number of server midnights instead of full 24 hour intervals
-             DYNA_LEVEL_MIN = 65;       -- level min for entering in Dynamis
+             DYNA_LEVEL_MIN = 60;       -- level min for entering in Dynamis
     TIMELESS_HOURGLASS_COST = 50000;   -- refund for the timeless hourglass for Dynamis.
    PRISMATIC_HOURGLASS_COST = 10000;    -- cost of the prismatic hourglass for Dynamis.
      CURRENCY_EXCHANGE_RATE = 100;      -- X Tier 1 ancient currency -> 1 Tier 2, and so on.  Certain values may conflict with shop items.  Not designed to exceed 198.
@@ -108,9 +112,6 @@ FREE_COP_DYNAMIS = 0 ; -- Authorize player to entering inside COP Dynamis withou
 AF1_QUEST_LEVEL = 40; -- Minimum level to start AF1 quest
 AF2_QUEST_LEVEL = 50; -- Minimum level to start AF2 quest
 AF3_QUEST_LEVEL = 50; -- Minimum level to start AF3 quest
-AF1_FAME = 20; -- base fame for completing an AF1 quest
-AF2_FAME = 40; -- base fame for completing an AF2 quest
-AF3_FAME = 60; -- base fame for completing an AF3 quest
 OldSchoolG1 = true; -- Set to true to require farming Exoray Mold, Bombd Coal, and Ancient Papyrus drops instead of allowing key item method.
 OldSchoolG2 = true; -- Set true to require the NMs for "Atop the Highest Mountains" be dead to get KI like before SE changed it.
 FrigiciteDuration = 60; -- When OldSChoolG2 is enabled, this is the time (in seconds) you have from killing Boreal NMs to click the "???" target.
@@ -130,8 +131,7 @@ USE_OLD_CURE_FORMULA = false; -- true/false. if true, uses older cure formula (3
 USE_OLD_MAGIC_DAMAGE = false; -- true/false. if true, uses older magic damage formulas
 
 -- CELEBRATIONS
-EXPLORER_MOOGLE = 1; -- Enables Explorer Moogle teleports
-EXPLORER_MOOGLE_LEVELCAP = 10;
+EXPLORER_MOOGLE_LV = 5; -- Enables Explorer Moogle teleports and sets required level. Zero to disable.
 HALLOWEEN_2005 = 1; -- Set to 1 to Enable the 2005 version of Harvest Festival, will start on Oct. 20 and end Nov. 1.
 HALLOWEEN_YEAR_ROUND = 0; -- Set to 1 to have Harvest Festival initialize outside of normal times.
 

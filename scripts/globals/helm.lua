@@ -6,9 +6,10 @@
 -- https://ffxiclopedia.wikia.com/wiki/Mining
 -----------------------------------
 require("scripts/globals/keyitems")
+require("scripts/globals/missions")
 require("scripts/globals/npc_util")
-require("scripts/globals/settings")
 require("scripts/globals/quests")
+require("scripts/globals/settings")
 require("scripts/globals/status")
 require("scripts/globals/zone")
 -----------------------------------
@@ -56,7 +57,7 @@ local helmInfo =
                     { 860, 2156}, -- Imperial Tea Leaves
                     { 470, 1845}, -- Red Moko Grass
                     { 430, 1524}, -- Fresh Mugwort
-                    { 240,  951}, -- Wijnruit                    
+                    { 240,  951}, -- Wijnruit
                 },
                 points =
                 {
@@ -121,7 +122,7 @@ local helmInfo =
                     {1060,  575}, -- Grain Seeds
                     {1200,  572}, -- Herb Seeds
                     {1270, 2155}, -- Lesser Chigoe
-                    {1160, 5907}, -- Winterflower                    
+                    {1160, 5907}, -- Winterflower
                 },
                 points =
                 {
@@ -496,7 +497,7 @@ local helmInfo =
                     { 830,  693}, -- Walnut Log
                     { 170, 4504}, -- Acorn
                     { 330,  690}, -- Elm Log
-                    { 170,  699}, -- Oak Log                    
+                    { 170,  699}, -- Oak Log
                     { 100,  702}, -- Ebony Log
                 },
                 points =
@@ -911,10 +912,11 @@ local helmInfo =
                     { 600, 1638}, -- Moblin Mask
                     { 570,  568}, -- Goblin Die
                     { 570, 1631}, -- Moblin Armor
-                    {  180,  645}, -- Darksteel Ore
-                    {  180,  2763}, -- Swamp Ore
-                    {  170,  737}, -- Gold Ore
-                    {  170,  738}, -- Platium Ore
+                    {  80,  645}, -- Darksteel Ore
+                    {  80,  644}, -- Mythril Ore
+                    {  70,  737}, -- Gold Ore
+                    {  70,  738}, -- Platium Ore                    
+                    {  180,  2763}, -- Swamp Ore                                        
                     {  180,  646}, -- Adaman Ore
                 },
                 points =
@@ -1031,7 +1033,7 @@ local helmInfo =
                     { 025, 1650}, -- Kopparnickel ore
                     { 480, 2160}, -- Troll Pauldron
                     { 330, 2161}, -- Troll Vambrace
-                    { 250,  1255}, -- Colored Ore                    
+                    { 250,  1255}, -- Colored Ore  
                 },
                 points =
                 {
@@ -1293,7 +1295,7 @@ local helmInfo =
                     { 220,   769}, -- Colored Rock
                     { 175,  1255}, -- Colored Ore
                     {  50,  3918}, -- Midrium Ore
-                    {  50,  3920}, -- Vanadium Ore                                        
+                    {  50,  3920}, -- Vanadium Ore      
                 },
                 points =
                 {
@@ -1329,7 +1331,6 @@ local helmInfo =
 
 local rocks = {769,771,770,772,773,774,776,775}
 local eores = {1255,1258,1260,1257,1256,1259,1261,1262}
-
 -------------------------------------------------
 -- local functions
 -------------------------------------------------
@@ -1424,6 +1425,7 @@ end
 dsp.helm.onTrade = function(player, npc, trade, helmType, csid)
     local info = helmInfo[helmType]
     local zoneId = player:getZoneID()
+    local regionId = player:getCurrentRegion()
 
     if trade:hasItemQty(info.tool, 1) and trade:getItemCount() == 1 then
         -- start event
@@ -1455,6 +1457,31 @@ dsp.helm.onTrade = function(player, npc, trade, helmType, csid)
             npcUtil.giveKeyItem(player, dsp.ki.RAINBOW_BERRY)
         end
 
+        local amkChance = 20
+        if 
+            player:getCurrentMission(AMK) == dsp.mission.id.amk.WELCOME_TO_MY_DECREPIT_DOMICILE and
+            broke ~= 1
+        then
+            if
+                helmType == dsp.helm.type.MINING and
+                not player:hasKeyItem(dsp.ki.STURDY_METAL_STRIP) and
+                dsp.expansionRegion.ORIGINAL_ROTZ[regionId] and math.random(100) <= amkChance
+            then
+                npcUtil.giveKeyItem(player, dsp.ki.STURDY_METAL_STRIP)
+            elseif
+                helmType == dsp.helm.type.LOGGING and
+                not player:hasKeyItem(dsp.ki.PIECE_OF_RUGGED_TREE_BARK) and
+                dsp.expansionRegion.ORIGINAL_ROTZ[regionId] and math.random(100) <= amkChance
+            then
+                npcUtil.giveKeyItem(player, dsp.ki.PIECE_OF_RUGGED_TREE_BARK)
+            elseif
+                helmType == dsp.helm.type.HARVESTING and
+                not player:hasKeyItem(dsp.ki.SAVORY_LAMB_ROAST) and
+                dsp.expansionRegion.ORIGINAL_ROTZ[regionId] and math.random(100) <= amkChance
+            then
+                npcUtil.giveKeyItem(player, dsp.ki.SAVORY_LAMB_ROAST)
+            end
+        end
     else
         player:messageSpecial(zones[zoneId].text[info.message], info.tool)
     end
