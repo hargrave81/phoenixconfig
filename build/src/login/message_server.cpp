@@ -220,7 +220,8 @@ void message_server_listen()
                     {                        
                         chat_message_t& msg = msg_queue.front();
                         in_addr dest_ip;
-                        dest_ip.s_addr = &msg.dest;
+                        uint destIp = msg.dest;
+                        dest_ip.s_addr = &destIp;
                         ShowDebug("Message came through %s - %d\n",inet_ntoa(dest_ip), &msg.type);
                         message_server_send(msg.dest, msg.type, &msg.data, &msg.packet);
 
