@@ -12,7 +12,7 @@ function onTrigger(player,npc)
         player:setCharVar("ArtifactC", 2)
     else
         player:PrintToPlayer("Safe travels")
-        player:addStatusEffectEx(dsp.effect.TELEPORT)
+        player:addStatusEffectEx(tpz.effect.TELEPORT)
         if player:hasItem(4181) == false then -- instant warp
             player:addItem(4181);
         end

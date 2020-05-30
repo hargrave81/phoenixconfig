@@ -83,6 +83,7 @@ CMobEntity::CMobEntity()
     m_EcoSystem = SYSTEM_UNCLASSIFIED;
     m_Element = 0;
     m_HiPCLvl = 0;
+    m_HiPartySize = 0;
     m_THLvl = 0;
     m_ItemStolen = false;
 
@@ -184,7 +185,7 @@ uint32 CMobEntity::GetRandomGil()
             ShowWarning("CMobEntity::GetRandomGil Max value is set too low, defauting\n");
         }
 
-        return dsprand::GetRandomNumber(min, max);
+        return tpzrand::GetRandomNumber(min, max);
     }
 
     float gil = (float)pow(GetMLevel(), 1.05f);
@@ -205,7 +206,7 @@ uint32 CMobEntity::GetRandomGil()
     }
 
     // randomize it
-    gil += dsprand::GetRandomNumber(highGil);
+    gil += tpzrand::GetRandomNumber(highGil);
 
     if (min && gil < min)
     {
@@ -241,7 +242,7 @@ bool CMobEntity::CanStealGil()
 
 void CMobEntity::ResetGilPurse()
 {
-    uint32 purse = GetRandomGil() / ((dsprand::GetRandomNumber(4, 7)));
+    uint32 purse = GetRandomGil() / ((tpzrand::GetRandomNumber(4, 7)));
     if (purse == 0)
         purse = GetRandomGil();
     setMobMod(MOBMOD_MUG_GIL, purse);
@@ -507,6 +508,7 @@ void CMobEntity::Spawn()
     CBattleEntity::Spawn();
     m_giveExp = true;
     m_HiPCLvl = 0;
+    m_HiPartySize = 0;
     m_THLvl = 0;
     m_ItemStolen = false;
     m_DropItemTime = 1000;
@@ -520,7 +522,7 @@ void CMobEntity::Spawn()
     // Generate a random level between min and max level
     if (m_maxLevel > m_minLevel)
     {
-        level += dsprand::GetRandomNumber(0, m_maxLevel - m_minLevel + 1);
+        level += tpzrand::GetRandomNumber(0, m_maxLevel - m_minLevel + 1);
     }
 
     SetMLevel(level);
@@ -573,7 +575,7 @@ void CMobEntity::Spawn()
     setMobMod((int)Mod::STUNRES,CBattleEntity::getMod(Mod::STUNRES));
     setMobMod((int)Mod::CHARMRES,CBattleEntity::getMod(Mod::CHARMRES));
     setMobMod((int)Mod::LULLABYRES,CBattleEntity::getMod(Mod::LULLABYRES));
-    
+
     m_DespawnTimer = time_point::min();
     luautils::OnMobSpawn(this);
 }
@@ -755,7 +757,18 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
             }
         }
         PTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
+        if (PTarget->isDead())
+        {
+            battleutils::ClaimMob(PTarget, this);
+        }
+        battleutils::DirtyExp(PTarget, this);
     }
+    PTarget = static_cast<CBattleEntity*>(state.GetTarget());
+    if (PTarget->objtype == TYPE_MOB && (PTarget->isDead() || (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PETTYPE_AVATAR)))
+    {
+        battleutils::ClaimMob(PTarget, this);
+    }
+    battleutils::DirtyExp(PTarget, this);
 }
 
 void CMobEntity::DistributeRewards()
@@ -775,13 +788,13 @@ void CMobEntity::DistributeRewards()
             blueutils::TryLearningSpells(PChar, this);
             m_UsedSkillIds.clear();
 
-            if (m_giveExp)
+            if (m_giveExp && !PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
             {
                 charutils::DistributeExperiencePoints(PChar, this);
             }
 
             // check for gil (beastmen drop gil, some NMs drop gil)
-            if (CanDropGil() || (map_config.all_mobs_gil_bonus > 0 && getMobMod(MOBMOD_GIL_MAX) >= 0)) // Negative value of MOBMOD_GIL_MAX is used to prevent gil drops in Dynamis/Limbus.
+            if ((map_config.mob_gil_multiplier > 0 && CanDropGil()) || (map_config.all_mobs_gil_bonus > 0 && getMobMod(MOBMOD_GIL_MAX) >= 0)) // Negative value of MOBMOD_GIL_MAX is used to prevent gil drops in Dynamis/Limbus.
             {
                 charutils::DistributeGil(PChar, this); // TODO: REALISATION MUST BE IN TREASUREPOOL
             }
@@ -822,12 +835,12 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             for (int16 roll = 0; roll < maxRolls; ++roll)
             {
                 //Determine if this group should drop an item
-                if (group.GroupRate > 0 && dsprand::GetRandomNumber(1000) < group.GroupRate * map_config.drop_rate_multiplier + bonus)
+                if (group.GroupRate > 0 && tpzrand::GetRandomNumber(1000) < group.GroupRate * map_config.drop_rate_multiplier + bonus)
                 {
                     //Each item in the group is given its own weight range which is the previous value to the previous value + item.DropRate
                     //Such as 2 items with drop rates of 200 and 800 would be 0-199 and 200-999 respectively
                     uint16 previousRateValue = 0;
-                    uint16 itemRoll = dsprand::GetRandomNumber(1000);
+                    uint16 itemRoll = tpzrand::GetRandomNumber(1000);
                     for (const DropItem_t& item : group.Items)
                     {
                         if (previousRateValue + item.DropRate > itemRoll)
@@ -847,7 +860,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
         {
             for (int16 roll = 0; roll < maxRolls; ++roll)
             {
-                if (item.DropRate > 0 && dsprand::GetRandomNumber(1000) < item.DropRate * map_config.drop_rate_multiplier + bonus)
+                if (item.DropRate > 0 && tpzrand::GetRandomNumber(1000) < item.DropRate * map_config.drop_rate_multiplier + bonus)
                 {
                     if (AddItemToPool(item.ItemID, ++dropCount))
                         return;
@@ -873,7 +886,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
         if (((PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) && conquest::GetRegionOwner(PChar->loc.zone->GetRegionID()) <= 2) ||
             (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SANCTION) && PChar->loc.zone->GetRegionID() >= 28 && PChar->loc.zone->GetRegionID() <= 32) ||
             (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SIGIL) && PChar->loc.zone->GetRegionID() >= 33 && PChar->loc.zone->GetRegionID() <= 40)) &&
-            m_Element > 0 && dsprand::GetRandomNumber(100) < 20) // Need to move to CRYSTAL_CHANCE constant
+            m_Element > 0 && tpzrand::GetRandomNumber(100) < 20) // Need to move to CRYSTAL_CHANCE constant
         {
             if (AddItemToPool(4095 + m_Element, ++dropCount))
                 return;
@@ -883,12 +896,12 @@ void CMobEntity::DropItems(CCharEntity* PChar)
         // Item element matches day/weather element, not mob crystal. Lv80+ xp mobs can drop Avatarite.
         // Wiki's have conflicting info on mob lv required for Geodes. One says 50 the other 75. I think 50 is correct.
 
-        if (dsprand::GetRandomNumber(100) < 20 && PChar->PTreasurePool->CanAddSeal() && !getMobMod(MOBMOD_NO_DROPS))
+        if (tpzrand::GetRandomNumber(100) < 20 && PChar->PTreasurePool->CanAddSeal() && !getMobMod(MOBMOD_NO_DROPS))
         {
             //RULES: Only 1 kind may drop per mob
             if (GetMLevel() >= 75 && luautils::IsContentEnabled("ABYSSEA")) //all 4 types
             {
-                switch (dsprand::GetRandomNumber(4))
+                switch (tpzrand::GetRandomNumber(4))
                 {
                 case 0:
 
@@ -911,7 +924,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             }
             else if (GetMLevel() >= 70 && luautils::IsContentEnabled("ABYSSEA")) //b.seal & k.seal & k.crest
             {
-                switch (dsprand::GetRandomNumber(3))
+                switch (tpzrand::GetRandomNumber(3))
                 {
                 case 0:
                     if (AddItemToPool(1126, ++dropCount))
@@ -929,7 +942,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             }
             else if (GetMLevel() >= 50) //b.seal & k.seal only
             {
-                if (dsprand::GetRandomNumber(2) == 0)
+                if (tpzrand::GetRandomNumber(2) == 0)
                 {
                     if (AddItemToPool(1126, ++dropCount))
                         return;
@@ -1049,6 +1062,7 @@ void CMobEntity::Die()
                 loc.zone->PushPacket(this, CHAR_INRANGE, new CMessageBasicPacket(this, this, 0, 0, MSGBASIC_FALLS_TO_GROUND));
 
             DistributeRewards();
+            m_OwnerID.clean();
         }
     }));
     if (PMaster && PMaster->PPet == this && PMaster->objtype == TYPE_PC)
@@ -1086,6 +1100,7 @@ void CMobEntity::OnCastFinished(CMagicState& state, action_t& action)
 bool CMobEntity::OnAttack(CAttackState& state, action_t& action)
 {
     static_cast<CMobController*>(PAI->GetController())->TapDeaggroTime();
+    auto PTarget = static_cast<CBattleEntity*>(state.GetTarget());
 
     if (getMobMod(MOBMOD_ATTACK_SKILL_LIST))
     {

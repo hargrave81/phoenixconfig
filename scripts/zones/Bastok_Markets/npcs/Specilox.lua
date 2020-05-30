@@ -27,5 +27,5 @@ function onTrigger(player,npc)
     
     player:PrintToPlayer("Rolling Dice  gift"..giftReady)
     player:showText(npc,ID.text.OLWYN_SHOP_DIALOG)
-    dsp.shop.nation(player, stock, dsp.nation.BASTOK)
+    tpz.shop.nation(player, stock, tpz.nation.BASTOK)
 end

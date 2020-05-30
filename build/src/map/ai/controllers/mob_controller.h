@@ -46,6 +46,7 @@ public:
 
     bool CanAggroTarget(CBattleEntity*);
     void TapDeaggroTime();
+    void TapDeclaimTime();
     virtual bool Cast(uint16 targid, SpellID spellid) override;
     time_point GetLastMagicTime() const { return m_LastMagicTime; }
 
@@ -88,6 +89,7 @@ private:
     time_point m_LastActionTime;    
     time_point m_LastSpecialTime;
     time_point m_DeaggroTime;
+    time_point m_DeclaimTime;
     time_point m_NeutralTime;
     time_point m_WaitTime;
     

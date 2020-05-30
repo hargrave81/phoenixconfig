@@ -1,6 +1,6 @@
 FROM hargrave81/devagent
 
-ENV DS_BRANCH=phoenixreborn
+ENV DS_BRANCH=release
 
 ARG CACHEBUST=1 
 

@@ -22,7 +22,7 @@ function onTrigger(player)
     end
 
     local modNameByNum = {}
-    for k,v in pairs(dsp.mobMod) do
+    for k,v in pairs(tpz.mobMod) do
         modNameByNum[v]=k
         local value = effectTarget:getMobMod(modId)
         if value ~= nil and value > 0 then

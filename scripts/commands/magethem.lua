@@ -51,7 +51,7 @@ function onTrigger(player,target)
             return
         end
     end
-    if targ:getMainJob() == dsp.job.COR then
+    if targ:getMainJob() == tpz.job.COR then
         if targ:canLearnAbility(104) then -- corsair roll
             target:addLearnedAbility(104)
         end
@@ -86,7 +86,7 @@ function onTrigger(player,target)
             target:addLearnedAbility(93)
         end        
     end
-    if targ:getMainJob() == dsp.job.BLM then
+    if targ:getMainJob() == tpz.job.BLM then
         learnSpell(targ,1)  -- cure
         
         learnSpell(targ,159)  -- stone
@@ -151,7 +151,7 @@ function onTrigger(player,target)
         learnSpell(targ,262) -- warp 2
         
     end
-    if targ:getMainJob() == dsp.job.WHM then
+    if targ:getMainJob() == tpz.job.WHM then
         learnSpell(targ,1)  -- cure
         learnSpell(targ,2)  -- cure 2
         learnSpell(targ,3)  -- cure 3
@@ -229,7 +229,7 @@ function onTrigger(player,target)
         learnSpell(targ,120)  -- tele-yhoat
         learnSpell(targ,139)  -- tele-vahzl
     end
-    if targ:getMainJob() == dsp.job.RDM then
+    if targ:getMainJob() == tpz.job.RDM then
         learnSpell(targ,1)  -- cures
         learnSpell(targ,2)
         learnSpell(targ,3)
@@ -309,7 +309,7 @@ function onTrigger(player,target)
         learnSpell(targ,254)  -- blind
         learnSpell(targ,258)  -- bind        
     end  
-    if targ:getMainJob() == dsp.job.SCH then
+    if targ:getMainJob() == tpz.job.SCH then
         learnSpell(targ,159)  -- stone
         learnSpell(targ,160)  -- stone II
 
@@ -373,7 +373,7 @@ function onTrigger(player,target)
         learnSpell(targ,285) -- luminohelix
         learnSpell(targ,249) -- blaze spikes
     end
-    if targ:getMainJob() == dsp.job.BRD then
+    if targ:getMainJob() == tpz.job.BRD then
         learnSpell(targ,389) -- Knights minne 1
         learnSpell(targ,390) -- Knights minne 2
         learnSpell(targ,391) -- Knights minne 3
@@ -441,11 +441,11 @@ function onTrigger(player,target)
         learnSpell(targ,445) -- dark carol
         
     end
-    if targ:getMainJob() == dsp.job.SMN then
+    if targ:getMainJob() == tpz.job.SMN then
         learnSpell(targ,288) -- fire spirit
         learnSpell(targ,306) -- alexander
     end
-    if targ:getMainJob() == dsp.job.PLD then
+    if targ:getMainJob() == tpz.job.PLD then
         learnSpell(targ,1)  -- cures
         learnSpell(targ,2)  -- cure 2
         learnSpell(targ,3)  -- cure 3
@@ -465,7 +465,7 @@ function onTrigger(player,target)
 
 
     end
-    if targ:getMainJob() == dsp.job.DRK then
+    if targ:getMainJob() == tpz.job.DRK then
         learnSpell(targ,159)  -- stone
         learnSpell(targ,160)  -- stone II        
 
@@ -504,7 +504,7 @@ function onTrigger(player,target)
         learnSpell(targ,275)  -- absorb TP
 
     end
-    if targ:getMainJob() == dsp.job.BLU then
+    if targ:getMainJob() == tpz.job.BLU then
         learnSpell(targ,549) -- pollen
         learnSpell(targ,524) -- sandspin
         learnSpell(targ,577) -- foot kick
@@ -527,7 +527,7 @@ function onTrigger(player,target)
         learnSpell(targ,587) -- claw cyclone
 
     end
-    if targ:getMainJob() == dsp.job.NIN then
+    if targ:getMainJob() == tpz.job.NIN then
         learnSpell(targ,353) -- tonko 1
         learnSpell(targ,338) -- utsusemi 1
         

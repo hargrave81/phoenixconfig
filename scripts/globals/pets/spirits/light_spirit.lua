@@ -3,23 +3,23 @@
 -----------------------------------
 require("scripts/globals/pets/spirit")
 
-local this = dsp.pet.spirit.create(dsp.magic.element.LIGHT)
+local this = tpz.pet.spirit.create(tpz.magic.element.LIGHT)
 
 -- Selects a spell to cast based on current party status
 this.selectSpell = function(spirit)
     -- Helper function to choose a spell based on what buffs a player lacks
     local checkBuffs = function(spirit, player)
         local level = spirit:getMainLvl()
-        if not player:hasStatusEffect(dsp.effect.PROTECT) and level >= 7 then -- protect        
+        if not player:hasStatusEffect(tpz.effect.PROTECT) and level >= 7 then -- protect        
             return level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43                
         end
-        if not player:hasStatusEffect(dsp.effect.SHELL) and level >= 17 then -- shell        
+        if not player:hasStatusEffect(tpz.effect.SHELL) and level >= 17 then -- shell        
             return level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48
         end
-        if not player:hasStatusEffect(dsp.effect.HASTE) and level >= 40 then -- haste        
+        if not player:hasStatusEffect(tpz.effect.HASTE) and level >= 40 then -- haste        
             return 57
         end
-        if not player:hasStatusEffect(dsp.effect.REGEN) and level >= 21 then -- regen        
+        if not player:hasStatusEffect(tpz.effect.REGEN) and level >= 21 then -- regen        
             return level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108
         end
         return false

@@ -11,5 +11,5 @@ function onMobDeath(mob, player, isKiller)
 end
 
 function onMobDespawn(mob)
-    dsp.mob.phOnDespawn(mob,ID.mob.MEE_DEGGI_THE_PUNISHER_PH,5,1800) -- 50 minutes
+    tpz.mob.phOnDespawn(mob,ID.mob.MEE_DEGGI_THE_PUNISHER_PH,5,1800) -- 50 minutes
 end

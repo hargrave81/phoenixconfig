@@ -12,7 +12,7 @@ function onTrade(player,npc,trade)
 end
 
 function onTrigger(player,npc)
-    if player:hasKeyItem(dsp.ki.TENSHODO_MEMBERS_CARD) then
+    if player:hasKeyItem(tpz.ki.TENSHODO_MEMBERS_CARD) then
         local stock =
         {
             704,    144,    -- Bamboo Stick
@@ -48,7 +48,10 @@ function onTrigger(player,npc)
             4940,  2331,    -- Raiton: Ichi
             4943,  2331,    -- Suiton: Ichi
             4949,  2849,    -- Jubaku: Ichi
+            4952,  2849,    -- Hojo: Ichi
+            4955,  2849,    -- Kurayami: Ichi
             4958,  2849,    -- Dokumori: Ichi
+            4961,  2849,    -- Tonko: Ichi
             4964,  9590,    -- Monomi: Ichi
             4687, 60750,    -- Recall-Jugner
             4688, 60750,    -- Recall-Pashh
@@ -71,7 +74,7 @@ function onTrigger(player,npc)
         }
 
         player:showText(npc, ID.text.AMALASANDA_SHOP_DIALOG)
-        dsp.shop.general(player, stock)
+        tpz.shop.general(player, stock)
     end
 end
 

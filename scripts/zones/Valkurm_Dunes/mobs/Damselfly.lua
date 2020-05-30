@@ -8,13 +8,13 @@ require("scripts/globals/regimes")
 require("scripts/globals/mobs");
 
 function onMobDeath(mob, player, isKiller)
-    dsp.regime.checkRegime(player, mob, 9, 1, dsp.regime.type.FIELDS)
-    dsp.regime.checkRegime(player, mob, 10, 2, dsp.regime.type.FIELDS)
+    tpz.regime.checkRegime(player, mob, 9, 1, tpz.regime.type.FIELDS)
+    tpz.regime.checkRegime(player, mob, 10, 2, tpz.regime.type.FIELDS)
     if (math.random(1,100) > 90 and isKiller == true) then
         player:addTreasure(15147,mob);
     end
 end;
 
 function onMobDespawn(mob)
-    dsp.mob.phOnDespawn(mob,ID.mob.VALKURM_EMPEROR_PH,5,1800); -- 30m respawn
+    tpz.mob.phOnDespawn(mob,ID.mob.VALKURM_EMPEROR_PH,5,1800); -- 30m respawn
 end;

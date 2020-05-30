@@ -3,7 +3,7 @@ require("scripts/globals/teleports")
 ------------------------------------
 
 dsp = dsp or {}
-dsp.homepoint = dsp.homepoint or {}
+tpz.homepoint = tpz.homepoint or {}
 
 local HPs =
 {
@@ -144,7 +144,7 @@ local selection =
     SHOW_MENU        = 8
 }
 
-local travelType = dsp.teleport.type.HOMEPOINT
+local travelType = tpz.teleport.type.HOMEPOINT
 
 local function getCost (from, to, key)
 
@@ -159,7 +159,7 @@ end
 local function goToHP(player, choice, index)
 
     local origin = player:getLocalVar("originIndex")
-    local hasKI  = player:hasKeyItem(dsp.ki.RHAPSODY_IN_WHITE)
+    local hasKI  = player:hasKeyItem(tpz.ki.RHAPSODY_IN_WHITE)
 
     if choice == selection.SAME_ZONE then
         -- For zones like Sky and Uleguerand Range, this will force gil deletion
@@ -172,16 +172,22 @@ local function goToHP(player, choice, index)
 
 end
 
-dsp.homepoint.onTrigger = function(player, csid, index)
+tpz.homepoint.onTrigger = function(player, csid, index)
+    
+    if HOMEPOINT_HEAL == 1 then -- Settings.lua Homepoint Heal enabled
+        player:addHP(player:getMaxHP())
+        player:addMP(player:getMaxMP())
+    end
+
+    if HOMEPOINT_TELEPORT ~= 1 then -- Settings.lua Homepoints disabled
+        player:startEvent(csid, 0, 0, 0, 0, 0, player:getGil(), 4095, index)
+        return
+    end
+
     local hpBit  = index % 32
     local hpSet  = math.floor(index / 32)
     local menu   = player:getTeleportMenu(travelType)
     local params = bit.bor(index, bit.lshift(menu[10] < 1 and 0 or 1, 18)) -- Include menu layout
-
-    if HOMEPOINT_HEAL == 1 then
-        player:addHP(player:getMaxHP())
-        player:addMP(player:getMaxMP())
-    end
 
     if not player:hasTeleport(travelType, hpBit, hpSet) then
         player:addTeleport(travelType, hpBit, hpSet)
@@ -194,61 +200,64 @@ dsp.homepoint.onTrigger = function(player, csid, index)
 
 end
 
-dsp.homepoint.onEventUpdate = function(player, csid, option)
+tpz.homepoint.onEventUpdate = function(player, csid, option)
 
     local choice = bit.band(option, 0xFF)
     local favs = player:getTeleportMenu(travelType)
 
-    if choice >= selection.SET_LAYOUT and choice <= selection.REP_FAVORITE then
+    if HOMEPOINT_TELEPORT == 1 then
+        if choice >= selection.SET_LAYOUT and choice <= selection.REP_FAVORITE then
 
-        local index = bit.rshift(bit.lshift(option, 8), 24) -- Ret HP #
+            local index = bit.rshift(bit.lshift(option, 8), 24) -- Ret HP #
 
-        if choice == selection.ADD_FAVORITE then
-            local temp = 0
-            for x = 1, 9 do
-                temp = favs[x]
-                favs[x] = index
-                index = temp
-            end
-        elseif choice == selection.REM_FAVORITE then
-            for x = 1, 9 do
-                if favs[x] == index then
-                    for x = x, 8 do
-                        favs[x] = favs[x+1]
-                    end
-                    favs[9] = -1
-                    break
+            if choice == selection.ADD_FAVORITE then
+                local temp = 0
+                for x = 1, 9 do
+                    temp = favs[x]
+                    favs[x] = index
+                    index = temp
                 end
+            elseif choice == selection.REM_FAVORITE then
+                for x = 1, 9 do
+                    if favs[x] == index then
+                        for x = x, 8 do
+                            favs[x] = favs[x+1]
+                        end
+                        favs[9] = -1
+                        break
+                    end
+                end
+            elseif choice == selection.REP_FAVORITE then
+                favs[bit.rshift(option, 24) + 1] = index
+            elseif choice == selection.SET_LAYOUT then
+                -- 1 = Sort by content/expansion else sort by region
+                favs[10] = bit.rshift(option, 16) == 1 and 1 or 0
             end
-        elseif choice == selection.REP_FAVORITE then
-            favs[bit.rshift(option, 24) + 1] = index
-        elseif choice == selection.SET_LAYOUT then
-            -- 1 = Sort by content/expansion else sort by region
-            favs[10] = bit.rshift(option, 16) == 1 and 1 or 0
+
+            player:setTeleportMenu(travelType, favs)
+
         end
 
-        player:setTeleportMenu(travelType, favs)
+        for x = 1, 3 do -- Condense arrays for event params
+            favs[1] = favs[1] + favs[x+1] * 256^x
+            favs[5] = favs[5] + favs[x+5] * 256^x
+        end
 
+        favs[9] = favs[9] + favs[10] * 256
+        player:updateEvent(favs[1], favs[5], favs[9])
+    else
+        player:updateEvent(-1, -1, -1)
     end
-
-    for x = 1, 3 do -- Condense arrays for event params
-        favs[1] = favs[1] + favs[x+1] * 256^x
-        favs[5] = favs[5] + favs[x+5] * 256^x
-    end
-
-    favs[9] = favs[9] + favs[10] * 256
-    player:updateEvent(favs[1], favs[5], favs[9])
-
 end
 
-dsp.homepoint.onEventFinish = function(player, csid, option, event)
+tpz.homepoint.onEventFinish = function(player, csid, option, event)
 
     if csid == event then
         choice = bit.band(option, 0xFF)
         if choice == selection.SET_HOMEPOINT then
             player:setHomePoint()
             player:messageSpecial(zones[player:getZoneID()].text.HOMEPOINT_SET)
-        elseif choice == selection.TELEPORT or choice == selection.SAME_ZONE then
+        elseif (choice == selection.TELEPORT or choice == selection.SAME_ZONE) and HOMEPOINT_TELEPORT == 1 then
             goToHP(player, choice, bit.rshift(option, 16))
         end
     end

@@ -12,9 +12,9 @@ function onMagicCastingCheck(caster, target,spell)
 end
 
 function onSpellCast(caster,target,spell)
-    local dMND = caster:getStat(dsp.mod.MND) - target:getStat(dsp.mod.MND)
+    local dMND = caster:getStat(tpz.mod.MND) - target:getStat(tpz.mod.MND)
 
-    local currentResist = target:getMod(dsp.mod.SLOWRES)
+    local currentResist = target:getMod(tpz.mod.SLOWRES)
     if currentResist == nil then
         currentResist = 0
     end
@@ -29,21 +29,21 @@ function onSpellCast(caster,target,spell)
     local duration = calculateDuration(120, spell:getSkillType(), spell:getSpellGroup(), caster, target)
     local params = {}
     params.diff = dMND
-    params.skillType = dsp.skill.ENFEEBLING_MAGIC
+    params.skillType = tpz.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = dsp.effect.SLOW
+    params.effect = tpz.effect.SLOW
     local resist = applyResistanceEffect(caster, target, spell, params)
     
     if resist >= 0.5 then -- Do it!
         if target:addStatusEffect(params.effect, power, 0, duration * resist, 0, 1) then
-            spell:setMsg(dsp.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(dsp.mod.SLOWRES, currentResist + 6)
+            spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB_IS)
+            target:setMod(tpz.mod.SLOWRES, currentResist + 6)
         else
-            spell:setMsg(dsp.msg.basic.MAGIC_NO_EFFECT)
+            spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT)
         end
 
     else
-        spell:setMsg(dsp.msg.basic.MAGIC_RESIST)
+        spell:setMsg(tpz.msg.basic.MAGIC_RESIST)
     end
 
     return params.effect

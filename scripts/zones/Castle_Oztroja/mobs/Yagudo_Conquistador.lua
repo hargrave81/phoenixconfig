@@ -11,5 +11,5 @@ function onMobDeath(mob, player, isKiller)
 end
 
 function onMobDespawn(mob)
-    dsp.mob.phOnDespawn(mob,ID.mob.YAA_HAQA_THE_PROFANE_PH,5,1800) -- 1 hour
+    tpz.mob.phOnDespawn(mob,ID.mob.YAA_HAQA_THE_PROFANE_PH,5,1800) -- 1 hour
 end

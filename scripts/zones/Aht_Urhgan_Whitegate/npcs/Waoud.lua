@@ -16,7 +16,7 @@ local ID = require("scripts/zones/Aht_Urhgan_Whitegate/IDs")
 -----------------------------------
 
 function onTrade(player,npc,trade)
-    local anEmptyVessel = player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.AN_EMPTY_VESSEL)
+    local anEmptyVessel = player:getQuestStatus(AHT_URHGAN,tpz.quest.id.ahtUrhgan.AN_EMPTY_VESSEL)
     local anEmptyVesselProgress = player:getCharVar("AnEmptyVesselProgress")
     local StoneID = player:getCharVar("EmptyVesselStone")
 
@@ -27,10 +27,10 @@ function onTrade(player,npc,trade)
 end
 
 function onTrigger(player,npc)
-    local anEmptyVessel = player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.AN_EMPTY_VESSEL)
+    local anEmptyVessel = player:getQuestStatus(AHT_URHGAN,tpz.quest.id.ahtUrhgan.AN_EMPTY_VESSEL)
     local anEmptyVesselProgress = player:getCharVar("AnEmptyVesselProgress")
     local divinationReady = true -- vanaDay() > player:getCharVar("LastDivinationDay")
-    local beginnings = player:getQuestStatus(AHT_URHGAN,dsp.quest.id.ahtUrhgan.BEGINNINGS)
+    local beginnings = player:getQuestStatus(AHT_URHGAN,tpz.quest.id.ahtUrhgan.BEGINNINGS)
 
     -- AN EMPTY VESSEL
     if ENABLE_TOAU == 1 and anEmptyVessel == QUEST_AVAILABLE and anEmptyVesselProgress <= 1 and player:getMainLvl() >= ADVANCED_JOB_LEVEL then
@@ -54,8 +54,8 @@ function onTrigger(player,npc)
         player:startEvent(69) -- closing cutscene
 
     -- BEGINNINGS
-    elseif anEmptyVessel == QUEST_COMPLETED and beginnings == QUEST_AVAILABLE and player:getCurrentMission(TOAU) > dsp.mission.id.toau.IMMORTAL_SENTRIES
-            and player:getMainJob() == dsp.job.BLU and player:getMainLvl() >= ADVANCED_JOB_LEVEL then
+    elseif anEmptyVessel == QUEST_COMPLETED and beginnings == QUEST_AVAILABLE and player:getCurrentMission(TOAU) > tpz.mission.id.toau.IMMORTAL_SENTRIES
+            and player:getMainJob() == tpz.job.BLU and player:getMainLvl() >= ADVANCED_JOB_LEVEL then
         if not divinationReady then
             player:startEvent(63)
         elseif player:needToZone() then
@@ -64,11 +64,11 @@ function onTrigger(player,npc)
             player:startEvent(705,player:getGil()) -- start AF1 quest            
         end
     elseif beginnings == QUEST_ACCEPTED then
-        local brand1 = player:hasKeyItem(dsp.ki.BRAND_OF_THE_SPRINGSERPENT)
-        local brand2 = player:hasKeyItem(dsp.ki.BRAND_OF_THE_GALESERPENT)
-        local brand3 = player:hasKeyItem(dsp.ki.BRAND_OF_THE_FLAMESERPENT)
-        local brand4 = player:hasKeyItem(dsp.ki.BRAND_OF_THE_SKYSERPENT)
-        local brand5 = player:hasKeyItem(dsp.ki.BRAND_OF_THE_STONESERPENT)
+        local brand1 = player:hasKeyItem(tpz.ki.BRAND_OF_THE_SPRINGSERPENT)
+        local brand2 = player:hasKeyItem(tpz.ki.BRAND_OF_THE_GALESERPENT)
+        local brand3 = player:hasKeyItem(tpz.ki.BRAND_OF_THE_FLAMESERPENT)
+        local brand4 = player:hasKeyItem(tpz.ki.BRAND_OF_THE_SKYSERPENT)
+        local brand5 = player:hasKeyItem(tpz.ki.BRAND_OF_THE_STONESERPENT)
         if brand1 and brand2 and brand3 and brand4 and brand5 then
             player:startEvent(707) -- reward immortal's scimitar
         else
@@ -135,7 +135,7 @@ function onEventFinish(player,csid,option)
             player:needToZone(false) -- remove this need
             player:setCharVar("LastDivinationDay",vanaDay())
             player:setCharVar("AnEmptyVesselProgress",2)
-            player:addQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.AN_EMPTY_VESSEL)
+            player:addQuest(AHT_URHGAN,tpz.quest.id.ahtUrhgan.AN_EMPTY_VESSEL)
         else
             player:setCharVar("LastDivinationDay",vanaDay())
             player:setCharVar("AnEmptyVesselProgress",1)
@@ -148,15 +148,15 @@ function onEventFinish(player,csid,option)
     elseif csid == 67 then -- Turn in stone, go to Aydeewa
         player:setCharVar("AnEmptyVesselProgress",4)
         -- skip going to Aydeewa
-        npcUtil.completeQuest(player, AHT_URHGAN, dsp.quest.id.ahtUrhgan.AN_EMPTY_VESSEL, {title=dsp.title.BEARER_OF_THE_MARK_OF_ZAHAK, ki=dsp.ki.MARK_OF_ZAHAK, var={"AnEmptyVesselProgress", "EmptyVesselStone"}})
-        player:unlockJob(dsp.job.BLU)  
+        npcUtil.completeQuest(player, AHT_URHGAN, tpz.quest.id.ahtUrhgan.AN_EMPTY_VESSEL, {title=tpz.title.BEARER_OF_THE_MARK_OF_ZAHAK, ki=tpz.ki.MARK_OF_ZAHAK, var={"AnEmptyVesselProgress", "EmptyVesselStone"}})
+        player:unlockJob(tpz.job.BLU)  
         player:PrintToPlayer("You can now become a blue mage!")
-        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.AZOUPH)
-        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.DVUCCA)
-        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.MAMOOL)
-        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.HALVUNG)
-        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.ILRUSI)
-        dsp.besieged.addRunicPortal(player, dsp.teleport.runic_portal.NYZUL)
+        tpz.besieged.addRunicPortal(player, tpz.teleport.runic_portal.AZOUPH)
+        tpz.besieged.addRunicPortal(player, tpz.teleport.runic_portal.DVUCCA)
+        tpz.besieged.addRunicPortal(player, tpz.teleport.runic_portal.MAMOOL)
+        tpz.besieged.addRunicPortal(player, tpz.teleport.runic_portal.HALVUNG)
+        tpz.besieged.addRunicPortal(player, tpz.teleport.runic_portal.ILRUSI)
+        tpz.besieged.addRunicPortal(player, tpz.teleport.runic_portal.NYZUL)
     elseif csid == 69 and option == 1 then
         player:needToZone(true)
         player:setCharVar("LastDivinationDay",vanaDay())
@@ -168,11 +168,11 @@ function onEventFinish(player,csid,option)
         player:delGil(1000)
         player:messageSpecial(ID.text.PAY_DIVINATION) -- You pay 1000 gil for the divination.
     elseif csid == 705 and option == 1 then
-        player:addQuest(AHT_URHGAN,dsp.quest.id.ahtUrhgan.BEGINNINGS)
+        player:addQuest(AHT_URHGAN,tpz.quest.id.ahtUrhgan.BEGINNINGS)
     elseif csid == 706 and option == 1 then
         player:delGil(1000)
         player:messageSpecial(ID.text.PAY_DIVINATION) -- You pay 1000 gil for the divination.
     elseif csid == 707 then
-        npcUtil.completeQuest(player, AHT_URHGAN, dsp.quest.id.ahtUrhgan.BEGINNINGS, {item=17717})
+        npcUtil.completeQuest(player, AHT_URHGAN, tpz.quest.id.ahtUrhgan.BEGINNINGS, {item=17717})
     end
 end

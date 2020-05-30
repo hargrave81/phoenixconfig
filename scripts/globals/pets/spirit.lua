@@ -5,25 +5,25 @@ require("scripts/globals/magic")
 require("scripts/globals/status")
 require("scripts/globals/weather")
 
-dsp.pet = dsp.pet or {}
-dsp.pet.spirit = dsp.pet.spirit or {}
+tpz.pet = tpz.pet or {}
+tpz.pet.spirit = tpz.pet.spirit or {}
 
 -- Establishes an elemental spirit of the given element
 ---------------------------------------------------------------
-dsp.pet.spirit.create = function(element)
-    local spirit = dsp.pet.spirit.newSpirit()
+tpz.pet.spirit.create = function(element)
+    local spirit = tpz.pet.spirit.newSpirit()
     spirit.element = element
     spirit.weather_casting_mods =
     {
-        [dsp.magic.singleWeatherStrong[spirit.element]] = -2000,
-        [dsp.magic.doubleWeatherStrong[spirit.element]] = -4000,
-        [dsp.magic.singleWeatherWeak[spirit.element]] = 2000,
-        [dsp.magic.doubleWeatherWeak[spirit.element]] = 4000
+        [tpz.magic.singleWeatherStrong[spirit.element]] = -2000,
+        [tpz.magic.doubleWeatherStrong[spirit.element]] = -4000,
+        [tpz.magic.singleWeatherWeak[spirit.element]] = 2000,
+        [tpz.magic.doubleWeatherWeak[spirit.element]] = 4000
     }
     spirit.day_casting_mods =
     {
-        [dsp.magic.dayStrong[spirit.element]] = -3000,
-        [dsp.magic.dayWeak[spirit.element]] = 3000
+        [tpz.magic.dayStrong[spirit.element]] = -3000,
+        [tpz.magic.dayWeak[spirit.element]] = 3000
     }
 
     return spirit
@@ -32,7 +32,7 @@ end
 -----------------------------------
 --  SPIRIT OBJECT
 -----------------------------------
-dsp.pet.spirit.newSpirit = function()
+tpz.pet.spirit.newSpirit = function()
     local this = {}
 
     -- These are initial definitions which will be overriden by
@@ -68,8 +68,8 @@ dsp.pet.spirit.newSpirit = function()
     -- skill, and the summoner's current skill over cap
     ---------------------------------------------------------------
     this.getSkillMod = function(summoner)
-        local summoning_skill = summoner:getSkillLevel(dsp.skill.SUMMONING_MAGIC)
-        local max_skill = summoner:getMaxSkillLevel(summoner:getMainLvl(), dsp.job.SMN, dsp.skill.SUMMONING_MAGIC)
+        local summoning_skill = summoner:getSkillLevel(tpz.skill.SUMMONING_MAGIC)
+        local max_skill = summoner:getMaxSkillLevel(summoner:getMainLvl(), tpz.job.SMN, tpz.skill.SUMMONING_MAGIC)
         local skill_vs_cap = summoning_skill - max_skill
         -- 48 s +/- 1 second for every 3 skill over or under cap
         local base_time = 15000 - ((summoning_skill - max_skill) / 3) * 1000
@@ -82,7 +82,7 @@ dsp.pet.spirit.newSpirit = function()
     this.getGearMod = function(summoner)
         -- TODO: MAKE THESE PROPER MODS
         -- Summoner's spats
-        local leg = summoner:getEquipID(dsp.slot.LEGS);
+        local leg = summoner:getEquipID(tpz.slot.LEGS);
         if leg == 15131 or leg == 15594 then
             return -5000
         end    
@@ -96,7 +96,7 @@ dsp.pet.spirit.newSpirit = function()
         local casting_time, over_cap = this.getSkillMod(summoner)
         casting_time = casting_time + this.getGearMod(summoner) +
                        this.getWeatherMod(spirit) + this.getDayMod(spirit)
-        if summoner:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
+        if summoner:hasStatusEffect(tpz.effect.ASTRAL_FLOW) then
             casting_time = casting_time - 5000
         end
 
@@ -115,7 +115,7 @@ dsp.pet.spirit.newSpirit = function()
         local summoner = spirit:getMaster()    
         local fast_cast, smn_skill = this.getSkillMod(summoner)
 
-        if summoner:hasStatusEffect(dsp.effect.ASTRAL_FLOW) then
+        if summoner:hasStatusEffect(tpz.effect.ASTRAL_FLOW) then
             delay = fast_cast -- this will make the reduction the entire delay
         elseif smn_skill > 0 then            
             -- randomly cast on fight start

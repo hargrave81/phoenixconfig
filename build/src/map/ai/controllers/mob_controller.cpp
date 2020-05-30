@@ -273,7 +273,7 @@ bool CMobController::MobSkill(int wsList)
         return false;
     }
 
-    std::shuffle(skillList.begin(), skillList.end(), dsprand::mt());
+    std::shuffle(skillList.begin(), skillList.end(), tpzrand::mt());
     CBattleEntity* PActionTarget {nullptr};
 
     for (auto skillid : skillList)
@@ -368,7 +368,7 @@ bool CMobController::TryCastSpell()
         return false;
     }
 
-    m_LastMagicTime = m_Tick - std::chrono::milliseconds(dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) / 2));
+    m_LastMagicTime = m_Tick - std::chrono::milliseconds(tpzrand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) / 2));
 
     if (PMob->m_HasSpellScript)
     {
@@ -451,12 +451,12 @@ void CMobController::CastSpell(SpellID spellid)
             if ((PSpell->getValidTarget() & TARGET_PLAYER_PARTY))
             {
                 // chance to target my master
-                if (PMob->PMaster != nullptr && dsprand::GetRandomNumber(2) == 0)
+                if (PMob->PMaster != nullptr && tpzrand::GetRandomNumber(2) == 0)
                 {
                     // target my master
                     PCastTarget = PMob->PMaster;
                 }
-                else if (dsprand::GetRandomNumber(2) == 0)
+                else if (tpzrand::GetRandomNumber(2) == 0)
                 {
                     // chance to target party
                     PMob->PAI->TargetFind->reset();
@@ -465,7 +465,7 @@ void CMobController::CastSpell(SpellID spellid)
                     if (!PMob->PAI->TargetFind->m_targets.empty())
                     {
                         // randomly select a target
-                        PCastTarget = PMob->PAI->TargetFind->m_targets[dsprand::GetRandomNumber(PMob->PAI->TargetFind->m_targets.size())];
+                        PCastTarget = PMob->PAI->TargetFind->m_targets[tpzrand::GetRandomNumber(PMob->PAI->TargetFind->m_targets.size())];
 
                         // only target if are on same action
                         if (PMob->PAI->IsEngaged() == PCastTarget->PAI->IsEngaged())
@@ -486,6 +486,16 @@ void CMobController::CastSpell(SpellID spellid)
 
 void CMobController::DoCombatTick(time_point tick)
 {
+    if (PMob->m_OwnerID.targid != 0 && static_cast<CCharEntity*>(PMob->GetEntity(PMob->m_OwnerID.targid))->PClaimedMob != static_cast<CBattleEntity*>(PMob))
+    {
+        if (m_Tick >= m_DeclaimTime + 3s)
+        {
+            PMob->m_OwnerID.clean();
+            PMob->updatemask |= UPDATE_STATUS;
+        }
+    }
+
+
     HandleEnmity();
     PTarget = static_cast<CBattleEntity*>(PMob->GetEntity(PMob->GetBattleTargetID()));
 
@@ -513,7 +523,7 @@ void CMobController::DoCombatTick(time_point tick)
     {
         return;
     }
-    else if (m_Tick >= m_LastMobSkillTime && dsprand::GetRandomNumber(100) < PMob->TPUseChance() && MobSkill())
+    else if (m_Tick >= m_LastMobSkillTime && tpzrand::GetRandomNumber(100) < PMob->TPUseChance() && MobSkill())
     {
         return;
     }
@@ -731,6 +741,8 @@ void CMobController::DoRoamTick(time_point tick)
                 if (PMob->GetHPP() == 100)
                 {
                     // at max health undirty exp
+                    PMob->m_HiPCLvl = 0;
+                    PMob->m_HiPartySize = 0;
                     PMob->m_giveExp = true;
                 }
             }
@@ -775,7 +787,7 @@ void CMobController::DoRoamTick(time_point tick)
                     if(spellID)
                         CastSpell(spellID.value());
                 }
-                else if (CanCastSpells() && dsprand::GetRandomNumber(10) < 3 && PMob->SpellContainer->HasBuffSpells())
+                else if (CanCastSpells() && tpzrand::GetRandomNumber(10) < 3 && PMob->SpellContainer->HasBuffSpells())
                 {
                     // cast buff
                     auto spellID = PMob->SpellContainer->GetBuffSpell();
@@ -860,7 +872,7 @@ void CMobController::FollowRoamPath()
         if (!PMob->PAI->PathFind->IsFollowingPath())
         {
             uint16 roamRandomness = (uint16)(PMob->getBigMobMod(MOBMOD_ROAM_COOL) / PMob->GetRoamRate());
-            m_LastActionTime = m_Tick - std::chrono::milliseconds(dsprand::GetRandomNumber(roamRandomness));
+            m_LastActionTime = m_Tick - std::chrono::milliseconds(tpzrand::GetRandomNumber(roamRandomness));
 
             // i'm a worm pop back up
             if (PMob->m_roamFlags & ROAMFLAG_WORM)
@@ -897,7 +909,7 @@ void CMobController::Despawn()
 void CMobController::Reset()
 {
     // Wait a little before roaming / casting spell / spawning pet
-    m_LastActionTime = m_Tick - std::chrono::milliseconds(dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_ROAM_COOL)));
+    m_LastActionTime = m_Tick - std::chrono::milliseconds(tpzrand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_ROAM_COOL)));
 
     // Don't attack player right off of spawn
     PMob->m_neutral = true;
@@ -950,12 +962,13 @@ bool CMobController::Engage(uint16 targid)
         // Don't cast magic or use special ability right away
         if(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY) != 0)
         {
-            m_LastMagicTime = m_Tick + std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY) - dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL)));
+            //m_LastMagicTime = m_Tick + std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY) - dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL)));
+            m_LastMagicTime = m_Tick - std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) + tpzrand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_DELAY)));
         }
 
         if(PMob->getBigMobMod(MOBMOD_SPECIAL_DELAY) != 0)
         {
-            m_LastSpecialTime = m_Tick - std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_SPECIAL_COOL) + dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_SPECIAL_DELAY)));
+            m_LastSpecialTime = m_Tick - std::chrono::milliseconds(PMob->getBigMobMod(MOBMOD_SPECIAL_COOL) + tpzrand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_SPECIAL_DELAY)));
         }
     }
     return ret;
@@ -999,10 +1012,15 @@ void CMobController::TapDeaggroTime()
     m_DeaggroTime = m_Tick;
 }
 
+void CMobController::TapDeclaimTime()
+{
+    m_DeclaimTime = m_Tick;
+}
+
 bool CMobController::Cast(uint16 targid, SpellID spellid)
 {
     FaceTarget(targid);
-    m_LastMagicTime = m_Tick - std::chrono::milliseconds(dsprand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) / 2));
+    m_LastMagicTime = m_Tick - std::chrono::milliseconds(tpzrand::GetRandomNumber(PMob->getBigMobMod(MOBMOD_MAGIC_COOL) / 2));
     return CController::Cast(targid, spellid);
 }
 
@@ -1082,8 +1100,8 @@ void CMobController::DecayResist()
                      Mod::SILENCERES,Mod::BINDRES,Mod::GRAVITYRES,Mod::SLOWRES,
                      Mod::STUNRES,Mod::CHARMRES,Mod::LULLABYRES};
     
-    int rnd1 = dsprand::GetRandomNumber(6);
-    int rnd2 = dsprand::GetRandomNumber(20);
+    int rnd1 = tpzrand::GetRandomNumber(6);
+    int rnd2 = tpzrand::GetRandomNumber(20);
     CBattleEntity* _target = (CBattleEntity*)PMob;
     for(int i = 0; i < 8; i++)
     {
