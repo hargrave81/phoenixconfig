@@ -222,7 +222,7 @@ void message_server_listen()
                         in_addr dest_ip;
                         uint destIp = (uint)msg.dest;
                         dest_ip.s_addr = destIp;
-                        ShowDebug("Message came through %s - %d\n",inet_ntoa(dest_ip), &msg.type);
+                        ShowDebug("Message came through %s - %d\n",inet_ntoa(dest_ip), msg.type);
                         message_server_send(msg.dest, msg.type, &msg.data, &msg.packet);
 
                         msg_queue.pop();
