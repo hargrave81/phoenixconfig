@@ -219,7 +219,9 @@ void message_server_listen()
                     while (!msg_queue.empty())
                     {                        
                         chat_message_t& msg = msg_queue.front();
-                        ShowDebug("Message came through %u - %u\n",&msg.dest, &msg.type);
+                        in_addr dest_ip;
+                        dest_ip.s_addr = ref<uint32>(msg.dest,0);
+                        ShowDebug("Message came through %s - %d\n",inet_ntoa(dest_ip), &msg.type);
                         message_server_send(msg.dest, msg.type, &msg.data, &msg.packet);
 
                         msg_queue.pop();
