@@ -23,10 +23,11 @@ function modConfig() {
             sed -i "s/^\(mysql_login:\s*\).*\$/\1$MYSQL_LOGIN/" /topaz/conf/$f
             sed -i "s/^\(mysql_password:\s*\).*\$/\1$MYSQL_PASSWORD/" /topaz/conf/$f
             sed -i "s/^\(mysql_database:\s*\).*\$/\1$MYSQL_DATABASE/" /topaz/conf/$f            
+            sed -i "s/^\(msg_server_ip:\s*\).*\$/\1$MSG_SERVER/" /topaz/conf/$f
         fi
     done
 
-    sed -i "s/^\(servername:\s*\).*\$/\1$SERVERNAME/" /topaz/conf/login.conf
+    sed -i "s/^\(servername:\s*\).*\$/\1$SERVERNAME/" /topaz/conf/login.conf    
 }
 
 modConfig
