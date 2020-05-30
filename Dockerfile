@@ -12,6 +12,8 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
     echo "done" && \
     chown -R topaz:topaz /topaz/conf
 
+RUN sudo apt-get update && apt-get install telnet -y
+
 USER topaz
 EXPOSE 54230 54230/udp 54231 54001 54002
 WORKDIR /topaz

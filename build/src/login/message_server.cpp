@@ -16,8 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 
-This file is part of DarkStar-server source code.
-
 ===========================================================================
 */
 
@@ -95,6 +93,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
         case MSG_LINKSHELL_RANK_CHANGE:
         case MSG_LINKSHELL_REMOVE:
         {
+            ShowDebug("Linkshell or Tell %d from %s", type, inet_ntoa(from_ip));
             const char* query = "SELECT server_addr, server_port FROM accounts_sessions LEFT JOIN chars ON "
                                 "accounts_sessions.charid = chars.charid WHERE charname = '%s' LIMIT 1;";
             ret = Sql_Query(ChatSqlHandle, query, (int8*)extra->data() + 4);
@@ -109,6 +108,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
         case MSG_PT_RELOAD:
         case MSG_PT_DISBAND:
         {
+            ShowDebug("Party Message %d from %s", type, inet_ntoa(from_ip));
             const char* query = "SELECT server_addr, server_port, MIN(charid) FROM accounts_sessions JOIN accounts_parties USING (charid) "
                                 "WHERE IF (allianceid <> 0, allianceid = (SELECT MAX(allianceid) FROM accounts_parties WHERE partyid = %d), "
                                 "partyid = %d) GROUP BY server_addr, server_port;";
@@ -148,6 +148,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
         }
         case MSG_SEND_TO_ENTITY:
         {
+            ShowDebug("Send To Entity %d from %s", type, inet_ntoa(from_ip));
             const char* query = "SELECT zoneip, zoneport FROM zone_settings WHERE zoneid = %d;";
             ret = Sql_Query(ChatSqlHandle, query, ref<uint16>((uint8*)extra->data(), 2));
             ipstring = true;
@@ -200,7 +201,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
 }
 
 void message_server_listen()
-{    
+{
     while (true)
     {
         zmq::message_t from;
@@ -216,8 +217,9 @@ void message_server_listen()
                 {
                     std::lock_guard<std::mutex>lk(queue_mutex);
                     while (!msg_queue.empty())
-                    {
+                    {                        
                         chat_message_t& msg = msg_queue.front();
+                        ShowDebug("Message came through %u - %u\n",&msg.dest, &msg.type);
                         message_server_send(msg.dest, msg.type, &msg.data, &msg.packet);
 
                         msg_queue.pop();
@@ -297,7 +299,7 @@ void message_server_init()
     catch (zmq::error_t& err)
     {
         ShowFatalError("Unable to bind chat socket: %s\n", err.what());
-    }    
+    }
     message_server_listen();
 }
 
