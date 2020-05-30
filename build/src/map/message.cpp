@@ -51,9 +51,10 @@ namespace message
     void send_queue()
     {
         while (!message_queue.empty())
-        {
+        {            
             std::lock_guard<std::mutex> lk(send_mutex);
             chat_message_t msg = message_queue.front();
+            ShowDebug("Message: Send message over to server IP\n");
             message_queue.pop();
             try
             {
@@ -577,7 +578,7 @@ namespace message
                 ShowError("Message: %s\n", e.what());
                 continue;
             }
-
+            ShowDebug("Parsing something we received from the message server ...\n");
             parse((MSGSERVTYPE)ref<uint8>((uint8*)type.data(), 0), &extra, &packet);
         }
     }
@@ -623,7 +624,7 @@ namespace message
         server.append(chatIp);
         server.append(":");
         server.append(std::to_string(chatPort));
-
+        ShowDebug("Connecting to message server and establishing constant link %s:%s ...\n", chatIp,std::to_string(chatPort));
         try
         {
             zSocket->connect(server.c_str());
