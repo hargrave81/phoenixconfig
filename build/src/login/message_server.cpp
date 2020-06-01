@@ -210,7 +210,7 @@ void message_server_listen()
         zmq::message_t type;
         zmq::message_t extra;
         zmq::message_t packet;
-
+        ShowDebug("Listening Heartbeat\n");
         try
         {
             if (!zSocket->recv(&from))
@@ -264,6 +264,7 @@ void message_server_listen()
             // Exit loop
             if (!zSocket || e.num() == 156384765)
             {
+                ShowError("Message zSocket: %s\n", e.what());
                 return;
             }
 
