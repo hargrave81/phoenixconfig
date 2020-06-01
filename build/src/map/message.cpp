@@ -53,11 +53,12 @@ namespace message
         while (!message_queue.empty())
         {            
             std::lock_guard<std::mutex> lk(send_mutex);
-            chat_message_t msg = message_queue.front();
-            ShowDebug("Message: Send message over to server IP\n");
+            chat_message_t msg = message_queue.front();            
+            ShowDebug("Popping message ...\n");
             message_queue.pop();
             try
-            {
+            {                
+                ShowDebug("Message: Send message over to server IP\n");
                 zSocket->send(*msg.type, ZMQ_SNDMORE);
                 zSocket->send(*msg.data, ZMQ_SNDMORE);
                 zSocket->send(*msg.packet);
@@ -93,6 +94,7 @@ namespace message
         }
         case MSG_CHAT_TELL:
         {
+            ShowDebug("Chat Tell Parse ...\n");
             CCharEntity* PChar = zoneutils::GetCharByName((int8*)extra->data() + 4);
             if (PChar && PChar->status != STATUS_DISAPPEAR && !jailutils::InPrison(PChar))
             {
@@ -188,6 +190,7 @@ namespace message
         }
         case MSG_PT_INVITE:
         {
+            ShowDebug("PT Invite Parse ...\n");
             uint32 id = ref<uint32>((uint8*)extra->data(), 0);
             // uint16 targid = ref<uint16>((uint8*)extra->data(), 4);
             uint8 inviteType = ref<uint8>((uint8*)packet->data(), 0x0B);
@@ -296,6 +299,7 @@ namespace message
         }
         case MSG_PT_RELOAD:
         {
+            ShowDebug("PT Reload Parse ...\n");
             if (extra->size() == 8)
             {
                 CCharEntity* PChar = zoneutils::GetCharToUpdate(ref<uint32>((uint8*)extra->data(), 4), ref<uint32>((uint8*)extra->data(), 0));
@@ -650,7 +654,7 @@ namespace message
 
     void send(MSGSERVTYPE type, void* data, size_t datalen, CBasicPacket* packet)
     {
-        ShowDebug("Message: Send message %d to server\n", type);
+        ShowDebug("Message: Send message: %d to server\n", type);
         std::lock_guard<std::mutex> lk(send_mutex);
         chat_message_t msg;
         msg.type = new zmq::message_t(sizeof(MSGSERVTYPE));
@@ -668,6 +672,7 @@ namespace message
         {
             msg.packet = new zmq::message_t(0);
         }
+        ShowDebug("Push to queue\n");
         message_queue.push(msg);
     }
 };
