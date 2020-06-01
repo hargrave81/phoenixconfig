@@ -628,7 +628,7 @@ namespace message
         server.append(chatIp);
         server.append(":");
         server.append(std::to_string(chatPort));
-        ShowDebug("Connecting to message server and establishing constant link %s:%s ...\n", chatIp,std::to_string(chatPort));
+        ShowDebug("\nConnecting to message server and establishing constant link %s:%s ...\n", chatIp,std::to_string(chatPort));
         try
         {
             zSocket->connect(server.c_str());

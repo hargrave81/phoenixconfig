@@ -232,7 +232,11 @@ void message_server_listen()
                 }
                 continue;
             }
-
+            in_addr from_ip;
+            uint16 from_port = 0;
+            from_ip.s_addr = ref<uint32>((uint8*)from->data(), 0);
+            from_port = ref<uint16>((uint8*)from->data(), 4);
+            ShowDebug("Message arrived %s:%d\n",inet_ntoa(from_ip),from_port);
             int more;
             size_t size = sizeof(more);
             zSocket->getsockopt(ZMQ_RCVMORE, &more, &size);
