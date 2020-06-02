@@ -1,6 +1,6 @@
 FROM hargrave81/phoenixbase
 
-ENV DS_BRANCH=phoenixreborn
+ENV DS_BRANCH=release
 
 USER root
 
@@ -15,7 +15,7 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
 RUN sudo apt-get update && apt-get install telnet -y
 
 USER topaz
-EXPOSE 54230 54230/udp 54231 54001 54002
+EXPOSE 54230 54230/udp 54231 54001 54002 54003
 WORKDIR /topaz
 
 CMD ["docker-entrypoint.sh"]
