@@ -1,4 +1,4 @@
-FROM hargrave81/phoenixbase
+FROM kubeserver:32000/phoenixbase
 
 ENV DS_BRANCH=release
 

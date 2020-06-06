@@ -1,4 +1,4 @@
-FROM hargrave81/devagent
+FROM kubeserver:32000/devagent
 
 ENV DS_BRANCH=release
 
