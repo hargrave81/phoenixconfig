@@ -1,11 +1,12 @@
 cd DevAgent
-Docker build . -t hargrave81/devagent
+Docker build . -t kubeserver:32000/devagent
 cd ..
 cd DBUpdate
-docker build -t hargrave81/phoenixdb . --no-cache
+docker build -t kubeserver:32000/phoenixdb . --no-cache
 cd ..
-docker build -f dockerfile.base -t hargrave81/phoenixbase --no-cache --build-arg CACHEBUST=$(date) .
-docker build . -t hargrave81/phoenix --no-cache
-docker push hargrave81/DevAgent
-docker push hargrave81/phoenixbase
-docker push hargrave81/phoenix
+docker build -f dockerfile.base -t kubeserver:32000/phoenixbase --no-cache --build-arg CACHEBUST=$(date) .
+docker build . -t kubeserver:32000/phoenix --no-cache
+
+docker push kubeserver:32000/DevAgent
+docker push kubeserver:32000/phoenixbase
+docker push kubeserver:32000/phoenix

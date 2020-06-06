@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ffxigameb-deployment
+  labels:
+    instance: b
+    app: ffxigame
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      instance: b
+      app: ffxigame
+  template:
+    metadata:
+      labels:
+        instance: b
+        app: ffxigame
+    spec:      
+      containers:
+      - name: ffxigame
+        image: localhost:32000/phoenix:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 54230
+          protocol: UDP
+        resources:
+          limits:
+            memory: "2000M"
+            cpu: "1"
+          requests:
+            memory: "200M"
+            cpu: "0.25"
+        env:
+        - name: MYSQL_HOST
+          value: "ffxidb-service"
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: "topazdb"
+        - name: MYSQL_LOGIN
+          value: "ffxi"
+        - name: MYSQL_PASSWORD
+          value: "SquareEnix81"        
+        - name: SERVERNAME
+          value: "PhoenixReborn"
+        - name: MSG_SERVER
+          value: "ffxilogin-service"
+        - name: APP
+          value: "GAME"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: ffximap
+  name: ffxigameb-service
+spec:
+  selector:
+    app: ffxigame
+    instance: b
+  ports:
+    - name: mapport
+      protocol: UDP
+      port: 54230
+  sessionAffinity: ClientIP
+  type: LoadBalancer

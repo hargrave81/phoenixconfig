@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ffxilogin-deployment
+  labels:
+    app: ffxilogin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ffxilogin
+  template:
+    metadata:
+      labels:
+        app: ffxilogin
+    spec:      
+      containers:
+      - name: ffxilogin
+        image: localhost:32000/phoenix:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 54230
+        - containerPort: 54231
+        - containerPort: 54001
+        - containerPort: 54003
+        resources:
+          limits:
+            memory: "2000M"
+            cpu: "1"
+          requests:
+            memory: "200M"
+            cpu: "0.25"
+        env:
+        - name: MYSQL_HOST
+          value: "ffxidb-service"
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: "topazdb"
+        - name: MYSQL_LOGIN
+          value: "ffxi"
+        - name: MYSQL_PASSWORD
+          value: "SquareEnix81"        
+        - name: SERVERNAME
+          value: "PhoenixReborn"
+        - name: MSG_SERVER
+          value: "0.0.0.0"
+        - name: APP
+          value: "LOGIN"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: ffxishare
+  name: ffxilogin-service
+spec:
+  selector:
+    app: ffxilogin
+  ports:
+    - name: lobbydata
+      protocol: TCP
+      port: 54230
+    - name: auth
+      protocol: TCP
+      port: 54231
+    - name: lobbyview
+      protocol: TCP
+      port: 54001
+    - name: messagesvr
+      protocol: TCP
+      port: 54003
+  sessionAffinity: ClientIP
+  type: LoadBalancer

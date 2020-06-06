@@ -1,0 +1,79 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: kubestorage
+provisioner: microk8s.io/hostpath
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  kubestorage-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: kubestorage
+  resources:
+    requests:
+      storage: 10G
+      apiVersion: apps/v1
+---
+kind: Deployment
+metadata:
+  name: ffxidb-deployment
+  labels:
+    app: ffxidb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ffxidb
+  template:
+    metadata:
+      labels:
+        app: ffxidb
+    spec:
+      volumes:
+        - name: kubestorage-db
+          persistentVolumeClaim:
+            claimName: kubestorage-volume-claim
+      containers:
+      - name: ffxidb
+        image: mariadb:10.1        
+        ports:
+        - containerPort: 3306
+        resources:
+          limits:
+            memory: "1000M"
+            cpu: "1"
+          requests:
+            memory: "200M"
+            cpu: "0.25"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: SquareEnix81
+        - name: MYSQL_DATABASE
+          value: topazdb
+        - name: MYSQL_USER
+          value: ffxi
+        - name: MYSQL_PASSWORD
+          value: SquareEnix81
+        volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: kubestorage-db
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ffxidb-service
+spec:
+  selector:
+    app: ffxidb
+  ports:
+    - name: dbport
+      protocol: TCP
+      port: 3306      
+      nodePort: 30306
+  type: NodePort
