@@ -8,8 +8,9 @@ MYSQL_LOGIN=${MYSQL_LOGIN:-darkstar}
 MYSQL_PASSWORD=${MYSQL_PASSWORD:-darkstar}
 MYSQL_DATABASE=${MYSQL_DATABASE:-dspdb}
 SERVERNAME=${SERVERNAME:-topaz}
+GAME_PORT=${GAME_PORT:-54230}
 APP=${APP:-GAME}
-MSG_SERVER=${MSG_SERVER:-10.0.0.24}
+MSG_SERVER=${MSG_SERVER:-0.0.0.0}
 
 ## modify configuration
 function modConfig() {
@@ -24,6 +25,7 @@ function modConfig() {
             sed -i "s/^\(mysql_password:\s*\).*\$/\1$MYSQL_PASSWORD/" /topaz/conf/$f
             sed -i "s/^\(mysql_database:\s*\).*\$/\1$MYSQL_DATABASE/" /topaz/conf/$f            
             sed -i "s/^\(msg_server_ip:\s*\).*\$/\1$MSG_SERVER/" /topaz/conf/$f
+            sed -i "s/^\(map_port:\s*\).*\$/\1$GAME_PORT/" /topaz/conf/$f
         fi
     done
 

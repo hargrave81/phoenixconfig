@@ -46,6 +46,8 @@ spec:
           value: "PhoenixReborn"
         - name: MSG_SERVER
           value: "ffxilogin-service"
+        - name: GAME_PORT
+          value: "54230"
         - name: APP
           value: "GAME"
       restartPolicy: Always
