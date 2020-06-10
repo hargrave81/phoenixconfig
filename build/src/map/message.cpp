@@ -560,11 +560,12 @@ namespace message
                     continue;
                 }
 
+                ShowDebug("We are getting something in the buffer\n");
                 int more;
                 size_t size = sizeof(more);
                 zSocket->getsockopt(ZMQ_RCVMORE, &more, &size);
                 if (more)
-                {
+                {                    
                     zSocket->recv(&extra);
                     zSocket->getsockopt(ZMQ_RCVMORE, &more, &size);
                     if (more)
@@ -575,6 +576,7 @@ namespace message
             }
             catch (zmq::error_t& e)
             {
+                ShowDebug("Things didn't pan out right\n");
                 if (!zSocket)
                 {
                     return;
@@ -585,6 +587,7 @@ namespace message
             ShowDebug("Parsing something we received from the message server ...\n");
             parse((MSGSERVTYPE)ref<uint8>((uint8*)type.data(), 0), &extra, &packet);
         }
+        ShowDebug("Looks like we are done listening\n");
     }
 
     void init(const char* chatIp, uint16 chatPort)

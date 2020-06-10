@@ -3,6 +3,10 @@
     "files.associations": {
         "xlocale": "cpp",
         "cmath": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "array": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
     }
 }

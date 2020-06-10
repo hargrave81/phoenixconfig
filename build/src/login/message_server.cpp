@@ -50,13 +50,18 @@ void queue_message(uint64 ipp, MSGSERVTYPE type, zmq::message_t* extra, zmq::mes
 }
 
 void message_server_send(uint64 ipp, MSGSERVTYPE type, zmq::message_t* extra, zmq::message_t* packet)
-{
-    ShowDebug("Sending out a message");
+{    
     try
     {
         zmq::message_t to(sizeof(uint64));
         memcpy(to.data(), &ipp, sizeof(uint64));
         zSocket->send(to, ZMQ_SNDMORE);
+    
+        in_addr to_ip;
+        uint16 from_port = 0;
+        to_ip.s_addr = ref<uint32>((uint8*)to.data(), 0);
+        to_port = ref<uint16>((uint8*)to.data(), 4);
+        ShowDebug("Sending out a message right now POOOOOF! %s:%d\n",inet_ntoa(to_ip),to_port);        
 
         zmq::message_t newType(sizeof(MSGSERVTYPE));
         ref<uint8>((uint8*)newType.data(), 0) = type;
@@ -223,7 +228,7 @@ void message_server_listen()
                         in_addr dest_ip;
                         uint destIp = (uint)msg.dest;
                         dest_ip.s_addr = destIp;
-                        ShowDebug("Message came through %s - %d\n",inet_ntoa(dest_ip), msg.type);
+                        ShowDebug("Message came through queue %s - %d\n",inet_ntoa(dest_ip), msg.type);
                         message_server_send(msg.dest, msg.type, &msg.data, &msg.packet);
 
                         msg_queue.pop();
@@ -235,7 +240,7 @@ void message_server_listen()
             uint16 from_port = 0;
             from_ip.s_addr = ref<uint32>((uint8*)(&from)->data(), 0);
             from_port = ref<uint16>((uint8*)(&from)->data(), 4);
-            ShowDebug("Message arrived %s:%d\n",inet_ntoa(from_ip),from_port);
+            ShowDebug("Message is arriving at port %s:%d\n",inet_ntoa(from_ip),from_port);
             int more;
             size_t size = sizeof(more);
             zSocket->getsockopt(ZMQ_RCVMORE, &more, &size);
