@@ -58,7 +58,7 @@ void message_server_send(uint64 ipp, MSGSERVTYPE type, zmq::message_t* extra, zm
         zSocket->send(to, ZMQ_SNDMORE);
     
         in_addr to_ip;
-        uint16 from_port = 0;
+        uint16 to_port = 0;
         to_ip.s_addr = ref<uint32>((uint8*)to.data(), 0);
         to_port = ref<uint16>((uint8*)to.data(), 4);
         ShowDebug("Sending out a message right now POOOOOF! %s:%d\n",inet_ntoa(to_ip),to_port);        
