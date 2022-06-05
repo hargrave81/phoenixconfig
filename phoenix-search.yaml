@@ -16,7 +16,7 @@ spec:
     spec:      
       containers:
       - name: ffxisearch
-        image: localhost:32000/phoenix:latest
+        image: kuberegistry:32000/phoenix:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 54002

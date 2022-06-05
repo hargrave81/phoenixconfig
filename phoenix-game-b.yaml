@@ -19,7 +19,7 @@ spec:
     spec:      
       containers:
       - name: ffxigame
-        image: localhost:32000/phoenix:latest
+        image: kuberegistry:32000/phoenix:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 54231

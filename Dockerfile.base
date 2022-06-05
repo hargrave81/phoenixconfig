@@ -1,4 +1,4 @@
-FROM kubeserver:32000/devagent
+FROM kuberegistry:32000/devagent
 
 ENV DS_BRANCH=release
 
@@ -9,8 +9,9 @@ RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/hargrave81/topaz.git/ 
   sh autogen.sh && \
   ./configure --enable-debug=gdb  
 
-RUN apt-get install rsync && \
-    git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
+RUN apt-get install rsync -y    
+
+RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
     rsync -avh /configuration/scripts/* /topaz/scripts && \
     rm -rf /configuration/scripts && \
     rsync -avh /configuration/build/* /topaz && \
@@ -18,14 +19,15 @@ RUN apt-get install rsync && \
     rsync -avh /configuration/* /topaz/conf && \
     rm -rf /configuration && \
     cd /topaz && \
-    make -j8 && \
-    apt-get autoremove -y build-essential autoconf pkg-config software-properties-common && \
+    make -j8 && \    
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /topaz/src && \
     rm -rf /topaz/sql && \
     rm /topaz/*.o && \
     rm -rf /topaz/win32 && \
     git clone --depth=1 -b master https://github.com/project-topaz/xiNavmeshes.git /topaz/navmeshes
+
+RUN apt-get autoremove -y build-essential autoconf pkg-config software-properties-common
 
 # add topaz user and fix permissions
 RUN groupadd -r topaz && \

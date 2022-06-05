@@ -1,3 +1,3 @@
-docker build . -t kubeserver:32000/phoenix --no-cache
+docker build . -t kuberegistry:32000/phoenix --no-cache
 
-docker push kubeserver:32000/phoenix
+docker push kuberegistry:32000/phoenix
