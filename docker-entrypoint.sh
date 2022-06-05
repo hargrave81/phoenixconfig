@@ -15,7 +15,7 @@ LOGIN_SERVER=${LOGIN_SERVER:-0.0.0.0}
 
 ## modify configuration
 function modConfig() {
-    local db_files=(login.conf search_server.conf)
+    local db_files=(login.conf map.conf search_server.conf)
 
     for f in ${db_files[@]}
     do
