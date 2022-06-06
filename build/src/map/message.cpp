@@ -51,13 +51,13 @@ namespace message
     void send_queue()
     {
         while (!message_queue.empty())
-        {            
+        {
             std::lock_guard<std::mutex> lk(send_mutex);
-            chat_message_t msg = message_queue.front();            
+            chat_message_t msg = message_queue.front();
             ShowDebug("Popping message ...\n");
             message_queue.pop();
             try
-            {                
+            {
                 ShowDebug("Message: Send message over to server IP\n");
                 zSocket->send(*msg.type, ZMQ_SNDMORE);
                 zSocket->send(*msg.data, ZMQ_SNDMORE);
@@ -72,7 +72,7 @@ namespace message
 
     void parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_t* packet)
     {
-        ShowDebug("Message: Received message %d from message server\n", type);
+        ShowDebug("Message: Received message %d from message server\n", static_cast<uint8>(type));
         switch (type)
         {
         case MSG_LOGIN:
@@ -118,6 +118,7 @@ namespace message
         }
         case MSG_CHAT_PARTY:
         {
+            ShowDebug("Chat Party Parse ...\n");
             CCharEntity* PChar = zoneutils::GetChar(ref<uint32>((uint8*)extra->data(), 0));
             if (PChar)
             {
@@ -156,6 +157,7 @@ namespace message
         }
         case MSG_CHAT_YELL:
         {
+            ShowDebug("Chat Yell Parse ...\n");
             zoneutils::ForEachZone([&packet, &extra](CZone* PZone)
             {
                 if (PZone->CanUseMisc(MISC_YELL))
@@ -190,7 +192,7 @@ namespace message
         }
         case MSG_PT_INVITE:
         {
-            ShowDebug("PT Invite Parse ...\n");
+            ShowDebug("Party Invite Parse ...\n");
             uint32 id = ref<uint32>((uint8*)extra->data(), 0);
             // uint16 targid = ref<uint16>((uint8*)extra->data(), 4);
             uint8 inviteType = ref<uint8>((uint8*)packet->data(), 0x0B);
@@ -299,7 +301,7 @@ namespace message
         }
         case MSG_PT_RELOAD:
         {
-            ShowDebug("PT Reload Parse ...\n");
+            ShowDebug("Party Reload Parse ...\n");
             if (extra->size() == 8)
             {
                 CCharEntity* PChar = zoneutils::GetCharToUpdate(ref<uint32>((uint8*)extra->data(), 4), ref<uint32>((uint8*)extra->data(), 0));
@@ -345,12 +347,18 @@ namespace message
         }
         case MSG_DIRECT:
         {
+            ShowDebug("Direct Tell Parse ...\n");
             CCharEntity* PChar = zoneutils::GetChar(ref<uint32>((uint8*)extra->data(), 0));
             if (PChar)
             {
+                ShowDebug("Message: outbound to %s\n", PChar->GetName());
                 CBasicPacket* newPacket = new CBasicPacket();
                 memcpy(*newPacket, packet->data(), std::min<size_t>(packet->size(), PACKET_SIZE));
                 PChar->pushPacket(newPacket);
+            }
+            else
+            {
+                ShowDebug("Failed to locate character ...\n");
             }
             break;
         }
@@ -441,6 +449,7 @@ namespace message
         }
         case MSG_SEND_TO_ENTITY:
         {
+            ShowDebug("Entity Message ...\n");
             // Need to check which server we're on so we don't get null pointers
             bool toTargetServer = ref<bool>((uint8*)extra->data(), 0);
             bool spawnedOnly    = ref<bool>((uint8*)extra->data(), 1);
@@ -505,6 +514,8 @@ namespace message
             }
             else // This is going to the player's game server
             {
+                ShowDebug("Game Server Message ...\n");
+
                 CCharEntity* PChar = zoneutils::GetChar(ref<uint16>((uint8*)extra->data(), 4));
 
                 if (PChar && PChar->loc.zone)
@@ -560,12 +571,11 @@ namespace message
                     continue;
                 }
 
-                ShowDebug("We are getting something in the buffer\n");
                 int more;
                 size_t size = sizeof(more);
                 zSocket->getsockopt(ZMQ_RCVMORE, &more, &size);
                 if (more)
-                {                    
+                {
                     zSocket->recv(&extra);
                     zSocket->getsockopt(ZMQ_RCVMORE, &more, &size);
                     if (more)
@@ -576,7 +586,6 @@ namespace message
             }
             catch (zmq::error_t& e)
             {
-                ShowDebug("Things didn't pan out right\n");
                 if (!zSocket)
                 {
                     return;
@@ -584,10 +593,9 @@ namespace message
                 ShowError("Message: %s\n", e.what());
                 continue;
             }
-            ShowDebug("Parsing something we received from the message server ...\n");
+
             parse((MSGSERVTYPE)ref<uint8>((uint8*)type.data(), 0), &extra, &packet);
         }
-        ShowDebug("Looks like we are done listening\n");
     }
 
     void init(const char* chatIp, uint16 chatPort)
@@ -616,7 +624,7 @@ namespace message
             int ret = Sql_Query(SqlHandle, "SELECT zoneip, zoneport FROM zone_settings GROUP BY zoneip, zoneport ORDER BY COUNT(*) DESC;");
             if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) > 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
             {
-                ipp = inet_addr((const char*)Sql_GetData(SqlHandle, 0));
+                inet_pton(AF_INET, (const char*)Sql_GetData(SqlHandle, 0), &ipp);
                 port = Sql_GetUIntData(SqlHandle, 1);
             }
         }
@@ -631,7 +639,7 @@ namespace message
         server.append(chatIp);
         server.append(":");
         server.append(std::to_string(chatPort));
-        ShowDebug("\nConnecting to message server and establishing constant link %s:%s ...\n", chatIp,std::to_string(chatPort));
+
         try
         {
             zSocket->connect(server.c_str());
@@ -657,7 +665,6 @@ namespace message
 
     void send(MSGSERVTYPE type, void* data, size_t datalen, CBasicPacket* packet)
     {
-        ShowDebug("Message: Send message: %d to server\n", type);
         std::lock_guard<std::mutex> lk(send_mutex);
         chat_message_t msg;
         msg.type = new zmq::message_t(sizeof(MSGSERVTYPE));
@@ -675,7 +682,6 @@ namespace message
         {
             msg.packet = new zmq::message_t(0);
         }
-        ShowDebug("Push to queue\n");
         message_queue.push(msg);
     }
 };

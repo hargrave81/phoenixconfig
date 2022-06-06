@@ -61,7 +61,7 @@ void message_server_send(uint64 ipp, MSGSERVTYPE type, zmq::message_t* extra, zm
         uint16 to_port = 0;
         to_ip.s_addr = ref<uint32>((uint8*)to.data(), 0);
         to_port = ref<uint16>((uint8*)to.data(), 4);
-        ShowDebug("Sending out a message right now POOOOOF! %s:%d\n",inet_ntoa(to_ip),to_port);        
+        ShowDebug("Sending out a message right now POOOOOF! %s:%d\n %s -  -  %s",inet_ntoa(to_ip),to_port,extra->str(),packet->str());        
 
         zmq::message_t newType(sizeof(MSGSERVTYPE));
         ref<uint8>((uint8*)newType.data(), 0) = type;
@@ -100,7 +100,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
         case MSG_LINKSHELL_RANK_CHANGE:
         case MSG_LINKSHELL_REMOVE:
         {
-            ShowDebug("Linkshell or Tell %d from %s", type, inet_ntoa(from_ip));
+            ShowDebug("Linkshell or Tell %d from %s packet from %s packet data %s", type, inet_ntoa(from_ip), from->str(), packet->str());
             const char* query = "SELECT server_addr, server_port FROM accounts_sessions LEFT JOIN chars ON "
                                 "accounts_sessions.charid = chars.charid WHERE charname = '%s' LIMIT 1;";
             ret = Sql_Query(ChatSqlHandle, query, (int8*)extra->data() + 4);
