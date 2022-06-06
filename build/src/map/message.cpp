@@ -347,7 +347,7 @@ namespace message
         }
         case MSG_DIRECT:
         {
-            ShowDebug("Direct Tell Parse ...\n");
+            ShowDebug("Direct Tell Parse > %s...\n",extra->str());
             CCharEntity* PChar = zoneutils::GetChar(ref<uint32>((uint8*)extra->data(), 0));
             if (PChar)
             {
