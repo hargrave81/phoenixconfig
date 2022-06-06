@@ -43,6 +43,7 @@
 #include "lua_trade_container.h"
 #include "lua_zone.h"
 #include "lua_item.h"
+#include "../utils/fishingutils.h"
 
 /************************************************************************
 *                                                                       *
@@ -73,6 +74,7 @@ struct actionList_t;
 struct actionTarget_t;
 
 enum ConquestUpdate : uint8;
+enum class Emote : uint8;
 
 namespace luautils
 {
@@ -141,7 +143,8 @@ namespace luautils
     int32 setMobPos(lua_State*);                                                // set a mobs position (only if mob is not in combat)
 
     int32 GetHealingTickDelay(lua_State* L);                                    // Returns the configured healing tick delay
-
+    int32 GetItem(lua_State* L);             // Returns a newly minted item object of the specified ID
+    
     int32 getAbility(lua_State*);
     int32 getSpell(lua_State*);
 
@@ -150,15 +153,17 @@ namespace luautils
     int32 GetPlayerByName(lua_State*);                                          // Gets Player ref from a name supplied
     int32 GetPlayerByID(lua_State*);                                            // Gets Player ref from an Id supplied
     int32 GetMobAction(lua_State*);                                             // Get Mobs current action
-    int32 VanadielTime(lua_State*);                                             // Gets the current Vanadiel Time in timestamp format (SE epoch in earth seconds)
+    int32 JstMidnight(lua_State* L);
+    int32 VanadielTime(lua_State*); // Gets the current Vanadiel Time in timestamp format (SE epoch in earth seconds)
     int32 VanadielTOTD(lua_State*);                                             // текущее игровое время суток
     int32 VanadielHour(lua_State*);                                             // текущие Vanadiel часы
     int32 VanadielMinute(lua_State*);                                           // текущие Vanadiel минуты
     int32 VanadielDayOfTheYear(lua_State*);                                     // Gets Integer Value for Day of the Year (Jan 01 = Day 1)
     int32 VanadielDayOfTheMonth(lua_State*);                                    // Gets day of the month (Feb 6 = Day 6)
+    int32 VanadielDayOfTheWeek(lua_State*);                                     // Gets day of the week (Fire Earth Water Wind Ice Lightning Light Dark)
     int32 VanadielYear(lua_State*);                                             // Gets the current Vanadiel Year
     int32 VanadielMonth(lua_State*);                                            // Gets the current Vanadiel Month
-    int32 VanadielDayElement(lua_State*);                                       // Gets element of the day (0: fire, ...)
+    int32 VanadielDayElement(lua_State*);                                       // Gets element of the day (1: fire, 2: ice, 3: wind, 4: earth, 5: thunder, 6: water, 7: light, 8: dark)
     int32 VanadielMoonPhase(lua_State*);                                        // Gets the current Vanadiel Moon Phase
     int32 VanadielMoonDirection(lua_State* L);                                  // Gets the current Vanadiel Moon Phasing direction (waxing, waning, neither)
     int32 VanadielRSERace(lua_State* L);                                        // Gets the current Race for RSE gear quest
@@ -214,6 +219,8 @@ namespace luautils
     std::tuple<int32, int32, int32> OnItemCheck(CBaseEntity* PTarget, CItem* PItem, ITEMCHECK param = ITEMCHECK::NONE, CBaseEntity* PCaster = nullptr);    // check to see if item can be used
     int32 CheckForGearSet(CBaseEntity* PTarget);                                // check for gear sets
 
+     int32 OnCastStarting(CBattleEntity* PCaster, CSpell* PSpell); // triggered just before starting to cast a spell (modify cast time etc.)
+
     int32 OnMagicCastingCheck(CBaseEntity* PChar, CBaseEntity* PTarget, CSpell* PSpell);    // triggers when a player attempts to cast a spell
     int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell);      // triggered when casting a spell
     int32 OnSpellPrecast(CBattleEntity* PCaster, CSpell* PSpell);                           // triggered just before casting a spell
@@ -232,7 +239,9 @@ namespace luautils
     int32 OnMobDrawIn(CBaseEntity* PMob, CBaseEntity* PTarget);
     int32 OnMobFight(CBaseEntity* PMob, CBaseEntity* PTarget);                    // Сalled every 3 sec when a player fight monster
     int32 OnCriticalHit(CBattleEntity* PMob, CBattleEntity* PAttacker);
-    int32 OnMobDeath(CBaseEntity* PMob, CBaseEntity* PKiller);                    // triggers on mob death
+    int32 OnFrontalCriticalHit(CBattleEntity* PMob, CBattleEntity* PAttacker);
+    int32 OnSkillchain(CBattleEntity* PMob, CBattleEntity* PAttacker);
+    int32 OnMobDeath(CBaseEntity* PMob, CBaseEntity* PKiller); // triggers on mob death
     int32 OnMobDespawn(CBaseEntity* PMob);                                        // triggers on mob despawn (death not assured)
 
     int32 OnPetEngage(CBaseEntity* PPet, int32 delay);                            // triggers on pet engaging a target
@@ -253,13 +262,16 @@ namespace luautils
     int32 OnBattlefieldDestroy(CBattlefield* PBattlefield);							// triggers when BCNM is destroyed
 
     int32 OnMobWeaponSkill(CBaseEntity* PChar, CBaseEntity* PMob, CMobSkill* PMobSkill, action_t* action);                            // triggers when mob weapon skill is used
-    int32 OnMobSkillCheck(CBaseEntity* PChar, CBaseEntity* PMob, CMobSkill* PMobSkill);                             // triggers before mob weapon skill is used, returns 0 if the move is valid
+    uint16 OnMobWeaponSkillPrepare(CBaseEntity* PMob, CBaseEntity* PTarget); // triggers before mob weapon skill is used, scripts can pick a WS for us
+    int32 OnMobSkillCheck(CBaseEntity* PChar, CBaseEntity* PMob,
+                          CMobSkill* PMobSkill); // triggers before mob weapon skill is used, returns 0 if the move is valid
     int32 OnMobAutomatonSkillCheck(CBaseEntity* PChar, CAutomatonEntity* PAutomaton, CMobSkill* PMobSkill);
 
     int32 OnAbilityCheck(CBaseEntity* PChar, CBaseEntity* PTarget, CAbility* PAbility, CBaseEntity** PMsgTarget);   // triggers when a player attempts to use a job ability or roll
     int32 OnPetAbility(CBaseEntity* PPet, CBaseEntity* PMob, CMobSkill* PMobSkill, CBaseEntity* PPetMaster, action_t* action);      // triggers when pet uses an ability
-    std::tuple<int32, uint8, uint8> OnUseWeaponSkill(CCharEntity* PChar, CBaseEntity* PMob, CWeaponSkill* wskill, uint16 tp, bool primary, action_t& action, CBattleEntity* taChar);// returns: damage, tphits landed, extra hits landed
-    int32 OnUseAbility(CBattleEntity* PUser, CBattleEntity* PTarget, CAbility* PAbility, action_t* action);         // triggers when job ability is used
+    std::tuple<int32, uint8, uint8> OnUseWeaponSkill(CBattleEntity* PUser, CBaseEntity* PMob, CWeaponSkill* wskill, uint16 tp, bool primary, action_t& action,
+                                                     CBattleEntity* taChar);                                // returns: damage, tphits landed, extra hits landed
+    int32 OnUseAbility(CBattleEntity* PUser, CBattleEntity* PTarget, CAbility* PAbility, action_t* action); // triggers when job ability is used
 
     int32 OnInstanceZoneIn(CCharEntity* PChar, CInstance* PInstance);           // triggered on zone in to instance
     void AfterInstanceRegister(CBaseEntity* PChar);                             // triggers after a character is registered and zoned into an instance (the first time)
@@ -282,6 +294,7 @@ namespace luautils
     int32 OnSpikesDamage(CBattleEntity* PDefender, CBattleEntity* PAttacker, actionTarget_t* Action, uint32 damage);                         // for mobs with spikes
 
     int32 nearLocation(lua_State*);
+    int32 GetItemIDByName(lua_State*);
 
     int32 OnPlayerLevelUp(CCharEntity* PChar);
     int32 OnPlayerLevelDown(CCharEntity* PChar);
@@ -293,6 +306,23 @@ namespace luautils
 
     void OnFurniturePlaced(CCharEntity* PChar, CItemFurnishing* itemId);
     void OnFurnitureRemoved(CCharEntity* PChar, CItemFurnishing* itemId);
-};
+
+    int32 SelectDailyItem(lua_State* L);
+
+    void OnPlayerEmote(CCharEntity* PChar, Emote EmoteID);
+
+    int32 OnFishingStart(CCharEntity* PChar, int32 RodID, int32 BaitID, int32 AreaID); // triggers when player starts fishing in a zone
+
+    fishresponse_t* OnFishingCheck(CCharEntity* PChar, fishingrod_t* Rod, std::vector<fish_t>* FishList, std::vector<fishmob_t>* MobList, uint8 AreaID,
+                                   string_t AreaName, fishinglure_t* Lure, uint8 Difficulty); // fishing process hook check
+
+    catchresponse_t* OnFishingReelIn(CCharEntity* PChar, fishresponse_t* response, fishingrod_t* rod); // triggers when player reels in the fish
+
+    int32 OnFishingAction(CCharEntity* PChar, int32 Action, int32 Stamina, int32 Special); // triggers when fishing action happens to player
+    int32 OnFishingCatch(CCharEntity* PChar, uint8 CatchType, int32 CatchID);              // triggers when player catches fish
+    int32 OnFishingEnd(CCharEntity* PChar);
+    // triggers when player stops fishing
+
+    };
 
 #endif //- _LUAUTILS_H -

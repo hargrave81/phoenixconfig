@@ -64,6 +64,7 @@
 #include "../entities/automatonentity.h"
 #include "../utils/itemutils.h"
 #include "../utils/charutils.h"
+#include "../utils/battleutils.h"
 #include "../conquest_system.h"
 #include "../weapon_skill.h"
 #include "../status_effect_container.h"
@@ -82,6 +83,8 @@
 #include "../ai/states/magic_state.h"
 #include <optional>
 #include "../battlefield.h"
+#include "../daily_system.h"
+#include "../packets/char_emotion.h"
 
 namespace luautils
 {
@@ -100,6 +103,7 @@ namespace luautils
 
     int32 init()
     {
+        TracyZoneScoped;
         ShowStatus("luautils::init:lua initializing...");
         LuaHandle = luaL_newstate();
         luaL_openlibs(LuaHandle);
@@ -119,10 +123,12 @@ namespace luautils
         lua_register(LuaHandle, "GetPlayerByName", luautils::GetPlayerByName);
         lua_register(LuaHandle, "GetPlayerByID", luautils::GetPlayerByID);
         lua_register(LuaHandle, "GetMobAction", luautils::GetMobAction);
+        lua_register(LuaHandle, "JstMidnight", luautils::JstMidnight);
         lua_register(LuaHandle, "VanadielTime", luautils::VanadielTime);
         lua_register(LuaHandle, "VanadielTOTD", luautils::VanadielTOTD);
         lua_register(LuaHandle, "VanadielHour", luautils::VanadielHour);
         lua_register(LuaHandle, "VanadielMinute", luautils::VanadielMinute);
+        lua_register(LuaHandle, "VanadielDayOfTheWeek", luautils::VanadielDayOfTheWeek);
         lua_register(LuaHandle, "VanadielDayOfTheMonth", luautils::VanadielDayOfTheMonth);
         lua_register(LuaHandle, "VanadielDayOfTheYear", luautils::VanadielDayOfTheYear);
         lua_register(LuaHandle, "VanadielYear", luautils::VanadielYear);
@@ -146,12 +152,14 @@ namespace luautils
         lua_register(LuaHandle, "UpdateNMSpawnPoint", luautils::UpdateNMSpawnPoint);
         lua_register(LuaHandle, "SetDropRate", luautils::SetDropRate);
         lua_register(LuaHandle, "NearLocation", luautils::nearLocation);
+        lua_register(LuaHandle, "GetItemIDByName", luautils::GetItemIDByName);
         lua_register(LuaHandle, "terminate", luautils::terminate);
 
         lua_register(LuaHandle, "GetHealingTickDelay", luautils::GetHealingTickDelay);
-
+        lua_register(LuaHandle, "GetItem", luautils::GetItem);
         lua_register(LuaHandle, "getAbility", luautils::getAbility);
         lua_register(LuaHandle, "getSpell", luautils::getSpell);
+        lua_register(LuaHandle, "SelectDailyItem", luautils::SelectDailyItem);
 
         Lunar<CLuaAbility>::Register(LuaHandle);
         Lunar<CLuaAction>::Register(LuaHandle);
@@ -176,7 +184,9 @@ namespace luautils
 
         contentRestrictionEnabled = (GetSettingsVariable("RESTRICT_CONTENT") != 0);
 
-        ShowMessage("\t\t - " CL_GREEN"[OK]" CL_RESET"\n");
+         TracyReportLuaMemory(LuaHandle);
+
+         ShowMessage("\t\t - " CL_GREEN"[OK]" CL_RESET"\n");
         return 0;
     }
 
@@ -188,19 +198,27 @@ namespace luautils
 
     int32 free()
     {
-        ShowStatus(CL_WHITE"luautils::free" CL_RESET":lua free...");
-        lua_close(LuaHandle);
-        ShowMessage("\t - " CL_GREEN"[OK]" CL_RESET"\n");
+        if (LuaHandle)
+        {
+            ShowStatus(CL_WHITE "luautils::free" CL_RESET ":lua free...");
+            lua_close(LuaHandle);
+            LuaHandle = nullptr;
+            ShowMessage("\t - " CL_GREEN "[OK]" CL_RESET "\n");
+        }
         return 0;
     }
 
     int32 garbageCollect()
     {
+        TracyZoneScoped;
+        TracyReportLuaMemory(LuaHandle);
 
         int32 top = lua_gettop(LuaHandle);
         ShowDebug(CL_CYAN"[Lua] Garbage Collected. Current State Top: %d\n" CL_RESET, top);
 
         lua_gc(LuaHandle, LUA_GCSTEP, 10);
+
+         TracyReportLuaMemory(LuaHandle);
 
         return 0;
     }
@@ -241,6 +259,11 @@ namespace luautils
 
     int32 prepFile(int8* File, const char* function)
     {
+        TracyZoneScoped;
+        TracyZoneCString(function);
+        TracyZoneIString(File);
+        TracyReportLuaMemory(LuaHandle);
+
         lua_pushnil(LuaHandle);
         lua_setglobal(LuaHandle, function);
 
@@ -332,6 +355,7 @@ namespace luautils
 
     int32 GetNPCByID(lua_State* L)
     {
+        TracyZoneScoped;
         if (!lua_isnil(L, 1) && lua_isnumber(L, 1))
         {
             uint32 npcid = (uint32)lua_tointeger(L, 1);
@@ -340,8 +364,8 @@ namespace luautils
 
             if (!lua_isnil(L, 2) && lua_isuserdata(L, 2))
             {
-                CLuaBaseEntity* PLuaBaseEntity = Lunar<CLuaBaseEntity>::check(L, 2);
-                PInstance = PLuaBaseEntity->GetBaseEntity()->PInstance;
+                CLuaInstance* PLuaInstance = Lunar<CLuaInstance>::check(L, 2);
+                PInstance = PLuaInstance->GetInstance();
             }
 
             CBaseEntity* PNpc = nullptr;
@@ -383,6 +407,7 @@ namespace luautils
 
     int32 GetMobByID(lua_State* L)
     {
+        TracyZoneScoped;
         if (!lua_isnil(L, 1) && lua_isnumber(L, 1))
         {
             uint32 mobid = (uint32)lua_tointeger(L, 1);
@@ -442,6 +467,7 @@ namespace luautils
 
         return 0;
     }
+
 
     /************************************************************************
     *                                                                       *
@@ -653,6 +679,22 @@ namespace luautils
 
     /************************************************************************
     *                                                                       *
+    * 
+    *   Return Vanadiel day of the week                                     *
+    *   Note: THIS IS NOT THE SAME AS THAT DAY'S ELEMENT                    *
+    *   Days of week: Fire Earth Water Wind Ice Lightning Light Dark        *
+    *   Elements: Fire Ice Wind Earth Thunder Water Light Dark              *
+    *                                                                       *
+    ************************************************************************/
+
+    int32 VanadielDayOfTheWeek(lua_State* L)
+    {
+        lua_pushinteger(L, CVanaTime::getInstance()->getWeekday());
+        return 1;
+    }
+
+    /************************************************************************
+    *                                                                       *
     *   Return Vanadiel Hour                                                *
     *                                                                       *
     ************************************************************************/
@@ -677,19 +719,36 @@ namespace luautils
 
     /************************************************************************
     *                                                                       *
-    *   Return Vanadiel Day element                                         *
+    *   Return Vanadiel Day element                                       *
+    *   Note: THIS IS NOT THE SAME AS THE DAY OF THE WEEK                   *
+    *   Days of week: Fire Earth Water Wind Ice Lightning Light Dark        *
+    *   Elements: Fire Ice Wind Earth Thunder Water Light Dark              *
     *                                                                       *
     ************************************************************************/
 
     int32 VanadielDayElement(lua_State* L)
     {
-        lua_pushinteger(L, CVanaTime::getInstance()->getWeekday());
+        lua_pushinteger(L, battleutils::GetDayElement());
         return 1;
     }
 
     /************************************************************************
     *                                                                       *
-    *   Return Moon Phase                                                   *
+
+     * * JstMidnight - Returns UTC timestamp of upcoming JST midnight
+    *                                                                       *
+
+     * ************************************************************************/
+
+    int32 JstMidnight(lua_State* L)
+    {
+        lua_pushinteger(L, CVanaTime::getInstance()->getJstMidnight());
+        return 1;
+    }
+
+    /************************************************************************
+    *                                                                       **
+    *  Return Moon Phase                                                   *
     *                                                                       *
     ************************************************************************/
 
@@ -705,7 +764,9 @@ namespace luautils
         {
             int32 offset = (int32)lua_tointeger(L, 1);
 
-            CVanaTime::getInstance()->setCustomOffset(offset);
+            int32 custom = CVanaTime::getInstance()->getCustomEpoch();
+            CVanaTime::getInstance()->setCustomEpoch((custom ? custom : VTIME_BASEDATE) - offset);
+
 
             lua_pushboolean(L, true);
             return 1;
@@ -839,6 +900,7 @@ namespace luautils
     ************************************************************************/
     int32 SpawnMob(lua_State* L)
     {
+        TracyZoneScoped;
         if (!lua_isnil(L, 1) && lua_isnumber(L, 1))
         {
             uint32 mobid = (uint32)lua_tointeger(L, 1);
@@ -904,6 +966,7 @@ namespace luautils
 
     int32 DespawnMob(lua_State* L)
     {
+        TracyZoneScoped;
         if (!lua_isnil(L, 1) && lua_isnumber(L, 1))
         {
             uint32 mobid = (uint32)lua_tointeger(L, 1);
@@ -1441,6 +1504,7 @@ namespace luautils
 
     int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
     {
+        TracyZoneScoped;
         lua_prepscript("scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(), PNpc->GetName());
 
         PChar->m_event.reset();
@@ -1499,6 +1563,7 @@ namespace luautils
 
     int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result, uint16 extras)
     {
+        TracyZoneScoped;
         int32 oldtop = lua_gettop(LuaHandle);
 
         lua_pushnil(LuaHandle);
@@ -1541,6 +1606,7 @@ namespace luautils
 
     int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
     {
+        TracyZoneScoped;
         lua_pushnil(LuaHandle);
         lua_setglobal(LuaHandle, "onEventUpdate");
 
@@ -1576,6 +1642,7 @@ namespace luautils
 
     int32 OnEventUpdate(CCharEntity* PChar, int8* string)
     {
+        TracyZoneScoped;
         lua_pushnil(LuaHandle);
         lua_setglobal(LuaHandle, "onEventUpdate");
 
@@ -1613,6 +1680,7 @@ namespace luautils
 
     int32 OnEventFinish(CCharEntity* PChar, uint16 eventID, uint32 result)
     {
+        TracyZoneScoped;
         lua_pushnil(LuaHandle);
         lua_setglobal(LuaHandle, "onEventFinish");
 
@@ -1655,6 +1723,7 @@ namespace luautils
 
     int32 OnTrade(CCharEntity* PChar, CBaseEntity* PNpc)
     {
+        TracyZoneScoped;
         lua_prepscript("scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(), PNpc->GetName());
 
         PChar->m_event.reset();
@@ -2160,6 +2229,33 @@ namespace luautils
         return 0;
     }
 
+    int32 OnCastStarting(CBattleEntity* PCaster, CSpell* PSpell)
+    {
+        if (PCaster->objtype == TYPE_MOB)
+        {
+            lua_prepscript("scripts/zones/%s/mobs/%s.lua", PCaster->loc.zone->GetName(), PCaster->GetName());
+
+            if (prepFile(File, "onCastStarting"))
+            {
+                return 0;
+            }
+
+            CLuaBaseEntity LuaCasterEntity(PCaster);
+            Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaCasterEntity);
+
+            CLuaSpell LuaSpell(PSpell);
+            Lunar<CLuaSpell>::push(LuaHandle, &LuaSpell);
+
+            if (lua_pcall(LuaHandle, 2, 0, 0))
+            {
+                ShowError("luautils::onCastStarting: %s\n", lua_tostring(LuaHandle, -1));
+                lua_pop(LuaHandle, 1);
+                return 0;
+            }
+        }
+        return 0;
+    }
+
     std::optional<SpellID> OnMonsterMagicPrepare(CBattleEntity* PCaster, CBattleEntity* PTarget)
     {
         TPZ_DEBUG_BREAK_IF(PCaster == nullptr || PTarget == nullptr);
@@ -2486,6 +2582,7 @@ namespace luautils
 
     int32 OnPath(CBaseEntity* PEntity)
     {
+        TracyZoneScoped;
         TPZ_DEBUG_BREAK_IF(PEntity == nullptr);
 
         if (PEntity->objtype != TYPE_PC)
@@ -2717,116 +2814,7 @@ namespace luautils
         return 0;
     }
 
-    /************************************************************************
-    *                                                                       *
-    *  Occurs when pet is roaming, and ms since last spell cast             *
-    *  Return true if lua script casts another spell or not to reset timer  *
-    *                                                                       *
-    ************************************************************************/
-
-    bool OnPetRoam(CBaseEntity* PPet, int32 msSinceLastCast)
-    {
-        TPZ_DEBUG_BREAK_IF(PPet == nullptr || PPet->objtype != TYPE_PET)
-
-            CLuaBaseEntity LuaMobEntity(PPet);
-
-        lua_prepscript("scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PPet)->GetScriptName().c_str());
-
-        if (prepFile(File, "onPetRoam"))
-        {
-            return false;
-        }
-
-        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
-        lua_pushinteger(LuaHandle, msSinceLastCast);
-
-        if (lua_pcall(LuaHandle, 2, 1, 0))
-        {
-            ShowError("luautils::onPetRoam: %s\n", lua_tostring(LuaHandle, -1));
-            lua_pop(LuaHandle, 1);
-            return false;
-        }
-        bool casted = (!lua_isnil(LuaHandle, -1) && lua_isboolean(LuaHandle, -1) ? (bool)lua_toboolean(LuaHandle, -1) : 0);
-        lua_pop(LuaHandle, 1);
-
-        return casted;
-    }
-    /************************************************************************
-    *                                                                       *
-    *  Сalled when pet first engages monster, delay optional to first cast  *
-    *                                                                       *
-    ************************************************************************/
-
-    int32 OnPetEngage(CBaseEntity* PPet, int32 delay)
-    {
-        TPZ_DEBUG_BREAK_IF(PPet == nullptr);
-
-        CLuaBaseEntity LuaMobEntity(PPet);
-
-        int8 File[255];
-        snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PPet)->GetScriptName().c_str());
-
-        if (prepFile(File, "onPetEngage"))
-        {
-            ShowError("luautils::onPetEngage: No File %s\n", File);
-            return -1;
-        }
-
-        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
-        lua_pushinteger(LuaHandle, delay);
-
-        if (lua_pcall(LuaHandle, 2, 1, 0))
-        {
-            ShowError("luautils::onPetEngage: %s\n", lua_tostring(LuaHandle, -1));
-            lua_pop(LuaHandle, 1);
-            return -1;
-        }
-        int32 newdelay = (!lua_isnil(LuaHandle, -1) && lua_isnumber(LuaHandle, -1) ? (int32)lua_tonumber(LuaHandle, -1) : 0);
-        //int32 newdelay = lua_tointeger(LuaHandle, -1);
-        lua_pop(LuaHandle, 1);
-
-        return newdelay;
-    }
-
-    /************************************************************************
-    *                                                                       *
-    *  Сalled every 3 sec when a pet fight monster, base delay passed in    *
-    *                                                                       *
-    ************************************************************************/
-
-    int32 OnPetFight(CBaseEntity* PPet, CBaseEntity* PTarget, int32 delay)
-    {
-        TPZ_DEBUG_BREAK_IF(PPet == nullptr);
-        TPZ_DEBUG_BREAK_IF(PTarget == nullptr || PTarget->objtype == TYPE_NPC);
-
-        CLuaBaseEntity LuaMobEntity(PPet);
-        CLuaBaseEntity LuaKillerEntity(PTarget);
-
-        int8 File[255];
-        snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PPet)->GetScriptName().c_str());
-
-        if (prepFile(File, "onPetFight"))
-        {
-
-            return -1;
-        }
-
-        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
-        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaKillerEntity);
-        lua_pushinteger(LuaHandle, delay);
-
-        if (lua_pcall(LuaHandle, 3, 1, 0))
-        {
-            ShowError("luautils::onPetFight: %s\n", lua_tostring(LuaHandle, -1));
-            lua_pop(LuaHandle, 1);
-            return -1;
-        }
-        int32 newdelay = (!lua_isnil(LuaHandle, -1) && lua_isnumber(LuaHandle, -1) ? (int32)lua_tonumber(LuaHandle, -1) : 0);
-        //int32 newdelay = lua_toint(LuaHandle, -1);
-        lua_pop(LuaHandle, 1);
-
-        return newdelay;
-    }
+   
 
     /************************************************************************
     *                                                                       *
@@ -2836,6 +2824,7 @@ namespace luautils
 
     int32 OnMobFight(CBaseEntity* PMob, CBaseEntity* PTarget)
     {
+        TracyZoneScoped;
         TPZ_DEBUG_BREAK_IF(PMob == nullptr);
         TPZ_DEBUG_BREAK_IF(PTarget == nullptr || PTarget->objtype == TYPE_NPC);
 
@@ -2893,6 +2882,174 @@ namespace luautils
         return 0;
     }
 
+     /************************************************************************
+     *                                                                       *
+     *  Occurs when pet is roaming, and ms since last spell cast             *
+     *  Return true if lua script casts another spell or not to reset timer  *
+     *                                                                       *
+     ************************************************************************/
+
+    bool OnPetRoam(CBaseEntity* PPet, int32 msSinceLastCast)
+    {
+        TPZ_DEBUG_BREAK_IF(PPet == nullptr || PPet->objtype != TYPE_PET)
+
+        CLuaBaseEntity LuaMobEntity(PPet);
+
+        lua_prepscript("scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PPet)->GetScriptName().c_str());
+
+        if (prepFile(File, "onPetRoam"))
+        {
+            return false;
+        }
+
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
+        lua_pushinteger(LuaHandle, msSinceLastCast);
+
+        if (lua_pcall(LuaHandle, 2, 1, 0))
+        {
+            ShowError("luautils::onPetRoam: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return false;
+        }
+        bool casted = (!lua_isnil(LuaHandle, -1) && lua_isboolean(LuaHandle, -1) ? (bool)lua_toboolean(LuaHandle, -1) : 0);
+        lua_pop(LuaHandle, 1);
+
+        return casted;
+    }
+    /************************************************************************
+     *                                                                       *
+     *  Сalled when pet first engages monster, delay optional to first cast  *
+     *                                                                       *
+     ************************************************************************/
+
+    int32 OnPetEngage(CBaseEntity* PPet, int32 delay)
+    {
+        TPZ_DEBUG_BREAK_IF(PPet == nullptr);
+
+        CLuaBaseEntity LuaMobEntity(PPet);
+
+        int8 File[255];
+        snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PPet)->GetScriptName().c_str());
+
+        if (prepFile(File, "onPetEngage"))
+        {
+            ShowError("luautils::onPetEngage: No File %s\n", File);
+            return -1;
+        }
+
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
+        lua_pushinteger(LuaHandle, delay);
+
+        if (lua_pcall(LuaHandle, 2, 1, 0))
+        {
+            ShowError("luautils::onPetEngage: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+        int32 newdelay = (!lua_isnil(LuaHandle, -1) && lua_isnumber(LuaHandle, -1) ? (int32)lua_tonumber(LuaHandle, -1) : 0);
+        // int32 newdelay = lua_tointeger(LuaHandle, -1);
+        lua_pop(LuaHandle, 1);
+
+        return newdelay;
+    }
+
+    /************************************************************************
+     *                                                                       *
+     *  Сalled every 3 sec when a pet fight monster, base delay passed in    *
+     *                                                                       *
+     ************************************************************************/
+
+    int32 OnPetFight(CBaseEntity* PPet, CBaseEntity* PTarget, int32 delay)
+    {
+        TPZ_DEBUG_BREAK_IF(PPet == nullptr);
+        TPZ_DEBUG_BREAK_IF(PTarget == nullptr || PTarget->objtype == TYPE_NPC);
+
+        CLuaBaseEntity LuaMobEntity(PPet);
+        CLuaBaseEntity LuaKillerEntity(PTarget);
+
+        int8 File[255];
+        snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PPet)->GetScriptName().c_str());
+
+        if (prepFile(File, "onPetFight"))
+        {
+            return -1;
+        }
+
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaKillerEntity);
+        lua_pushinteger(LuaHandle, delay);
+
+        if (lua_pcall(LuaHandle, 3, 1, 0))
+        {
+            ShowError("luautils::onPetFight: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+        int32 newdelay = (!lua_isnil(LuaHandle, -1) && lua_isnumber(LuaHandle, -1) ? (int32)lua_tonumber(LuaHandle, -1) : 0);
+        // int32 newdelay = lua_toint(LuaHandle, -1);
+        lua_pop(LuaHandle, 1);
+
+        return newdelay;
+    }
+    int32 OnFrontalCriticalHit(CBattleEntity* PMob, CBattleEntity* PAttacker)
+    {
+        TPZ_DEBUG_BREAK_IF(PMob == nullptr || PMob->objtype != TYPE_MOB)
+
+        CLuaBaseEntity LuaMobEntity(PMob);
+        CLuaBaseEntity LuaKillerEntity(PAttacker);
+
+        lua_prepscript("scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+
+        if (prepFile(File, "OnFrontalCriticalHit"))
+        {
+            return -1;
+        }
+
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
+        if (PAttacker)
+            Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaKillerEntity);
+        else
+            lua_pushnil(LuaHandle);
+
+        if (lua_pcall(LuaHandle, 2, 0, 0))
+        {
+            ShowError("luautils::OnFrontalCriticalHit: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    int32 OnSkillchain(CBattleEntity* PMob, CBattleEntity* PAttacker)
+    {
+        TPZ_DEBUG_BREAK_IF(PMob == nullptr || PMob->objtype != TYPE_MOB)
+
+        CLuaBaseEntity LuaMobEntity(PMob);
+        CLuaBaseEntity LuaKillerEntity(PAttacker);
+
+        lua_prepscript("scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+
+        if (prepFile(File, "onSkillchain"))
+        {
+            return -1;
+        }
+
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
+        if (PAttacker)
+            Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaKillerEntity);
+        else
+            lua_pushnil(LuaHandle);
+
+        if (lua_pcall(LuaHandle, 2, 0, 0))
+        {
+            ShowError("luautils::onSkillchain: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+
+        return 0;
+    }
     /************************************************************************
     *                                                                       *
     *  The script is executed after the death of any monster in the game    *
@@ -2901,6 +3058,7 @@ namespace luautils
 
     int32 OnMobDeath(CBaseEntity* PMob, CBaseEntity* PKiller)
     {
+        TracyZoneScoped;
         TPZ_DEBUG_BREAK_IF(PMob == nullptr);
 
         CCharEntity* PChar = dynamic_cast<CCharEntity*>(PKiller);
@@ -3000,9 +3158,21 @@ namespace luautils
         else
         {
             int8 File[255];
-            memset(File, 0, sizeof(File));
-            PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
-                snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());;
+            switch (PMob->objtype)
+            {
+                case TYPE_MOB:
+                    snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+                    break;
+                case TYPE_PET:
+                    snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str());
+                    break;
+                case TYPE_TRUST:
+                    snprintf((char*)File, sizeof(File), "scripts/globals/spells/trust/%s.lua", PMob->GetName());
+                    break;
+                default:
+                    ShowWarning("luautils::onMobDeath (%d): unknown objtype\n", PMob->objtype);
+                    break;
+            }
 
             lua_pushnil(LuaHandle);
             lua_setglobal(LuaHandle, "onMobDeath");
@@ -3050,8 +3220,22 @@ namespace luautils
         TPZ_DEBUG_BREAK_IF(PMob == nullptr);
 
         int8 File[255];
-        PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
-            snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+        switch (PMob->objtype)
+        {
+            case TYPE_MOB:
+                snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+                break;
+            case TYPE_PET:
+                snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str());
+                break;
+            case TYPE_TRUST:
+                snprintf((char*)File, sizeof(File), "scripts/globals/spells/trust/%s.lua", PMob->GetName());
+                break;
+            default:
+                ShowWarning("luautils::onMobSpawn (%d): unknown objtype\n", PMob->objtype);
+                break;
+        }
+
         if (prepFile(File, "onMobSpawn"))
         {
             return -1;
@@ -3059,7 +3243,6 @@ namespace luautils
 
         CLuaBaseEntity LuaMobEntity(PMob);
         Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
-
 
         if (lua_pcall(LuaHandle, 1, 0, 0))
         {
@@ -3137,8 +3320,21 @@ namespace luautils
         TPZ_DEBUG_BREAK_IF(PMob == nullptr);
 
         int8 File[255];
-        PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
-            snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+        switch (PMob->objtype)
+        {
+            case TYPE_MOB:
+                snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+                break;
+            case TYPE_PET:
+                snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str());
+                break;
+            case TYPE_TRUST:
+                snprintf((char*)File, sizeof(File), "scripts/globals/spells/trust/%s.lua", PMob->GetName());
+                break;
+            default:
+                ShowWarning("luautils::onMobDespawn (%d): unknown objtype\n", PMob->objtype);
+                break;
+        }
 
         if (prepFile(File, "onMobDespawn"))
         {
@@ -3190,6 +3386,7 @@ namespace luautils
 
     int32 OnGameHour(CZone* PZone)
     {
+        TracyZoneScoped;
         lua_prepscript("scripts/zones/%s/Zone.lua", PZone->GetName());
 
         if (prepFile(File, "onGameHour"))
@@ -3257,7 +3454,8 @@ namespace luautils
     *                                                                       *
     ************************************************************************/
 
-    std::tuple<int32, uint8, uint8> OnUseWeaponSkill(CCharEntity* PChar, CBaseEntity* PMob, CWeaponSkill* wskill, uint16 tp, bool primary, action_t& action, CBattleEntity* taChar)
+    std::tuple<int32, uint8, uint8> OnUseWeaponSkill(CBattleEntity* PChar, CBaseEntity* PMob, CWeaponSkill* wskill, uint16 tp, bool primary, action_t& action,
+                                                     CBattleEntity* taChar)
     {
         lua_prepscript("scripts/globals/weaponskills/%s.lua", wskill->getName());
 
@@ -3363,6 +3561,31 @@ namespace luautils
         }
 
         int32 retVal = (!lua_isnil(LuaHandle, -1) && lua_isnumber(LuaHandle, -1) ? (int32)lua_tonumber(LuaHandle, -1) : 0);
+        lua_pop(LuaHandle, 1);
+        return retVal;
+    }
+
+    uint16 OnMobWeaponSkillPrepare(CBaseEntity* PMob, CBaseEntity* PTarget)
+    {
+        lua_prepscript("scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+        if (!prepFile(File, "onMobWeaponSkillPrepare"))
+        {
+            CLuaBaseEntity LuaMobEntity(PMob);
+            Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaMobEntity);
+
+            CLuaBaseEntity LuaBaseEntity(PTarget);
+            Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+            if (lua_pcall(LuaHandle, 2, 1, 0))
+            {
+                lua_pop(LuaHandle, 1);
+                return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+        int32 retVal = (!lua_isnil(LuaHandle, -1) && lua_isnumber(LuaHandle, -1) ? (uint16)lua_tonumber(LuaHandle, -1) : 0);
         lua_pop(LuaHandle, 1);
         return retVal;
     }
@@ -4071,6 +4294,7 @@ namespace luautils
 
     int32 OnConquestUpdate(CZone* PZone, ConquestUpdate type)
     {
+        TracyZoneScoped;
         lua_prepscript("scripts/zones/%s/Zone.lua", PZone->GetName());
 
         if (prepFile(File, "onConquestUpdate"))
@@ -4365,6 +4589,54 @@ namespace luautils
         return 1;
     }
 
+    /***************************************************************************
+    * *
+    *  Creates an item object of the type specified by the itemID.
+     * *
+    *  This item is ephemeral, and doesn't exist in-game but can and should    *
+    *  be used to lookup item information or access item functions
+     * when only   *
+    *  the ItemID is known.                                                    *
+    * *
+    *  ## These items should be used to READ
+     * ONLY!                             *
+    *  ## Should lua functions be written which modify items, care must be     *
+    *     taken to ensure these are
+     * NEVER modified.                            *
+    *                                                                          *
+    *  example: local item
+     * = GetItem(16448)                                    *
+    *           item:GetName()                 --Bronze Dagger                 *
+    *
+     * item:isTwoHanded()             --False                         *
+    *                                                                          *
+
+     * ***************************************************************************/
+
+    int32 GetItem(lua_State* L)
+    {
+        TPZ_DEBUG_BREAK_IF(lua_isnil(L, -1) || !lua_isnumber(L, -1));
+
+        uint32 id = static_cast<uint32>(lua_tointeger(L, 1));
+        CItem* PItem = itemutils::GetItemPointer(id);
+        if (PItem)
+        {
+            lua_getglobal(L, CLuaItem::className);
+            lua_pushstring(L, "new");
+            lua_gettable(L, -2);
+            lua_insert(L, -2);
+            lua_pushlightuserdata(L, (void*)PItem);
+
+            if (lua_pcall(L, 2, 1, 0))
+            {
+                return 0;
+            }
+            return 1;
+        }
+        lua_pushnil(L);
+        return 1;
+    }
+
     int32 getAbility(lua_State* L)
     {
         if (!lua_isnil(L, 1) && lua_isnumber(L, 1))
@@ -4470,6 +4742,46 @@ namespace luautils
         return 1;
     }
 
+    inline int32 GetItemIDByName(lua_State* L)
+    {
+        uint32 id = 0;
+        // ShowDebug("1\n");
+        if (lua_isnil(L, 1) || !lua_isstring(L, 1))
+        {
+            lua_pushinteger(L, 0);
+            return 1;
+        }
+        // ShowDebug("2\n");
+        const char* itemname = lua_tostring(L, 1);
+        char itemname_esc[64] = { 0 };
+        Sql_EscapeStringLen(SqlHandle, itemname_esc, itemname, std::min(strlen(itemname), sizeof(itemname_esc) - 1));
+        int32 ret = Sql_Query(SqlHandle, "SELECT itemid FROM item_basic WHERE name = '%s' LIMIT 1;", itemname_esc);
+        if (ret == SQL_SUCCESS && Sql_NumRows(SqlHandle) == 1 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+        {
+            id = Sql_GetUIntData(SqlHandle, 0);
+            // ShowDebug("3\n");
+        }
+        else
+        {
+            std::string fmtQuery1 = "SELECT itemid FROM item_basic WHERE name LIKE '%";
+            fmtQuery1 += itemname_esc;
+            fmtQuery1 += "%' LIMIT 1;";
+            ret = Sql_QueryStr(SqlHandle, (const char*)(fmtQuery1.c_str()));
+            // ShowDebug("4\n");
+            if (ret == SQL_SUCCESS && Sql_NumRows(SqlHandle) == 1 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+            {
+                id = Sql_GetUIntData(SqlHandle, 0);
+                // ShowDebug("5\n");
+            }
+        }
+        // ShowDebug("6\n");
+        lua_pushinteger(L, id);
+        // ShowDebug("7\n");
+        return 1;
+    }
+
+
+
 
     int32 OnPlayerLevelUp(CCharEntity* PChar)
     {
@@ -4533,6 +4845,472 @@ namespace luautils
 
         return canDig;
     }
+
+    /********************************************************************
+        onFishingStart - callback when you start fishing
+
+     * *********************************************************************/
+    int32 OnFishingStart(CCharEntity* PChar, int32 RodID, int32 BaitID, int32 AreaID)
+    {
+        lua_prepscript("scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+
+        if (prepFile(File, "onFishingStart"))
+        {
+            return -1;
+        }
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+
+        lua_pushinteger(LuaHandle, RodID);
+        lua_pushinteger(LuaHandle, BaitID);
+        lua_pushinteger(LuaHandle, AreaID);
+
+        if (lua_pcall(LuaHandle, 4, 0, 0))
+        {
+            ShowError("luautils::onFishingStart: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    int PushFishList(lua_State* L, std::vector<fish_t>* FishList)
+    {
+        lua_newtable(L);
+        int counter = 0;
+        if (FishList != nullptr)
+        {
+            for (std::vector<fish_t>::iterator fish = FishList->begin(); fish != FishList->end(); ++fish)
+            {
+                lua_pushnumber(L, ++counter);
+                lua_newtable(L);
+
+                lua_pushstring(L, "id");
+                lua_pushnumber(L, fish->fishId);
+                lua_settable(L, -3);
+                lua_pushstring(L, "name");
+                lua_pushstring(L, fish->fishName.c_str());
+                lua_settable(L, -3);
+                lua_pushstring(L, "minSkill");
+                lua_pushnumber(L, fish->minSkill);
+                lua_settable(L, -3);
+                lua_pushstring(L, "maxSkill");
+                lua_pushnumber(L, fish->maxSkill);
+                lua_settable(L, -3);
+                lua_pushstring(L, "size");
+                lua_pushnumber(L, fish->size);
+                lua_settable(L, -3);
+                lua_pushstring(L, "baseDelay");
+                lua_pushnumber(L, fish->baseDelay);
+                lua_settable(L, -3);
+                lua_pushstring(L, "baseMove");
+                lua_pushnumber(L, fish->baseMove);
+                lua_settable(L, -3);
+                lua_pushstring(L, "minLength");
+                lua_pushnumber(L, fish->minLength);
+                lua_settable(L, -3);
+                lua_pushstring(L, "maxLength");
+                lua_pushnumber(L, fish->maxLength);
+                lua_settable(L, -3);
+                lua_pushstring(L, "sizeType");
+                lua_pushnumber(L, fish->sizeType);
+                lua_settable(L, -3);
+                lua_pushstring(L, "waterType");
+                lua_pushnumber(L, fish->waterType);
+                lua_settable(L, -3);
+                lua_pushstring(L, "log");
+                lua_pushnumber(L, fish->log);
+                lua_settable(L, -3);
+                lua_pushstring(L, "quest");
+                lua_pushnumber(L, fish->quest);
+                lua_settable(L, -3);
+                lua_pushstring(L, "item");
+                lua_pushnumber(L, fish->item);
+                lua_settable(L, -3);
+                lua_pushstring(L, "maxhook");
+                lua_pushnumber(L, fish->maxhook);
+                lua_settable(L, -3);
+                lua_pushstring(L, "rarity");
+                lua_pushnumber(L, fish->rarity);
+                lua_settable(L, -3);
+                lua_pushstring(L, "reqKeyItem");
+                lua_pushnumber(L, fish->reqKeyItem);
+                lua_settable(L, -3);
+                lua_pushstring(L, "lurePower");
+                lua_pushnumber(L, fish->lurePower);
+                lua_settable(L, -3);
+                lua_pushstring(L, "minLength");
+                lua_pushnumber(L, fish->minLength);
+                lua_settable(L, -3);
+                lua_pushstring(L, "maxLength");
+                lua_pushnumber(L, fish->maxLength);
+                lua_settable(L, -3);
+                lua_pushstring(L, "legendary");
+                lua_pushnumber(L, fish->legendary);
+                lua_settable(L, -3);
+                lua_pushstring(L, "legendaryFlags");
+                lua_pushnumber(L, fish->legendary_flags);
+                lua_settable(L, -3);
+                lua_pushstring(L, "flags");
+                lua_pushnumber(L, fish->flags);
+                lua_settable(L, -3);
+
+                lua_settable(L, -3);
+            }
+        }
+        return 1;
+    }
+
+    int PushMobList(lua_State* L, std::vector<fishmob_t>* MobList)
+    {
+        lua_newtable(L);
+        int counter = 0;
+        if (MobList != nullptr)
+        {
+            for (std::vector<fishmob_t>::iterator mob = MobList->begin(); mob != MobList->end(); ++mob)
+            {
+                lua_pushnumber(L, ++counter);
+                lua_newtable(L);
+                lua_pushstring(L, "id");
+                lua_pushnumber(L, mob->mobId);
+                lua_settable(L, -3);
+                lua_pushstring(L, "name");
+                lua_pushstring(L, mob->mobName.c_str());
+                lua_settable(L, -3);
+                lua_pushstring(L, "level");
+                lua_pushnumber(L, mob->level);
+                lua_settable(L, -3);
+                lua_pushstring(L, "size");
+                lua_pushnumber(L, mob->size);
+                lua_settable(L, -3);
+                lua_pushstring(L, "baseDelay");
+                lua_pushnumber(L, mob->baseDelay);
+                lua_settable(L, -3);
+                lua_pushstring(L, "baseMove");
+                lua_pushnumber(L, mob->baseMove);
+                lua_settable(L, -3);
+                lua_pushstring(L, "log");
+                lua_pushnumber(L, mob->log);
+                lua_settable(L, -3);
+                lua_pushstring(L, "quest");
+                lua_pushnumber(L, mob->quest);
+                lua_settable(L, -3);
+                lua_pushstring(L, "nm");
+                lua_pushboolean(L, mob->nm);
+                lua_settable(L, -3);
+                lua_pushstring(L, "nmFlags");
+                lua_pushnumber(L, mob->nmFlags);
+                lua_settable(L, -3);
+                lua_pushstring(L, "rarity");
+                lua_pushnumber(L, mob->rarity);
+                lua_settable(L, -3);
+                lua_pushstring(L, "minRespawn");
+                lua_pushnumber(L, mob->minRespawn);
+                lua_settable(L, -3);
+                lua_pushstring(L, "reqKeyItem");
+                lua_pushnumber(L, mob->reqKeyItem);
+                lua_settable(L, -3);
+                lua_pushstring(L, "reqLure");
+                lua_pushnumber(L, mob->reqLureId);
+                lua_settable(L, -3);
+                lua_pushstring(L, "areaId");
+                lua_pushnumber(L, mob->areaId);
+                lua_settable(L, -3);
+
+                lua_settable(L, -3);
+            }
+        }
+        return 1;
+    }
+
+    int PushRodInfo(lua_State* L, fishingrod_t* Rod)
+    {
+        lua_newtable(L);
+        lua_pushstring(L, "id");
+        lua_pushnumber(L, Rod->rodId);
+        lua_settable(L, -3);
+        lua_pushstring(L, "name");
+        lua_pushstring(L, Rod->rodName.c_str());
+        lua_settable(L, -3);
+        lua_pushstring(L, "material");
+        lua_pushnumber(L, Rod->material);
+        lua_settable(L, -3);
+        lua_pushstring(L, "sizeType");
+        lua_pushnumber(L, Rod->sizeType);
+        lua_settable(L, -3);
+        lua_pushstring(L, "flags");
+        lua_pushnumber(L, Rod->flags);
+        lua_settable(L, -3);
+        lua_pushstring(L, "durability");
+        lua_pushnumber(L, Rod->durability);
+        lua_settable(L, -3);
+        lua_pushstring(L, "fishattack");
+        lua_pushnumber(L, Rod->fishAttack);
+        lua_settable(L, -3);
+        lua_pushstring(L, "lgdbonusatk");
+        lua_pushnumber(L, Rod->lgdBonusAtk);
+        lua_settable(L, -3);
+        lua_pushstring(L, "missregen");
+        lua_pushnumber(L, Rod->missRegen);
+        lua_settable(L, -3);
+        lua_pushstring(L, "lgdmissregen");
+        lua_pushnumber(L, Rod->lgdMissRegen);
+        lua_settable(L, -3);
+        lua_pushstring(L, "fishtime");
+        lua_pushnumber(L, Rod->fishTime);
+        lua_settable(L, -3);
+        lua_pushstring(L, "lgdbonustime");
+        lua_pushnumber(L, Rod->lgdBonusTime);
+        lua_settable(L, -3);
+        lua_pushstring(L, "smdelaybonus");
+        lua_pushnumber(L, Rod->smDelayBonus);
+        lua_settable(L, -3);
+        lua_pushstring(L, "smmovebonus");
+        lua_pushnumber(L, Rod->smMoveBonus);
+        lua_settable(L, -3);
+        lua_pushstring(L, "lgdelaybonus");
+        lua_pushnumber(L, Rod->lgDelayBonus);
+        lua_settable(L, -3);
+        lua_pushstring(L, "lgmovebonus");
+        lua_pushnumber(L, Rod->lgMoveBonus);
+        lua_settable(L, -3);
+        lua_pushstring(L, "multiplier");
+        lua_pushnumber(L, Rod->multiplier);
+        lua_settable(L, -3);
+        lua_pushstring(L, "breakable");
+        lua_pushnumber(L, Rod->breakable);
+        lua_settable(L, -3);
+        lua_pushstring(L, "brokenrodid");
+        lua_pushnumber(L, Rod->brokenRodId);
+        lua_settable(L, -3);
+        lua_pushstring(L, "mmm");
+        lua_pushnumber(L, Rod->isMMM);
+        lua_settable(L, -3);
+        return 1;
+    }
+
+    int PushLureInfo(lua_State* L, fishinglure_t* Lure)
+    {
+        lua_newtable(L);
+        lua_pushstring(L, "id");
+        lua_pushnumber(L, Lure->lureId);
+        lua_settable(L, -3);
+        lua_pushstring(L, "name");
+        lua_pushstring(L, Lure->lureName.c_str());
+        lua_settable(L, -3);
+        lua_pushstring(L, "type");
+        lua_pushnumber(L, Lure->luretype);
+        lua_settable(L, -3);
+        lua_pushstring(L, "flags");
+        lua_pushnumber(L, Lure->flags);
+        lua_settable(L, -3);
+        lua_pushstring(L, "maxhook");
+        lua_pushnumber(L, Lure->maxhook);
+        lua_settable(L, -3);
+        lua_pushstring(L, "losable");
+        lua_pushboolean(L, Lure->losable);
+        lua_settable(L, -3);
+        return 1;
+    }
+
+    fishresponse_t* OnFishingCheck(CCharEntity* PChar, fishingrod_t* Rod, std::vector<fish_t>* FishList, std::vector<fishmob_t>* MobList, uint8 AreaID,
+                                   string_t AreaName, fishinglure_t* Lure, uint8 Difficulty)
+    {
+        fishresponse_t* retVal = new fishresponse_t();
+        retVal->caught = false;
+        lua_prepscript("scripts/globals/fishing/fishing.lua");
+
+        if (prepFile(File, "onFishingCheck"))
+        {
+            return retVal;
+        }
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+        lua_pushinteger(LuaHandle, PChar->RealSkills.skill[SKILL_FISHING]);
+        PushRodInfo(LuaHandle, Rod);
+        PushFishList(LuaHandle, FishList);
+        PushMobList(LuaHandle, MobList);
+        PushLureInfo(LuaHandle, Lure);
+        lua_pushinteger(LuaHandle, AreaID);
+        lua_pushstring(LuaHandle, AreaName.c_str());
+        lua_pushinteger(LuaHandle, zoneutils::GetZone(PChar->getZone())->GetType());
+        lua_pushinteger(LuaHandle, Difficulty);
+        lua_pushinteger(LuaHandle, PChar->fishingToken);
+
+        if (lua_pcall(LuaHandle, 11, 26, 0))
+        {
+            ShowError("luautils::OnFishingCheck: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            retVal->successtype = FISHINGSUCCESSTYPE_NONE;
+            return retVal;
+        }
+
+        retVal->areaid = AreaID;
+        retVal->fishingToken = (uint32)lua_tonumber(LuaHandle, -26);
+        retVal->caught = (uint32)lua_toboolean(LuaHandle, -25);
+        retVal->catchid = (uint32)lua_tonumber(LuaHandle, -24);
+        retVal->catchtype = (uint32)lua_tonumber(LuaHandle, -23);
+        retVal->catchlevel = (uint32)lua_tonumber(LuaHandle, -22);
+        retVal->catchsize = (uint32)lua_tonumber(LuaHandle, -21);
+        retVal->count = (uint32)lua_tonumber(LuaHandle, -20);
+        retVal->stamina = (uint32)lua_tonumber(LuaHandle, -19);
+        retVal->delay = (uint32)lua_tonumber(LuaHandle, -18);
+        retVal->regen = (uint32)lua_tonumber(LuaHandle, -17);
+        retVal->response = (uint32)lua_tonumber(LuaHandle, -16);
+        retVal->attackdmg = (uint32)lua_tonumber(LuaHandle, -15);
+        retVal->heal = (uint32)lua_tonumber(LuaHandle, -14);
+        retVal->timelimit = (uint32)lua_tonumber(LuaHandle, -13);
+        retVal->sense = (uint32)lua_tonumber(LuaHandle, -12);
+        retVal->hooksense = (uint32)lua_tonumber(LuaHandle, -11);
+        retVal->special = (uint32)lua_tonumber(LuaHandle, -10);
+        retVal->length = (uint32)lua_tonumber(LuaHandle, -9);
+        retVal->weight = (uint32)lua_tonumber(LuaHandle, -8);
+        retVal->loseChance = (uint32)lua_tonumber(LuaHandle, -7);
+        retVal->breakChance = (uint32)lua_tonumber(LuaHandle, -6);
+        retVal->snapChance = (uint32)lua_tonumber(LuaHandle, -5);
+        retVal->catchsizeType = (uint32)lua_tonumber(LuaHandle, -4);
+        retVal->legendary = (bool)lua_toboolean(LuaHandle, -3) == true ? 1 : 0;
+        retVal->nm = (bool)lua_toboolean(LuaHandle, -2) == true ? 1 : 0;
+        retVal->nmFlags = (uint32)lua_tonumber(LuaHandle, -1);
+        int n = lua_gettop(LuaHandle);
+        lua_pop(LuaHandle, n);
+
+        return retVal;
+    }
+
+    catchresponse_t* OnFishingReelIn(CCharEntity* PChar, fishresponse_t* response, fishingrod_t* rod)
+    {
+        catchresponse_t* retVal = new catchresponse_t();
+        retVal->caught = false;
+        lua_prepscript("scripts/globals/fishing/fishing.lua");
+
+        if (prepFile(File, "onFishingReelIn"))
+        {
+            return retVal;
+        }
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+        lua_pushinteger(LuaHandle, response->catchtype);
+        lua_pushinteger(LuaHandle, PChar->RealSkills.skill[SKILL_FISHING]);
+        lua_pushinteger(LuaHandle, response->catchlevel);
+        lua_pushinteger(LuaHandle, response->loseChance);
+        lua_pushinteger(LuaHandle, response->breakChance);
+        lua_pushinteger(LuaHandle, response->snapChance);
+        lua_pushinteger(LuaHandle, rod->sizeType);
+        lua_pushinteger(LuaHandle, response->catchsizeType);
+        lua_pushinteger(LuaHandle, response->legendary);
+        lua_pushinteger(LuaHandle, rod->breakable);
+        lua_pushinteger(LuaHandle, rod->durability);
+        lua_pushinteger(LuaHandle, response->catchsize);
+        lua_pushboolean(LuaHandle, response->nm);
+        lua_pushinteger(LuaHandle, response->catchid);
+        lua_pushinteger(LuaHandle, response->nmFlags);
+        lua_pushinteger(LuaHandle, response->fishingToken);
+
+        if (lua_pcall(LuaHandle, 17, 5, 0))
+        {
+            ShowError("luautils::OnFishingReelIn: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            retVal->caught = false;
+            retVal->failReason = FISHINGFAILTYPE_SYSTEM;
+            return retVal;
+        }
+
+        retVal->fishingToken = (uint32)lua_tonumber(LuaHandle, -5);
+        retVal->caught = (uint32)lua_toboolean(LuaHandle, -4);
+        retVal->rodbreak = (uint32)lua_toboolean(LuaHandle, -3);
+        retVal->linebreak = (uint32)lua_toboolean(LuaHandle, -2);
+        retVal->failReason = (uint32)lua_tonumber(LuaHandle, -1);
+
+        int n = lua_gettop(LuaHandle);
+        lua_pop(LuaHandle, n);
+
+        return retVal;
+    }
+
+    /********************************************************************
+        onFishingAction - callback when fishing action happens
+
+     * *********************************************************************/
+    int32 OnFishingAction(CCharEntity* PChar, int32 Action, int32 Stamina, int32 Special)
+    {
+        lua_prepscript("scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+
+        if (prepFile(File, "onFishingAction"))
+        {
+            return -1;
+        }
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+
+        lua_pushinteger(LuaHandle, Action);
+        lua_pushinteger(LuaHandle, Stamina);
+        lua_pushinteger(LuaHandle, Special);
+
+        if (lua_pcall(LuaHandle, 4, 0, 0))
+        {
+            ShowError("luautils::onFishingAction: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    /********************************************************************
+        onFishingCatch - callback when you catch fish
+
+     * *********************************************************************/
+    int32 OnFishingCatch(CCharEntity* PChar, uint8 CatchType, int32 CatchID)
+    {
+        lua_prepscript("scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+
+        if (prepFile(File, "onFishingCatch"))
+        {
+            return -1;
+        }
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+
+        lua_pushinteger(LuaHandle, CatchType);
+        lua_pushinteger(LuaHandle, CatchID);
+
+        if (lua_pcall(LuaHandle, 3, 0, 0))
+        {
+            ShowError("luautils::onFishingCatch: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    /********************************************************************
+        onFishingEnd - callback when fishing has ended
+
+     * *********************************************************************/
+    int32 OnFishingEnd(CCharEntity* PChar)
+    {
+        lua_prepscript("scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+
+        if (prepFile(File, "onFishingCatch"))
+        {
+            return -1;
+        }
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+
+        if (lua_pcall(LuaHandle, 1, 0, 0))
+        {
+            ShowError("luautils::onFishingEnd: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return -1;
+        }
+
+        return 0;
+    }
+
 
     /************************************************************************
     *   Loads a Lua function with a fallback hierarchy                      *
@@ -4610,6 +5388,36 @@ namespace luautils
         {
             ShowError("luautils::onFurnitureRemoved: %s\n", lua_tostring(LuaHandle, -1));
             lua_pop(LuaHandle, 1);
+        }
+    }
+
+    int32 SelectDailyItem(lua_State* L)
+    {
+        TPZ_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
+        TPZ_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
+        CLuaBaseEntity* PLuaBaseEntity = Lunar<CLuaBaseEntity>::check(L, 1);
+        CCharEntity* player = (CCharEntity*)PLuaBaseEntity->GetBaseEntity();
+        lua_pushinteger(L, daily::SelectItem(player, (uint8)lua_tointeger(L, 2)));
+        return 1;
+    }
+
+    void OnPlayerEmote(CCharEntity* PChar, Emote EmoteID)
+    {
+        lua_prepscript("scripts/globals/player.lua");
+
+        if (prepFile(File, "onPlayerEmote"))
+            return;
+
+        CLuaBaseEntity LuaBaseEntity(PChar);
+        Lunar<CLuaBaseEntity>::push(LuaHandle, &LuaBaseEntity);
+
+        lua_pushinteger(LuaHandle, (uint8)EmoteID);
+
+        if (lua_pcall(LuaHandle, 2, 0, 0))
+        {
+            ShowError("luautils::onEmote: %s\n", lua_tostring(LuaHandle, -1));
+            lua_pop(LuaHandle, 1);
+            return;
         }
     }
 

@@ -40,6 +40,9 @@ CPetController::CPetController(CPetEntity* _PPet) :
 
 void CPetController::Tick(time_point tick)
 {
+    TracyZoneScoped;
+    TracyZoneIString(PPet->GetName());
+
     if (PPet->isCharmed && tick > PPet->charmTime)
     {
         petutils::DespawnPet(PPet->PMaster);
@@ -52,6 +55,14 @@ void CPetController::DoRoamTick(time_point tick)
 {
     if ((PPet->PMaster == nullptr || PPet->PMaster->isDead()) && PPet->isAlive()) {
         PPet->Die();
+        return;
+    }
+
+    // Pet is unable to move due to hard CC(Sleep, stun, terror, etc)
+    if (PPet->StatusEffectContainer->HasStatusEffect(EFFECT_SLEEP) || PPet->StatusEffectContainer->HasStatusEffect(EFFECT_LULLABY) ||
+        PPet->StatusEffectContainer->HasStatusEffect(EFFECT_TERROR) || PPet->StatusEffectContainer->HasStatusEffect(EFFECT_PETRIFICATION) ||
+        PPet->StatusEffectContainer->HasStatusEffect(EFFECT_STUN) || PPet->StatusEffectContainer->HasStatusEffect(EFFECT_BIND))
+    {
         return;
     }
 
@@ -68,8 +79,9 @@ void CPetController::DoRoamTick(time_point tick)
     float currentDistance = distance(PPet->loc.p, PPet->PMaster->loc.p);
 
     if (currentDistance > PetRoamDistance)
+    // Was 35.0f, but pets lag behind heavily due to bad pathing/navmesh so this should help
     {
-        if (currentDistance < 35.0f && PPet->PAI->PathFind->PathAround(PPet->PMaster->loc.p, 2.0f, PATHFLAG_RUN | PATHFLAG_WALLHACK))
+        if (currentDistance < 20.0f && PPet->PAI->PathFind->PathAround(PPet->PMaster->loc.p, 2.0f, PATHFLAG_RUN | PATHFLAG_WALLHACK))
         {
             PPet->PAI->PathFind->FollowPath();
         }

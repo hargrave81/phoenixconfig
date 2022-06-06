@@ -116,7 +116,7 @@ class CMobEntity : public CBattleEntity
 {
 public:
     CMobEntity();
-    ~CMobEntity();
+    virtual ~CMobEntity();
 
     uint32    getEntityFlags();                        // Returns the current value in m_flags
     void      setEntityFlags(uint32 EntityFlags);      // Change the current value in m_flags
@@ -124,7 +124,7 @@ public:
     bool      IsFarFromHome();                         // check if mob is too far from spawn
     bool      CanBeNeutral();                          // check if mob can have killing pause
 
-    uint8     TPUseChance();                           // return % chance to use TP move
+    uint16    TPUseChance();                            // return % chance to use TP move
 
     bool      CanDeaggro();
     time_point GetDespawnTime();
@@ -154,6 +154,7 @@ public:
     bool      IsHPHidden();
     void      Untargetable(bool untargetable);
     bool      IsUntargetable();
+    void      DoAutoTarget();
 
     void      PostTick() override;
     float     GetRoamDistance();
@@ -182,6 +183,10 @@ public:
     bool      m_AllowRespawn;             // if true, allow respawn
     uint32    m_RespawnTime;              // respawn time
     uint32    m_DropItemTime;             // time until monster death animation
+
+    bool m_autoTargetReady;          // autotarget logic is in multiple places. makes sure it only triggers once.
+    CCharEntity* m_autoTargetKiller; // the player that landed the killing blow. used in auto-target logic
+
 
     uint32    m_DropID;                   // dropid of items to be dropped. dropid in Database (mob_droplist)
 

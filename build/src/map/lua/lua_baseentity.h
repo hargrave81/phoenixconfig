@@ -56,6 +56,7 @@ public:
     int32 messagePublic(lua_State*);        // Sends a public Basic Message
     int32 messageSpecial(lua_State*);       // Sends Special Message
     int32 messageSystem(lua_State*);        // Sends System Message
+    int32 messageCombat(lua_State* L);      // Sends Combat Message
 
     // Variables
     int32 getCharVar(lua_State*);           // Returns a character variable
@@ -64,6 +65,8 @@ public:
     int32 getLocalVar(lua_State*);
     int32 setLocalVar(lua_State*);
     int32 resetLocalVars(lua_State*);
+    int32 getLastOnline(lua_State*); // Returns the unix timestamp of last time the player logged out or zoned
+
 
     // Masks and Bitwise Operations
     int32 getMaskBit(lua_State*);           // Retrieves a single bit in a character variable
@@ -142,8 +145,12 @@ public:
     int32 sendEmote(lua_State*);             // Character emits emote packet.
 
     // Location and Positioning
-    int32 isBehind(lua_State*);              // true if you're behind the input target
+    int32 getWorldAngle(lua_State* L);       // return angle (rot) between two points (vector from a to b), aligned to absolute cardinal degree
+    int32 getFacingAngle(lua_State* L);      // return angle between entity rot and target pos, aligned to number of degrees of difference
     int32 isFacing(lua_State*);              // true if you are facing the target
+    int32 isInfront(lua_State*);             // true if you're infront of the input target
+    int32 isBehind(lua_State*);              // true if you're behind the input target
+    int32 isBeside(lua_State*);              // true if you're to the side of the input target
     int32 getAngle(lua_State* L);            // return angle (rot) between two points (vector from a to b)
     int32 getZone(lua_State*);               // Get Entity zone
     int32 getZoneID(lua_State*);             // Get Entity zone ID
@@ -184,6 +191,7 @@ public:
     // Items
     int32 addLinkshell(lua_State*);          // Adds LS to player
     int32 getEquipID(lua_State*);            // Gets the Item Id of the item in specified slot
+    int32 getEquippedItem(lua_State*);       // Returns the item object from specified slot
     int32 hasItem(lua_State*);               // Check to see if Entity has item in inventory (hasItem(itemNumber))
     int32 addItem(lua_State*);               // Add item to Entity inventory (additem(itemNumber,quantity))
     int32 delItem(lua_State*);
@@ -246,6 +254,7 @@ public:
     int32 getCampaignAllegiance(lua_State*); // Gets Campaign Allegiance of Entity
     int32 setCampaignAllegiance(lua_State*); // Sets Campaign Allegiance of Entity
 
+    int32 isSeekingParty(lua_State* L);
     int32 getNewPlayer(lua_State* L);
     int32 setNewPlayer(lua_State* L);
     int32 getMentor(lua_State* L);
@@ -264,6 +273,8 @@ public:
     int32 speed(lua_State*);                // скорость передвижения сущности
 
     int32 getPlaytime(lua_State*);
+    int32 getTimeCreated(lua_State*);
+
 
     // Player Jobs and Levels
     int32 getMainJob(lua_State*);           // Returns Entity Main Job
@@ -281,6 +292,7 @@ public:
     int32 setsLevel(lua_State*);            // sets the character's level
     int32 levelCap(lua_State*);             // genkai
     int32 levelRestriction(lua_State*);     // Establish/return current level restriction
+    int32 addJobTraits(lua_State*);         // Add job traits
 
     // Player Titles and Fame
     int32 getTitle(lua_State*);             // Gets character's title
@@ -313,6 +325,11 @@ public:
     int32 completeMission(lua_State*);      // Complete Mission
     int32 setMissionLogEx(lua_State*);      // Sets mission log extra data to correctly track progress in branching missions.
     int32 getMissionLogEx(lua_State*);      // Gets mission log extra data.
+
+    int32 setEminenceCompleted(lua_State* L); // Sets the complete flag for a record of eminence
+    int32 getEminenceCompleted(lua_State* L); // Gets the record completed flag
+    int32 setEminenceProgress(lua_State* L);  // Sets progress on a record of eminence
+    int32 getEminenceProgress(lua_State* L);  // gets progress on a record of eminence
 
     int32 addAssault(lua_State*);           // Add Mission
     int32 delAssault(lua_State*);           // Delete Mission from Mission Log
@@ -415,24 +432,29 @@ public:
     int32 recalculateAbilitiesTable(lua_State*);
 
     // Parties and Alliances
+    int32 getPlayersInRange(lua_State* L);
     int32 getParty(lua_State* L);
+    int32 getPartyWithTrusts(lua_State* L);
     int32 getPartySize(lua_State* L);               // Get the size of a party in an entity's alliance
     int32 hasPartyJob(lua_State*);
     int32 getPartyMember(lua_State* L);             // Get a character entity from another entity's party or alliance
     int32 getPartyLeader(lua_State* L);
     int32 getLeaderID(lua_State* L);              // Get the id of the alliance/party leader *falls back to player id if no party*
-
+    int32 getPartyLastMemberJoinedTime(lua_State* L);
     int32 forMembersInRange(lua_State* L);
 
     int32 addPartyEffect(lua_State*);               // Adds Effect to all party members
     int32 hasPartyEffect(lua_State*);               // Has Effect from all party members
-    int32 removePartyEffect(lua_State*);            // Removes Effect from all party members
+    int32 delPartyEffect(lua_State*);               // Deletes Effect from all party members
 
     int32 getAlliance(lua_State* L);
     int32 getAllianceSize(lua_State* L);            // Get the size of an entity's alliance
+    int32 getFomorHate(lua_State* L);
+    int32 setFomorHate(lua_State* L);
 
     int32 reloadParty(lua_State* L);
     int32 disableLevelSync(lua_State* L);
+    int32 isLevelSync(lua_State* L);
 
     int32 checkSoloPartyAlliance(lua_State*);        // Check if Player is in Party or Alliance 0=Solo 1=Party 2=Alliance
 
@@ -466,6 +488,10 @@ public:
     int32 sendReraise(lua_State*);            // send raise request to char
     int32 sendTractor(lua_State*);            // send tractor request to char
 
+    int32 countdown(lua_State* L);
+    int32 enableEntities(lua_State* L);
+    int32 independantAnimation(lua_State* L);
+
     int32 engage(lua_State* L);
     int32 isEngaged(lua_State* L);
     int32 disengage(lua_State* L);
@@ -482,6 +508,7 @@ public:
 
     int32 getEntity(lua_State* L);
     int32 getNearbyEntities(lua_State* L);
+    int32 getNearbyMobs(lua_State* L);
     int32 canChangeState(lua_State* L);
 
     int32 wakeUp(lua_State*);                  //wakes target if necessary
@@ -489,6 +516,7 @@ public:
     int32 recalculateStats(lua_State* L);
     int32 checkImbuedItems(lua_State* L);
 
+    int32 isDualWielding(lua_State*);          // Checks if the battle entity is dual wielding
     // Enmity
     int32 getCE(lua_State*);                   //gets current CE the mob has towards the player
     int32 getVE(lua_State*);                   //gets current VE the mob has towards the player
@@ -502,6 +530,8 @@ public:
     int32 updateEnmityFromCure(lua_State*);
     int32 resetEnmity(lua_State*);             //resets enmity to player for specificed mob
     int32 updateClaim(lua_State*);             // Adds Enmity to player for specified mob and claims
+    int32 hasEnmity(lua_State*);               // Does the player have any enmity at all from any source
+    int32 getNotorietyList(lua_State*);        // Returns a table with all of the entities on a chars notoriety list
 
     // Status Effects
     int32 addStatusEffect(lua_State*);         // Adds status effect to character
@@ -585,7 +615,14 @@ public:
     // Pets and Automations
     int32 spawnPet(lua_State*);              // Calls Pet
     int32 despawnPet(lua_State*);            // Despawns Pet
-    int32 spawnTrust(lua_State*);            // Spawns trust
+
+    int32 spawnTrust(lua_State*);
+    int32 clearTrusts(lua_State*);
+    int32 getTrustID(lua_State*);
+    int32 trustPartyMessage(lua_State*);
+    int32 addSimpleGambit(lua_State*);
+    int32 addFullGambit(lua_State*);
+    int32 setTrustTPSkillSettings(lua_State*);
 
     int32 isJugPet(lua_State*);              // If the entity has a pet, test if it is a jug pet.
     int32 hasValidJugPetItem(lua_State*);
@@ -646,6 +683,7 @@ public:
     int32 hasImmunity(lua_State*);          // Check if the mob has immunity for a type of spell (list at mobentity.h)
 
     int32 setAggressive(lua_State* L);
+    int32 getAggressive(lua_State* L);
     int32 setTrueDetection(lua_State* L);
     int32 setUnkillable(lua_State* L);
     int32 untargetable(lua_State* L);
@@ -663,6 +701,10 @@ public:
     int32 setMobMod(lua_State*);
     int32 addMobMod(lua_State*);
     int32 delMobMod(lua_State*);
+    int32 addImmunity(lua_State*);
+    int32 delImmunity(lua_State*);
+
+    int32 tryInterruptSpell(lua_State* L);
 
     int32 getBattleTime(lua_State*);          // Get the time in second of the battle
 
@@ -685,6 +727,7 @@ public:
     int32 weaknessTrigger(lua_State* L);
     int32 hasPreventActionEffect(lua_State*);
     int32 stun(lua_State* L);
+    int32 drawIn(lua_State* L);
 
     int32 getPool(lua_State *L);            // Returns a mobs pool ID. If entity is not a mob, returns nil.
     int32 getDropID(lua_State* L);
@@ -695,6 +738,13 @@ public:
     int32 getDespoilDebuff(lua_State*);     // gets the status effect id to apply to the mob on successful despoil
     int32 itemStolen(lua_State*);           // sets mob's ItemStolen var = true
     int32 getTHlevel(lua_State*);           // Returns the Monster's current Treasure Hunter Tier
+    int32 getGuardRate(lua_State* L);
+    int32 getParryRate(lua_State* L);
+    int32 getBlockRate(lua_State* L);
+    int32 getBlockedDamage(lua_State* L);
+    int32 trySkillUp(lua_State* L);
+    int32 addRoamFlag(lua_State* L);
+    int32 delRoamFlag(lua_State* L);
 };
 
 #endif

@@ -88,11 +88,14 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
     in_addr from_ip;
     uint16 from_port = 0;
     bool ipstring = false;
+    char from_address[INET_ADDRSTRLEN];
+
     ShowDebug("Parsing message ...");
     if (from)
     {
         from_ip.s_addr = ref<uint32>((uint8*)from->data(), 0);
         from_port = ref<uint16>((uint8*)from->data(), 4);
+        inet_ntop(AF_INET, &from_ip, from_address, INET_ADDRSTRLEN);
     }
     switch (type)
     {
@@ -194,7 +197,9 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
             uint64 port = Sql_GetUIntData(ChatSqlHandle, 1);
             in_addr target;
             target.s_addr = (unsigned long)ip;
-            ShowDebug("Message:  -> rerouting to %s:%lu\n", inet_ntoa(target), port);
+            char target_address[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &target, target_address, INET_ADDRSTRLEN);
+            ShowDebug("Message:  -> rerouting to %s:%lu\n", target_address, port);
             ip |= (port << 32);
 
             if (type == MSG_CHAT_PARTY || type == MSG_PT_RELOAD || type == MSG_PT_DISBAND)
@@ -226,7 +231,7 @@ void message_server_listen()
                     {                        
                         chat_message_t& msg = msg_queue.front();
                         in_addr dest_ip;
-                        uint destIp = (uint)msg.dest;
+                        uint32 destIp = (uint32)msg.dest;
                         dest_ip.s_addr = destIp;
                         ShowDebug("Message came through queue %s - %d\n",inet_ntoa(dest_ip), msg.type);
                         message_server_send(msg.dest, msg.type, &msg.data, &msg.packet);
@@ -319,14 +324,16 @@ void message_server_init()
 
 void message_server_close()
 {
-    Sql_Free(ChatSqlHandle);
-
-    zContext.close();
-
+    if (ChatSqlHandle)
+    {
+        Sql_Free(ChatSqlHandle);
+        ChatSqlHandle = nullptr;
+    }
     if (zSocket)
     {
         zSocket->close();
         delete zSocket;
         zSocket = nullptr;
     }
+    zContext.close();
 }

@@ -56,6 +56,7 @@ protected:
 
     virtual void TryLink();
     bool CanDetectTarget(CBattleEntity* PTarget, bool forceSight = false);
+    int32 GetFomorHate(CBattleEntity* PTarget);
     bool CanPursueTarget(CBattleEntity* PTarget);
     bool CheckHide(CBattleEntity* PTarget);
     bool CheckDetection(CBattleEntity* PTarget);
@@ -86,7 +87,8 @@ protected:
 
 private:
     
-    time_point m_LastActionTime;    
+    time_point m_LastActionTime;
+
     time_point m_LastSpecialTime;
     time_point m_DeaggroTime;
     time_point m_DeclaimTime;
