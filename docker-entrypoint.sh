@@ -39,11 +39,11 @@ function modConfig() {
 modConfig
 
 if [ $APP = "LOGIN" ]; then
-  exec /topaz/topaz_connect
+  exec /topaz/xi_connect
 elif [ $APP = "AUCTION" ]; then 
-  exec /topaz/topaz_search
+  exec /topaz/xi_search
 elif [ $APP = "GAME" ]; then
-  exec /topaz/topaz_game
+  exec /topaz/xi_map
 else
   exec /usr/local/bin/supervisord
 fi

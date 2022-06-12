@@ -4,7 +4,7 @@ ENV DS_BRANCH=release
 
 ARG CACHEBUST=1 
 
-RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/hargrave81/topaz.git/ /topaz && \
+RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/hargrave81/lsb.git/ /topaz && \
   cd /topaz && \
   sh autogen.sh && \
   ./configure --enable-debug=gdb  
@@ -25,7 +25,7 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
     rm -rf /topaz/sql && \
     rm /topaz/*.o && \
     rm -rf /topaz/win32 && \
-    git clone --depth=1 -b master https://github.com/project-topaz/xiNavmeshes.git /topaz/navmeshes
+    git clone --depth=1 -b master https://github.com/LandSandBoat/xiNavmeshes.git /topaz/navmeshes
 
 RUN apt-get autoremove -y build-essential autoconf pkg-config software-properties-common
 

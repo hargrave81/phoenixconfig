@@ -16,48 +16,45 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/
 
-  This file is part of DarkStar-server source code.
-
 ===========================================================================
 */
 
 #include "mobentity.h"
 
-#include <string.h>
-#include "../../common/timer.h"
-#include "../../common/utils.h"
 #include "../ai/ai_container.h"
 #include "../ai/controllers/mob_controller.h"
-#include "../ai/controllers/player_controller.h"
 #include "../ai/helpers/pathfind.h"
 #include "../ai/helpers/targetfind.h"
 #include "../ai/states/attack_state.h"
-#include "../ai/states/weaponskill_state.h"
 #include "../ai/states/mobskill_state.h"
+#include "../ai/states/weaponskill_state.h"
+#include "../conquest_system.h"
+#include "../enmity_container.h"
 #include "../entities/charentity.h"
+#include "../mob_modifier.h"
+#include "../mob_spell_container.h"
+#include "../mob_spell_list.h"
+#include "../mobskill.h"
 #include "../packets/action.h"
 #include "../packets/entity_update.h"
 #include "../packets/pet_sync.h"
+#include "../roe.h"
+#include "../status_effect_container.h"
+#include "../treasure_pool.h"
 #include "../utils/battleutils.h"
 #include "../utils/blueutils.h"
 #include "../utils/charutils.h"
 #include "../utils/itemutils.h"
 #include "../utils/mobutils.h"
 #include "../utils/petutils.h"
-#include "../status_effect_container.h"
-#include "../enmity_container.h"
-#include "../mob_spell_container.h"
-#include "../mob_spell_list.h"
-#include "../mob_modifier.h"
 #include "../weapon_skill.h"
-#include "../mobskill.h"
-#include "../roe.h"
-#include "../treasure_pool.h"
-#include "../conquest_system.h"
-#include "../utils/zoneutils.h"
+#include "common/timer.h"
+#include "common/utils.h"
+#include <cstring>
 
 CMobEntity::CMobEntity()
 {
+    TracyZoneScoped;
     objtype = TYPE_MOB;
 
     m_DropID = 0;
@@ -69,29 +66,33 @@ CMobEntity::CMobEntity()
     MPscale = 1.0;
     m_flags = 0;
 
-    allegiance = ALLEGIANCE_MOB;
+    m_unk0 = 0;
+    m_unk1 = 8;
+    m_unk2 = 0;
+
+    m_CallForHelpBlocked = false;
+
+    allegiance = ALLEGIANCE_TYPE::MOB;
 
     // default to normal roaming
-    m_roamFlags = ROAMFLAG_NONE;
+    m_roamFlags    = ROAMFLAG_NONE;
     m_specialFlags = SPECIALFLAG_NONE;
-    m_name_prefix = 0;
+    m_name_prefix  = 0;
     m_MobSkillList = 0;
 
-    m_AllowRespawn = 0;
+    m_AllowRespawn = false;
     m_DropItemTime = 0;
-    m_Family = 0;
-    m_Type = MOBTYPE_NORMAL;
-    m_Behaviour = BEHAVIOUR_NONE;
-    m_SpawnType = SPAWNTYPE_NORMAL;
-    m_EcoSystem = SYSTEM_UNCLASSIFIED;
-    m_Element = 0;
-    m_HiPCLvl = 0;
-    m_HiPartySize = 0;
-    m_THLvl = 0;
-    m_ItemStolen = false;
-    m_autoTargetReady = true;
-    m_autoTargetKiller = nullptr;
-
+    m_Family       = 0;
+    m_SuperFamily  = 0;
+    m_Type         = MOBTYPE_NORMAL;
+    m_Behaviour    = BEHAVIOUR_NONE;
+    m_SpawnType    = SPAWNTYPE_NORMAL;
+    m_EcoSystem    = ECOSYSTEM::UNCLASSIFIED;
+    m_Element      = 0;
+    m_HiPCLvl      = 0;
+    m_HiPartySize  = 0;
+    m_THLvl        = 0;
+    m_ItemStolen   = false;
 
     strRank = 3;
     vitRank = 3;
@@ -106,33 +107,40 @@ CMobEntity::CMobEntity()
 
     m_dmgMult = 100;
 
-    m_giveExp = false;
-    m_neutral = false;
-    m_Aggro = false;
+    m_giveExp       = false;
+    m_neutral       = false;
+    m_Aggro         = false;
     m_TrueDetection = false;
-    m_Detects = DETECT_NONE;
-    m_Link = 0;
+    m_Detects       = DETECT_NONE;
+    m_Link          = 0;
 
     m_battlefieldID = 0;
-    m_bcnmID = 0;
+    m_bcnmID        = 0;
 
     m_maxRoamDistance = 50.0f;
-    m_disableScent = false;
+    m_disableScent    = false;
 
+    // False positive: any reasonable compiler is IEEE754-1985 compatible
+    // portability: Using memset() on struct which contains a floating point number.
+    // This is not portable because memset() sets each byte of a block of memory to a specific value and
+    // the actual representation of a floating-point value is implementation defined. Note: In case of an IEEE754-1985 compatible
+    // implementation setting all bits to zero results in the value 0.0. [memsetClassFloat]
+    // cppcheck-suppress memsetClassFloat
     memset(&m_SpawnPoint, 0, sizeof(m_SpawnPoint));
 
     m_SpellListContainer = nullptr;
-    PEnmityContainer = new CEnmityContainer(this);
-    SpellContainer = new CMobSpellContainer(this);
+    PEnmityContainer     = new CEnmityContainer(this);
+    SpellContainer       = new CMobSpellContainer(this);
 
     // For Dyna Stats
     m_StatPoppedMobs = false;
 
-    PAI = std::make_unique<CAIContainer>(this, std::make_unique<CPathFind>(this), std::make_unique<CMobController>(this),
-        std::make_unique<CTargetFind>(this));
+    m_IsClaimable = true;
+
+    PAI = std::make_unique<CAIContainer>(this, std::make_unique<CPathFind>(this), std::make_unique<CMobController>(this), std::make_unique<CTargetFind>(this));
 }
 
-uint32 CMobEntity::getEntityFlags()
+uint32 CMobEntity::getEntityFlags() const
 {
     return m_flags;
 }
@@ -149,10 +157,10 @@ CMobEntity::~CMobEntity()
 }
 
 /************************************************************************
-*                                                                       *
-*  Время исчезновения монстра в секундах                                *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *  Время исчезновения монстра в секундах                                *
+ *                                                                       *
+ ************************************************************************/
 
 time_point CMobEntity::GetDespawnTime()
 {
@@ -173,7 +181,6 @@ void CMobEntity::SetDespawnTime(duration _duration)
 
 uint32 CMobEntity::GetRandomGil()
 {
-
     int16 min = getMobMod(MOBMOD_GIL_MIN);
     int16 max = getMobMod(MOBMOD_GIL_MAX);
 
@@ -188,15 +195,16 @@ uint32 CMobEntity::GetRandomGil()
         if (max - min < 2)
         {
             max = min + 2;
-            ShowWarning("CMobEntity::GetRandomGil Max value is set too low, defauting\n");
+            ShowWarning("CMobEntity::GetRandomGil Max value is set too low, defauting");
         }
 
-        return tpzrand::GetRandomNumber(min, max);
+        return xirand::GetRandomNumber(min, max);
     }
 
     float gil = (float)pow(GetMLevel(), 1.05f);
 
-    if (gil < 1) {
+    if (gil < 1)
+    {
         gil = 1;
     }
 
@@ -207,12 +215,13 @@ uint32 CMobEntity::GetRandomGil()
         highGil = max;
     }
 
-    if (highGil < 2) {
+    if (highGil < 2)
+    {
         highGil = 2;
     }
 
     // randomize it
-    gil += tpzrand::GetRandomNumber(highGil);
+    gil += xirand::GetRandomNumber(highGil);
 
     if (min && gil < min)
     {
@@ -230,7 +239,10 @@ uint32 CMobEntity::GetRandomGil()
 bool CMobEntity::CanDropGil()
 {
     // smaller than 0 means drop no gil
-    if (getMobMod(MOBMOD_GIL_MAX) < 0) return false;
+    if (getMobMod(MOBMOD_GIL_MAX) < 0)
+    {
+        return false;
+    }
 
     if (getMobMod(MOBMOD_GIL_MIN) > 0 || getMobMod(MOBMOD_GIL_MAX))
     {
@@ -248,18 +260,22 @@ bool CMobEntity::CanStealGil()
 
 void CMobEntity::ResetGilPurse()
 {
-    uint32 purse = GetRandomGil() / ((tpzrand::GetRandomNumber(4, 7)));
+    uint32 purse = GetRandomGil() / ((xirand::GetRandomNumber(4, 7)));
     if (purse == 0)
+    {
         purse = GetRandomGil();
+    }
     setMobMod(MOBMOD_MUG_GIL, purse);
 }
 
 bool CMobEntity::CanRoamHome()
 {
-    if ((speed == 0 && !(m_roamFlags & ROAMFLAG_WORM)) || getMobMod(MOBMOD_NO_MOVE) > 0) return false;
+    if ((speed == 0 && !(m_roamFlags & ROAMFLAG_WORM)) || getMobMod(MOBMOD_NO_MOVE) > 0)
+    {
+        return false;
+    }
 
-    if (getMobMod(MOBMOD_NO_DESPAWN) != 0 ||
-        map_config.mob_no_despawn)
+    if (getMobMod(MOBMOD_NO_DESPAWN) != 0 || map_config.mob_no_despawn)
     {
         return true;
     }
@@ -274,6 +290,7 @@ bool CMobEntity::CanRoam()
 
 bool CMobEntity::CanLink(position_t* pos, int16 superLink)
 {
+    TracyZoneScoped;
     // handle super linking
     if (superLink && getMobMod(MOBMOD_SUPERLINK) == superLink)
     {
@@ -299,8 +316,8 @@ bool CMobEntity::CanLink(position_t* pos, int16 superLink)
     }
 
     // link only if I see him
-    if (m_Detects & DETECT_SIGHT) {
-
+    if (m_Detects & DETECT_SIGHT)
+    {
         if (!facing(loc.p, *pos, 64))
         {
             return false;
@@ -325,12 +342,12 @@ bool CMobEntity::CanLink(position_t* pos, int16 superLink)
 }
 
 /************************************************************************
-*                                                                       *
-*                                                                       *
-*                                                                       *
-************************************************************************/
+ *                                                                       *
+ *                                                                       *
+ *                                                                       *
+ ************************************************************************/
 
-bool CMobEntity::CanDeaggro()
+bool CMobEntity::CanDeaggro() const
 {
     return !(m_Type & MOBTYPE_NOTORIOUS || m_Type & MOBTYPE_BATTLEFIELD);
 }
@@ -340,15 +357,15 @@ bool CMobEntity::IsFarFromHome()
     return distance(loc.p, m_SpawnPoint) > m_maxRoamDistance;
 }
 
-bool CMobEntity::CanBeNeutral()
+bool CMobEntity::CanBeNeutral() const
 {
     return !(m_Type & MOBTYPE_NOTORIOUS);
 }
 
 uint16 CMobEntity::TPUseChance()
 {
-    auto& MobSkillList = battleutils::GetMobSkillList(getMobMod(MOBMOD_SKILL_LIST));
-    if (StatusEffectContainer->HasStatusEffect(EFFECT_MEIKYO_SHISUI) && health.tp >= 1000)
+    const auto& MobSkillList = battleutils::GetMobSkillList(getMobMod(MOBMOD_SKILL_LIST));
+if (StatusEffectContainer->HasStatusEffect(EFFECT_MEIKYO_SHISUI) && health.tp >= 1000)
     {
         return 10000;
     }
@@ -372,7 +389,6 @@ uint16 CMobEntity::TPUseChance()
             return 20;
         }
     }
-
     return (uint16)getMobMod(MOBMOD_TP_USE_CHANCE);
 }
 
@@ -432,13 +448,12 @@ void CMobEntity::HideHP(bool hide)
     updatemask |= UPDATE_HP;
 }
 
-bool CMobEntity::IsHPHidden()
+bool CMobEntity::IsHPHidden() const
 {
     return m_flags & FLAG_HIDE_HP;
 }
 
-
-void CMobEntity::CallForHelp(bool call)
+void CMobEntity::SetCallForHelpFlag(bool call)
 {
     if (call)
     {
@@ -452,12 +467,12 @@ void CMobEntity::CallForHelp(bool call)
     updatemask |= UPDATE_COMBAT;
 }
 
-bool CMobEntity::CalledForHelp()
+bool CMobEntity::GetCallForHelpFlag() const
 {
     return m_flags & FLAG_CALL_FOR_HELP;
 }
 
-void CMobEntity::Untargetable(bool untargetable)
+void CMobEntity::SetUntargetable(bool untargetable)
 {
     if (untargetable)
     {
@@ -470,188 +485,19 @@ void CMobEntity::Untargetable(bool untargetable)
     updatemask |= UPDATE_HP;
 }
 
-bool CMobEntity::IsUntargetable()
+bool CMobEntity::GetUntargetable() const
 {
     return m_flags & FLAG_UNTARGETABLE;
 }
 
-void CMobEntity::DoAutoTarget()
-{
-    if (!m_autoTargetReady)
-        return;
-    m_autoTargetReady = false;
-
-    // logic walk-thru:
-    // check each alliance-member of mob claimer if they were engaged with this mob when it died
-    // person who landed the final blow designates a new target for the alliance (closest mob to that person)
-    // which is a mob that is trying to attack a player and can be attacked by the alliance (white or red name mob)
-    // this way, when auto-target triggers, the entire alliance/party will always engage on the same mob together
-    // it is no longer a requirement for players to face towards a mob in order to auto-target it
-
-    CCharEntity* POwner = nullptr;
-    if (this->m_autoTargetKiller)
-        POwner = m_autoTargetKiller;
-    else if (this->m_OwnerID.id)
-        POwner = zoneutils::GetChar(m_OwnerID.id);
-    if (!POwner)
-        return;
-    CZone* PZone = zoneutils::GetZone(POwner->getZone());
-    if (!PZone)
-        return;
-
-    if (PZone->GetType() != ZONETYPE_DYNAMIS)
-    {
-        POwner->ForAlliance(
-            [](CBattleEntity* PMemberBE)
-            {
-                if (PMemberBE && PMemberBE->objtype == TYPE_PC)
-                    ((CCharEntity*)PMemberBE)->m_autoTargetOverride = nullptr;
-            });
-
-        POwner->ForAlliance(
-            [this, POwner](CBattleEntity* PMemberBE)
-            {
-                bool success = false;
-
-                if (PMemberBE && PMemberBE->objtype == TYPE_PC && PMemberBE->loc.zone->GetID() == this->loc.zone->GetID() &&
-                    ((CCharEntity*)PMemberBE)->m_LastEngagedTargID == this->targid && ((CCharEntity*)PMemberBE)->m_hasAutoTarget)
-                {
-                    CCharEntity* PMember = (CCharEntity*)PMemberBE;
-                    std::unique_ptr<CBasicPacket> errMsg;
-                    if (PMember->m_autoTargetOverride)
-                    {
-                        if (PMember->m_autoTargetOverride->allegiance == ALLEGIANCE_MOB && PMember->IsMobOwner(PMember->m_autoTargetOverride) &&
-                            !((CBattleEntity*)(PMember->m_autoTargetOverride)->IsNameHidden()) &&
-                            distanceSquared(PMember->loc.p, PMember->m_autoTargetOverride->loc.p) < 29.0f * 29.0f)
-                        {
-                            auto controller{ static_cast<CPlayerController*>(PMember->PAI->GetController()) };
-                            success = controller->ChangeTarget(PMember->m_autoTargetOverride->targid);
-                        }
-                    }
-                    else
-                    {
-                        auto controller{ static_cast<CPlayerController*>(PMember->PAI->GetController()) };
-                        CMobEntity* PWinner = nullptr;
-                        for (auto&& PPotentialTarget : PMember->SpawnMOBList)
-                        {
-                            CBattleEntity* PMob = (CBattleEntity*)PPotentialTarget.second;
-                            CBattleEntity* PMobTarget = (CBattleEntity*)(PMob->GetEntity(PMob->GetBattleTargetID()));
-
-                            if ((PMob->objtype == TYPE_MOB || PMob->objtype == TYPE_PET) && PMob->animation == ANIMATION_ATTACK &&
-                                PMob->allegiance == ALLEGIANCE_MOB && PMember->IsMobOwner(PMob) && !PMob->IsNameHidden() && PMob->id != this->id &&
-                                distanceSquared(PMember->loc.p, PMob->loc.p) < 29 * 29 && !PMember->m_autoTargetOverride &&
-                                ((PMobTarget->objtype == TYPE_PC && PMember->IsPartiedWith((CCharEntity*)PMobTarget)) ||
-                                 (PMobTarget->objtype == TYPE_PET && PMobTarget->PMaster && PMobTarget->PMaster->objtype == TYPE_PC &&
-                                  PMember->IsPartiedWith((CCharEntity*)(PMobTarget->PMaster)))))
-                            {
-                                if (PWinner)
-                                {
-                                    if (distanceSquared(PMob->loc.p, POwner->loc.p) < distanceSquared(PWinner->loc.p, POwner->loc.p))
-                                        PWinner = (CMobEntity*)PMob;
-                                }
-                                else
-                                {
-                                    PWinner = (CMobEntity*)PMob;
-                                }
-                            }
-                        }
-                        if (PWinner)
-                        {
-                            success = controller->ChangeTarget(PWinner->targid);
-                            PMember->ForAlliance(
-                                [PMember, PWinner](CBattleEntity* PMembermember)
-                                {
-                                    if (PMembermember->objtype == TYPE_PC && PMembermember->loc.zone->GetID() == PMember->loc.zone->GetID() &&
-                                        PMembermember->animation == ANIMATION_ATTACK)
-                                        ((CCharEntity*)PMembermember)->m_autoTargetOverride = (CBattleEntity*)PWinner;
-                                });
-                        }
-                    }
-                }
-
-                if (!success && PMemberBE && PMemberBE->objtype == TYPE_PC)
-                    ((CCharEntity*)PMemberBE)->m_LastEngagedTargID = 0;
-            });
-    }
-    else // use dynamis version of checking all nearby players, not just alliance
-    {
-        PZone->ForEachChar(
-            [](CCharEntity* PChar)
-            {
-                if (PChar && PChar->objtype == TYPE_PC)
-                    PChar->m_autoTargetOverride = nullptr;
-            });
-
-        PZone->ForEachChar(
-            [this, POwner, PZone](CCharEntity* PChar)
-            {
-                bool success = false;
-
-                if (PChar && PChar->objtype == TYPE_PC && PChar->loc.zone->GetID() == this->loc.zone->GetID() && PChar->m_LastEngagedTargID == this->targid &&
-                    PChar->m_hasAutoTarget)
-                {
-                    CCharEntity* PMember = PChar;
-                    std::unique_ptr<CBasicPacket> errMsg;
-                    if (PMember->m_autoTargetOverride)
-                    {
-                        if (PMember->m_autoTargetOverride->allegiance == ALLEGIANCE_MOB && PMember->IsMobOwner(PMember->m_autoTargetOverride) &&
-                            !((CBattleEntity*)(PMember->m_autoTargetOverride)->IsNameHidden()) &&
-                            distanceSquared(PMember->loc.p, PMember->m_autoTargetOverride->loc.p) < 29.0f * 29.0f)
-                        {
-                            auto controller{ static_cast<CPlayerController*>(PMember->PAI->GetController()) };
-                            success = controller->ChangeTarget(PMember->m_autoTargetOverride->targid);
-                        }
-                    }
-                    else
-                    {
-                        auto controller{ static_cast<CPlayerController*>(PMember->PAI->GetController()) };
-                        CMobEntity* PWinner = nullptr;
-                        for (auto&& PPotentialTarget : PMember->SpawnMOBList)
-                        {
-                            CBattleEntity* PMob = (CBattleEntity*)PPotentialTarget.second;
-
-                            if ((PMob->objtype == TYPE_MOB || PMob->objtype == TYPE_PET) && PMob->animation == ANIMATION_ATTACK &&
-                                PMob->allegiance == ALLEGIANCE_MOB && PMember->IsMobOwner(PMob) && !PMob->IsNameHidden() && PMob->id != this->id &&
-                                distanceSquared(PMember->loc.p, PMob->loc.p) < 29 * 29 && !PMember->m_autoTargetOverride)
-                            {
-                                if (PWinner)
-                                {
-                                    if (distanceSquared(PMob->loc.p, POwner->loc.p) < distanceSquared(PWinner->loc.p, POwner->loc.p))
-                                        PWinner = (CMobEntity*)PMob;
-                                }
-                                else
-                                {
-                                    PWinner = (CMobEntity*)PMob;
-                                }
-                            }
-                        }
-                        if (PWinner)
-                        {
-                            success = controller->ChangeTarget(PWinner->targid);
-                            PZone->ForEachChar(
-                                [PMember, PWinner](CCharEntity* PMembermember)
-                                {
-                                    if (PMembermember->objtype == TYPE_PC && PMembermember->loc.zone->GetID() == PMember->loc.zone->GetID() &&
-                                        PMembermember->animation == ANIMATION_ATTACK)
-                                        PMembermember->m_autoTargetOverride = (CBattleEntity*)PWinner;
-                                });
-                        }
-                    }
-                }
-
-                if (!success && PChar && PChar->objtype == TYPE_PC)
-                    PChar->m_LastEngagedTargID = 0;
-            });
-    }
-}
-
-
 void CMobEntity::PostTick()
 {
     CBattleEntity::PostTick();
-    if (loc.zone && updatemask)
+    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+    if (loc.zone && updatemask && now > m_nextUpdateTimer)
     {
-        loc.zone->PushPacket(this, CHAR_INRANGE, new CEntityUpdatePacket(this, ENTITY_UPDATE, updatemask));
+        m_nextUpdateTimer = now + 250ms;
+        loc.zone->UpdateEntityPacket(this, ENTITY_UPDATE, updatemask);
 
         // If this mob is charmed, it should sync with its master
         if (PMaster && PMaster->PPet == this && PMaster->objtype == TYPE_PC)
@@ -675,6 +521,7 @@ float CMobEntity::GetRoamRate()
 
 bool CMobEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
 {
+    TracyZoneScoped;
     if (StatusEffectContainer->GetConfrontationEffect() != PInitiator->StatusEffectContainer->GetConfrontationEffect())
     {
         return false;
@@ -683,8 +530,7 @@ bool CMobEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
     {
         return true;
     }
-    if (targetFlags & TARGET_PLAYER_DEAD && (m_Behaviour & BEHAVIOUR_RAISABLE)
-        && isDead())
+    if (targetFlags & TARGET_PLAYER_DEAD && (m_Behaviour & BEHAVIOUR_RAISABLE) && isDead())
     {
         return true;
     }
@@ -707,17 +553,16 @@ bool CMobEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
 
 void CMobEntity::Spawn()
 {
+    TracyZoneScoped;
     CBattleEntity::Spawn();
-    m_giveExp = true;
-    m_HiPCLvl = 0;
-    m_HiPartySize = 0;
-    m_THLvl = 0;
-    m_ItemStolen = false;
-    m_autoTargetReady = true;
-    m_autoTargetKiller = nullptr;
+    m_giveExp      = true;
+    m_HiPCLvl      = 0;
+    m_HiPartySize  = 0;
+    m_THLvl        = 0;
+    m_ItemStolen   = false;
     m_DropItemTime = 1000;
-    animationsub = (uint8)getMobMod(MOBMOD_SPAWN_ANIMATIONSUB);
-    CallForHelp(false);
+    animationsub   = (uint8)getMobMod(MOBMOD_SPAWN_ANIMATIONSUB);
+    SetCallForHelpFlag(false);
 
     PEnmityContainer->Clear();
 
@@ -726,13 +571,13 @@ void CMobEntity::Spawn()
     // Generate a random level between min and max level
     if (m_maxLevel > m_minLevel)
     {
-        level += tpzrand::GetRandomNumber(0, m_maxLevel - m_minLevel + 1);
+        level += xirand::GetRandomNumber(0, m_maxLevel - m_minLevel + 1);
     }
 
     SetMLevel(level);
-    SetSLevel(level);//calculated in function
+    SetSLevel(level); // calculated in function
 
-    mobutils::CalculateStats(this);
+    mobutils::CalculateMobStats(this);
     mobutils::GetAvailableSpells(this);
 
     // spawn somewhere around my point
@@ -741,13 +586,13 @@ void CMobEntity::Spawn()
     if (m_roamFlags & ROAMFLAG_STEALTH)
     {
         HideName(true);
-        Untargetable(true);
+        SetUntargetable(true);
     }
 
     // add people to my posse
     if (getMobMod(MOBMOD_ASSIST))
     {
-        for (int8 i = 1; i < getMobMod(MOBMOD_ASSIST) + 1; i++)
+        for (int32 i = 1; i < getMobMod(MOBMOD_ASSIST) + 1; i++)
         {
             CMobEntity* PMob = (CMobEntity*)GetEntity(targid + i, TYPE_MOB);
 
@@ -758,16 +603,14 @@ void CMobEntity::Spawn()
         }
     }
 
-    //CBattleEntity* _target = (CBattleEntity*)PMob->GetEntity(PMob->id, TYPE_PC | TYPE_MOB | TYPE_PET);
-    // note base resists
-    setMobMod(100+(int)Mod::FIRERES,CBattleEntity::getMod(Mod::FIRERES));
-    setMobMod(100+(int)Mod::ICERES,CBattleEntity::getMod(Mod::ICERES));
-    setMobMod(100+(int)Mod::WINDRES,CBattleEntity::getMod(Mod::WINDRES));
-    setMobMod(100+(int)Mod::EARTHRES,CBattleEntity::getMod(Mod::EARTHRES));
-    setMobMod(100+(int)Mod::THUNDERRES,CBattleEntity::getMod(Mod::THUNDERRES));
-    setMobMod(100+(int)Mod::WATERRES,CBattleEntity::getMod(Mod::WATERRES));
-    setMobMod(100+(int)Mod::LIGHTRES,CBattleEntity::getMod(Mod::LIGHTRES));
-    setMobMod(100+(int)Mod::DARKRES,CBattleEntity::getMod(Mod::DARKRES));
+    setMobMod(100+(int)Mod::FIRE_RES,CBattleEntity::getMod(Mod::FIRE_RES));
+    setMobMod(100+(int)Mod::ICE_RES,CBattleEntity::getMod(Mod::ICE_RES));
+    setMobMod(100+(int)Mod::WIND_RES,CBattleEntity::getMod(Mod::WIND_RES));
+    setMobMod(100+(int)Mod::EARTH_RES,CBattleEntity::getMod(Mod::EARTH_RES));
+    setMobMod(100+(int)Mod::THUNDER_RES,CBattleEntity::getMod(Mod::THUNDER_RES));
+    setMobMod(100+(int)Mod::WATER_RES,CBattleEntity::getMod(Mod::WATER_RES));
+    setMobMod(100+(int)Mod::LIGHT_RES,CBattleEntity::getMod(Mod::LIGHT_RES));
+    setMobMod(100+(int)Mod::DARK_RES,CBattleEntity::getMod(Mod::DARK_RES));
     setMobMod((int)Mod::SLEEPRES,CBattleEntity::getMod(Mod::SLEEPRES));
     setMobMod((int)Mod::POISONRES,CBattleEntity::getMod(Mod::POISONRES));
     setMobMod((int)Mod::PARALYZERES,CBattleEntity::getMod(Mod::PARALYZERES));
@@ -779,23 +622,23 @@ void CMobEntity::Spawn()
     setMobMod((int)Mod::STUNRES,CBattleEntity::getMod(Mod::STUNRES));
     setMobMod((int)Mod::CHARMRES,CBattleEntity::getMod(Mod::CHARMRES));
     setMobMod((int)Mod::LULLABYRES,CBattleEntity::getMod(Mod::LULLABYRES));
-
     m_DespawnTimer = time_point::min();
     luautils::OnMobSpawn(this);
 }
 
 void CMobEntity::OnWeaponSkillFinished(CWeaponSkillState& state, action_t& action)
 {
+    TracyZoneScoped;
     CBattleEntity::OnWeaponSkillFinished(state, action);
 
     static_cast<CMobController*>(PAI->GetController())->TapDeaggroTime();
 }
 
-
 void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
 {
-    auto PSkill = state.GetSkill();
-    auto PTarget = static_cast<CBattleEntity*>(state.GetTarget());
+    TracyZoneScoped;
+    auto* PSkill  = state.GetSkill();
+    auto* PTarget = static_cast<CBattleEntity*>(state.GetTarget());
 
     static_cast<CMobController*>(PAI->GetController())->TapDeaggroTime();
 
@@ -804,7 +647,7 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
 
     PAI->TargetFind->reset();
 
-    float distance = PSkill->getDistance();
+    float distance  = PSkill->getDistance();
     uint8 findFlags = 0;
     if (PSkill->getFlag() & SKILLFLAG_HIT_ALL)
     {
@@ -818,21 +661,25 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
     }
 
     action.id = id;
-    if (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PETTYPE_AVATAR)
+    if (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AVATAR)
+    {
         action.actiontype = ACTION_PET_MOBABILITY_FINISH;
-    else if (PSkill->isJobAbility())
-        action.actiontype = ACTION_JOBABILITY_FINISH;
+    }
     else if (PSkill->getID() < 256)
+    {
         action.actiontype = ACTION_WEAPONSKILL_FINISH;
+    }
     else
+    {
         action.actiontype = ACTION_MOBABILITY_FINISH;
+    }
     action.actionid = PSkill->getID();
 
     if (PTarget && PAI->TargetFind->isWithinRange(&PTarget->loc.p, distance))
     {
         if (PSkill->isAoE())
         {
-            PAI->TargetFind->findWithinArea(PTarget, (AOERADIUS)PSkill->getAoe(), PSkill->getRadius(), findFlags);
+            PAI->TargetFind->findWithinArea(PTarget, static_cast<AOE_RADIUS>(PSkill->getAoe()), PSkill->getRadius(), findFlags);
         }
         else if (PSkill->isConal())
         {
@@ -858,12 +705,12 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
 
     if (!PTarget || targets == 0)
     {
-        action.actiontype = ACTION_MOBABILITY_INTERRUPT;
-        actionList_t& actionList = action.getNewActionList();
+        action.actiontype         = ACTION_MOBABILITY_INTERRUPT;
+        actionList_t& actionList  = action.getNewActionList();
         actionList.ActionTargetID = id;
 
         actionTarget_t& actionTarget = actionList.getNewActionTarget();
-        actionTarget.animation = PSkill->getID();
+        actionTarget.animation       = PSkill->getID();
         return;
     }
 
@@ -871,10 +718,10 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
     PSkill->setTP(state.GetSpentTP());
     PSkill->setHPP(GetHPP());
 
-    uint16 msg = 0;
+    uint16 msg            = 0;
     uint16 defaultMessage = PSkill->getMsg();
 
-    bool first {true};
+    bool first{ true };
     for (auto&& PTarget : PAI->TargetFind->m_targets)
     {
         actionList_t& list = action.getNewActionList();
@@ -884,39 +731,37 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
         actionTarget_t& target = list.getNewActionTarget();
 
         list.ActionTargetID = PTarget->id;
-        target.reaction = REACTION_HIT;
-        target.speceffect = SPECEFFECT_HIT;
-        target.animation = PSkill->getAnimationID();
-        target.messageID = PSkill->getMsg();
-
+        target.reaction     = REACTION::HIT;
+        target.speceffect   = SPECEFFECT::HIT;
+        target.animation    = PSkill->getAnimationID();
+        target.messageID    = PSkill->getMsg();
 
         // reset the skill's message back to default
         PSkill->setMsg(defaultMessage);
-
-        if (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() != PETTYPE_JUG_PET)
+        int32 damage = 0;
+        if (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() != PET_TYPE::JUG_PET)
         {
-            if(static_cast<CPetEntity*>(this)->getPetType() == PETTYPE_AVATAR || static_cast<CPetEntity*>(this)->getPetType() == PETTYPE_WYVERN)
+            PET_TYPE petType = static_cast<CPetEntity*>(this)->getPetType();
+
+            if (static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AVATAR || static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::WYVERN)
             {
                 target.animation = PSkill->getPetAnimationID();
             }
-            target.param = luautils::OnPetAbility(PTarget, this, PSkill, PMaster, &action);
+
+            if (petType == PET_TYPE::AUTOMATON)
+            {
+                damage = luautils::OnAutomatonAbility(PTarget, this, PSkill, PMaster, &action);
+            }
+            else
+            {
+                damage = luautils::OnPetAbility(PTarget, this, PSkill, PMaster, &action);
+            }
         }
         else
         {
-            target.param = luautils::OnMobWeaponSkill(PTarget, this, PSkill, &action);
-            this->PAI->EventHandler.triggerListener("WEAPONSKILL_USE", this, PTarget, PSkill->getID(), state.GetSpentTP(), &action);
-            PTarget->PAI->EventHandler.triggerListener("WEAPONSKILL_TAKE", PTarget, this, PSkill->getID(), state.GetSpentTP(), &action);
-        }
-
-        if (objtype == TYPE_PET && PMaster && PMaster->objtype == TYPE_PC )
-        {
-            auto mob = dynamic_cast<CMobEntity *>(PTarget);
-            if (mob && !mob->CalledForHelp())
-            {
-                mob->m_OwnerID.id = PMaster->id;
-                mob->m_OwnerID.targid = PMaster->targid;
-                mob->updatemask |= UPDATE_STATUS; //This can go here because we only wanna call the updatemask if this happens
-            }
+            damage = luautils::OnMobWeaponSkill(PTarget, this, PSkill, &action);
+            this->PAI->EventHandler.triggerListener("WEAPONSKILL_USE", CLuaBaseEntity(this), CLuaBaseEntity(PTarget), PSkill->getID(), state.GetSpentTP(), &action);
+            PTarget->PAI->EventHandler.triggerListener("WEAPONSKILL_TAKE", CLuaBaseEntity(PTarget), CLuaBaseEntity(this), PSkill->getID(), state.GetSpentTP(), &action);
         }
 
         if (msg == 0)
@@ -928,41 +773,55 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
             msg = PSkill->getAoEMsg();
         }
 
+        if (damage < 0)
+        {
+            msg = MSGBASIC_SKILL_RECOVERS_HP; // TODO: verify this message does/does not vary depending on mob/avatar/automaton use
+            target.param = std::clamp(-damage,0, PTarget->GetMaxHP() - PTarget->health.hp);
+        }
+        else
+        {
+            target.param = damage;
+        }
+
         target.messageID = msg;
 
         if (PSkill->hasMissMsg())
         {
-            target.reaction = REACTION_MISS;
-            target.speceffect = SPECEFFECT_NONE;
+            target.reaction   = REACTION::MISS;
+            target.speceffect = SPECEFFECT::NONE;
             if (msg == PSkill->getAoEMsg())
+            {
                 msg = 282;
+            }
         }
         else
         {
-            target.reaction = REACTION_HIT;
+            target.reaction   = REACTION::HIT;
+            target.speceffect = SPECEFFECT::HIT;
         }
 
-        if (target.speceffect & SPECEFFECT_HIT)
+        // TODO: Should this be reaction and not speceffect?
+        if (target.speceffect == SPECEFFECT::HIT) // Formerly bitwise and, though nothing in this function adds additional bits to the field
         {
-            target.speceffect = SPECEFFECT_RECOIL;
-            target.knockback = PSkill->getKnockback();
+            target.speceffect = SPECEFFECT::RECOIL;
+            target.knockback  = PSkill->getKnockback();
             if (first && (PSkill->getPrimarySkillchain() != 0))
             {
                 if (PSkill->getPrimarySkillchain())
                 {
-                    SUBEFFECT effect = battleutils::GetSkillChainEffect(PTarget, PSkill->getPrimarySkillchain(),
-                        PSkill->getSecondarySkillchain(), PSkill->getTertiarySkillchain());
+                    SUBEFFECT effect = battleutils::GetSkillChainEffect(PTarget, PSkill->getPrimarySkillchain(), PSkill->getSecondarySkillchain(),
+                                                                        PSkill->getTertiarySkillchain());
                     if (effect != SUBEFFECT_NONE)
                     {
                         int32 skillChainDamage = battleutils::TakeSkillchainDamage(this, PTarget, target.param, nullptr);
                         if (skillChainDamage < 0)
                         {
-                            target.addEffectParam = -skillChainDamage;
+                            target.addEffectParam   = -skillChainDamage;
                             target.addEffectMessage = 384 + effect;
                         }
                         else
                         {
-                            target.addEffectParam = skillChainDamage;
+                            target.addEffectParam   = skillChainDamage;
                             target.addEffectMessage = 287 + effect;
                         }
                         target.additionalEffect = effect;
@@ -979,7 +838,7 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
         battleutils::DirtyExp(PTarget, this);
     }
     PTarget = static_cast<CBattleEntity*>(state.GetTarget());
-    if (PTarget->objtype == TYPE_MOB && (PTarget->isDead() || (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PETTYPE_AVATAR)))
+    if (PTarget->objtype == TYPE_MOB && (PTarget->isDead() || (objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AVATAR)))
     {
         battleutils::ClaimMob(PTarget, this);
     }
@@ -988,45 +847,52 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
 
 void CMobEntity::DistributeRewards()
 {
+    TracyZoneScoped;
     CCharEntity* PChar = (CCharEntity*)GetEntity(m_OwnerID.targid, TYPE_PC);
 
     if (PChar != nullptr && PChar->id == m_OwnerID.id)
     {
-        PChar->setWeaponSkillKill(false);
         StatusEffectContainer->KillAllStatusEffect();
+        PChar->m_charHistory.enemiesDefeated++;
 
         // NOTE: this is called for all alliance / party members!
         luautils::OnMobDeath(this, PChar);
 
-        if (!CalledForHelp())
+        if (!GetCallForHelpFlag())
         {
             blueutils::TryLearningSpells(PChar, this);
             m_UsedSkillIds.clear();
 
+            // RoE Mob kill event for all party members
+            // clang-format off
+            PChar->ForAlliance([this, PChar](CBattleEntity* PMember)
+            {
+                if (PMember->getZone() == PChar->getZone())
+                {
+                    RoeDatagramList datagrams;
+                    datagrams.push_back(RoeDatagram("mob", this));
+                    datagrams.push_back(RoeDatagram("atkType", static_cast<uint8>(this->BattleHistory.lastHitTaken_atkType)));
+                    roeutils::event(ROE_MOBKILL, (CCharEntity*)PMember, datagrams);
+                }
+            });
+            // clang-format on
+
             if (m_giveExp && !PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
             {
                 charutils::DistributeExperiencePoints(PChar, this);
+                charutils::DistributeCapacityPoints(PChar, this);
             }
 
             // check for gil (beastmen drop gil, some NMs drop gil)
-            if ((map_config.mob_gil_multiplier > 0 && CanDropGil()) || (map_config.all_mobs_gil_bonus > 0 && getMobMod(MOBMOD_GIL_MAX) >= 0)) // Negative value of MOBMOD_GIL_MAX is used to prevent gil drops in Dynamis/Limbus.
+            if ((map_config.mob_gil_multiplier > 0 && CanDropGil()) ||
+                (map_config.all_mobs_gil_bonus > 0 &&
+                 getMobMod(MOBMOD_GIL_MAX) >= 0)) // Negative value of MOBMOD_GIL_MAX is used to prevent gil drops in Dynamis/Limbus.
             {
                 charutils::DistributeGil(PChar, this); // TODO: REALISATION MUST BE IN TREASUREPOOL
             }
 
-            // RoE Mob kill event for all party members
-            PChar->ForAlliance(
-                [this, PChar](CBattleEntity* PMember)
-                {
-                    if (PMember->getZone() == PChar->getZone())
-                    {
-                        roeutils::event(ROE_MOBKILL, (CCharEntity*)PMember, RoeDatagram("mob", (CMobEntity*)this));
-                    }
-                });
-
             DropItems(PChar);
         }
-
     }
     else
     {
@@ -1036,101 +902,121 @@ void CMobEntity::DistributeRewards()
 
 void CMobEntity::DropItems(CCharEntity* PChar)
 {
-    //Adds an item to the treasure pool and returns true if the pool has been filled
+    TracyZoneScoped;
+    // Adds an item to the treasure pool and returns true if the pool has been filled
     auto AddItemToPool = [this, PChar](uint16 ItemID, uint8 dropCount)
     {
         PChar->PTreasurePool->AddItem(ItemID, this);
         return dropCount >= TREASUREPOOL_SIZE;
     };
 
-    //Limit number of items that can drop to the treasure pool size
+    auto UpdateDroprateOrAddToList = [&](std::vector<DropItem_t>& list, uint8 dropType, uint16 itemID, uint16 dropRate)
+    {
+        // Try and update droprate for an item in place
+        bool updated = false;
+        for (auto& entry : list)
+        {
+            if (!updated && entry.ItemID == itemID)
+            {
+                entry.DropRate = dropRate;
+                updated        = true;
+            }
+        }
+
+        // If that item wasn't found and updated, add the item and droprate to the list
+        if (!updated)
+        {
+            list.emplace_back(DropItem_t(dropType, itemID, dropRate));
+        }
+    };
+
+    // Limit number of items that can drop to the treasure pool size
     uint8 dropCount = 0;
 
-    DropList_t* DropList = itemutils::GetDropList(m_DropID);
-    //ShowDebug(CL_CYAN"DropID: %u dropping with TH Level: %u\n" CL_RESET, PMob->m_DropID, PMob->m_THLvl);
-
-    uint16 gDropBase[7][15] = { { 2400, 4800, 5600, 6000, 6400, 6666, 6800, 6900, 7050, 7200, 7350, 7400, 7600, 7800, 8000 },
-                                { 1500, 3000, 4000, 4250, 4500, 4750, 5000, 5250, 5500, 5750, 6000, 6250, 6500, 6750, 7000 },
-                                { 1000, 1200, 1500, 1650, 1800, 1900, 2000, 2100, 2250, 2400, 2650, 2800, 2950, 3100, 3250 },
-                                { 0500, 0600, 0700, 0750, 800, 850, 900, 950, 1050, 1150, 1250, 1350, 1550, 1750, 2000 },
-                                { 0100, 0150, 0200, 0225, 0250, 0300, 0350, 0400, 0475, 0550, 0650, 0750, 825, 900, 1000 },
-                                { 0050, 0075, 0100, 0120, 0140, 0160, 180, 0200, 0230, 0260, 0300, 0350, 0400, 0450, 0500 },
-                                { 0010, 0020, 0030, 0035, 0040, 0045, 0050, 0060, 0070, 80, 90, 0100, 0115, 0130, 0150 } };
-
-    if (DropList != nullptr && !getMobMod(MOBMOD_NO_DROPS) && (DropList->Items.size() || DropList->Groups.size()))
+    // Make a temporary copy of the global droplist entry for this drop id
+    // so we can modify it without modifying the global lists
+    DropList_t DropList;
+    if (auto droplistPtr = itemutils::GetDropList(m_DropID))
     {
-        uint16 th = m_THLvl;
-        if (th > 14)
-            th = 14;
-        for (const DropGroup_t& group : DropList->Groups)
-        {
-            uint16 rate = group.GroupRate;
-            uint16 category = 7;
-            if (rate < 5)
-                category = 6;
-            else if (rate < 10)
-                category = 5;
-            else if (rate < 50)
-                category = 4;
-            else if (rate < 100)
-                category = 3;
-            else if (rate < 150)
-                category = 2;
-            else if (rate < 240)
-                category = 1;
-            else if (rate < 1000)
-                category = 0;
+        DropList = *droplistPtr;
+    }
 
-            if ((category == 7) || (tpzrand::GetRandomNumber(10000) < gDropBase[category][th]))
+    // Apply m_DropListModifications changes to DropList
+    for (auto& entry : m_DropListModifications)
+    {
+        uint16    itemID   = entry.first;
+        uint16    dropRate = entry.second.first;
+        DROP_TYPE dropType = static_cast<DROP_TYPE>(entry.second.second);
+
+        if (dropType == DROP_NORMAL)
+        {
+            UpdateDroprateOrAddToList(DropList.Items, DROP_NORMAL, itemID, dropRate);
+        }
+        else if (dropType == DROP_GROUPED)
+        {
+            for (auto& group : DropList.Groups)
             {
-                // Each item in the group is given its own weight range which is the previous value to the previous value + item.DropRate
-                // Such as 2 items with drop rates of 200 and 800 would be 0-199 and 200-999 respectively
-                uint16 previousRateValue = 0;
-                uint16 itemRoll = tpzrand::GetRandomNumber(1000);
-                for (const DropItem_t& item : group.Items)
+                UpdateDroprateOrAddToList(group.Items, DROP_NORMAL, itemID, dropRate);
+            }
+        }
+    }
+
+    // Make sure m_DropListModifications doesn't persist by clearing it out now
+    m_DropListModifications.clear();
+
+    if (!getMobMod(MOBMOD_NO_DROPS) && (!DropList.Items.empty() || !DropList.Groups.empty()))
+    {
+        // THLvl is the number of 'extra chances' at an item. If the item is obtained, then break out.
+        int16 maxRolls = 1 + (m_THLvl > 2 ? 2 : m_THLvl);
+        int16 bonus    = (m_THLvl > 2 ? (m_THLvl - 2) * 10 : 0);
+
+        for (const DropGroup_t& group : DropList.Groups)
+        {
+            for (int16 roll = 0; roll < maxRolls; ++roll)
+            {
+                // Determine if this group should drop an item
+                if (group.GroupRate > 0 && xirand::GetRandomNumber(1000) < group.GroupRate * map_config.drop_rate_multiplier + bonus)
                 {
-                    if (previousRateValue + item.DropRate > itemRoll)
+                    // Each item in the group is given its own weight range which is the previous value to the previous value + item.DropRate
+                    // Such as 2 items with drop rates of 200 and 800 would be 0-199 and 200-999 respectively
+                    uint16 previousRateValue = 0;
+                    uint16 itemRoll          = xirand::GetRandomNumber(1000);
+                    for (const DropItem_t& item : group.Items)
                     {
-                        if (AddItemToPool(item.ItemID, ++dropCount))
-                            return;
-                        break;
+                        if (previousRateValue + item.DropRate > itemRoll)
+                        {
+                            if (AddItemToPool(item.ItemID, ++dropCount))
+                            {
+                                return;
+                            }
+                            break;
+                        }
+                        previousRateValue += item.DropRate;
                     }
-                    previousRateValue += item.DropRate;
+                    break;
                 }
             }
         }
 
-        for (const DropItem_t& item : DropList->Items)
+        for (const DropItem_t& item : DropList.Items)
         {
-            uint16 rate = item.DropRate;
-            uint16 category = 7;
-            if (rate < 5)
-                category = 6;
-            else if (rate < 10)
-                category = 5;
-            else if (rate < 50)
-                category = 4;
-            else if (rate < 100)
-                category = 3;
-            else if (rate < 150)
-                category = 2;
-            else if (rate < 240)
-                category = 1;
-            else if (rate < 1000)
-                category = 0;
-
-            if ((category == 7) || (tpzrand::GetRandomNumber(10000) < gDropBase[category][th]))
+            for (int16 roll = 0; roll < maxRolls; ++roll)
             {
-                if (AddItemToPool(item.ItemID, ++dropCount))
-                    return;
+                if (item.DropRate > 0 && xirand::GetRandomNumber(1000) < item.DropRate * map_config.drop_rate_multiplier + bonus)
+                {
+                    if (AddItemToPool(item.ItemID, ++dropCount))
+                    {
+                        return;
+                    }
+                    break;
+                }
             }
         }
     }
+
     uint16 Pzone = PChar->getZone();
 
-    bool validZone =
-        ((Pzone > 0 && Pzone < 31) || (Pzone > 44 && Pzone < 55) || (Pzone > 56 && Pzone < 63) || (Pzone > 64 && Pzone < 66) || (Pzone > 66 && Pzone < 69) ||
-         (Pzone > 69 && Pzone < 73) || (Pzone > 78 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < 294));
+    bool validZone = ((Pzone > 0 && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < 255));
 
     if (validZone && charutils::CheckMob(m_HiPCLvl, GetMLevel()) > EMobDifficulty::TooWeak)
     {
@@ -1138,102 +1024,247 @@ void CMobEntity::DropItems(CCharEntity* PChar)
         /* MobLvl >= 1 = Beastmen Seals ID=1126
         >= 50 = Kindred Seals ID=1127
         >= 75 = Kindred Crests ID=2955
-        >= 90 = High Kindred Crests
-         * ID=2956
+        >= 90 = High Kindred Crests ID=2956
         */
-        if (tpzrand::GetRandomNumber(100) < 90 && PChar->PTreasurePool->CanAddSeal() && !getMobMod(MOBMOD_NO_DROPS))
+        if (xirand::GetRandomNumber(100) < 20 && PChar->PTreasurePool->CanAddSeal() && !getMobMod(MOBMOD_NO_DROPS))
         {
             // RULES: Only 1 kind may drop per mob
-            // if (GetMLevel() >= 75 && luautils::IsContentEnabled("ABYSSEA")) //all 4 types
-            if (GetMLevel() >= 190 && luautils::IsContentEnabled("ABYSSEA")) // all 4 types
+            if (GetMLevel() >= 75 && luautils::IsContentEnabled("ABYSSEA")) // all 4 types
             {
-                switch (tpzrand::GetRandomNumber(4))
+                switch (xirand::GetRandomNumber(4))
                 {
                     case 0:
 
                         if (AddItemToPool(1126, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                     case 1:
                         if (AddItemToPool(1127, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                     case 2:
                         if (AddItemToPool(2955, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                     case 3:
                         if (AddItemToPool(2956, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                 }
             }
-            // else if (GetMLevel() >= 70 && luautils::IsContentEnabled("ABYSSEA")) //b.seal & k.seal & k.crest
-            else if (GetMLevel() >= 80 && luautils::IsContentEnabled("ABYSSEA")) // b.seal & k.seal & k.crest
+            else if (GetMLevel() >= 70 && luautils::IsContentEnabled("ABYSSEA")) // b.seal & k.seal & k.crest
             {
-                switch (tpzrand::GetRandomNumber(3))
+                switch (xirand::GetRandomNumber(3))
                 {
                     case 0:
-                        if (AddItemToPool(1127, ++dropCount))
+                        if (AddItemToPool(1126, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                     case 1:
                         if (AddItemToPool(1127, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                     case 2:
-                        if (AddItemToPool(1127, ++dropCount))
+                        if (AddItemToPool(2955, ++dropCount))
+                        {
                             return;
+                        }
                         break;
                 }
             }
             else if (GetMLevel() >= 50) // b.seal & k.seal only
             {
-                if (tpzrand::GetRandomNumber(2) == 0)
+                if (xirand::GetRandomNumber(2) == 0)
                 {
                     if (AddItemToPool(1126, ++dropCount))
+                    {
                         return;
+                    }
                 }
                 else
                 {
                     if (AddItemToPool(1127, ++dropCount))
+                    {
                         return;
+                    }
                 }
             }
             else
             {
                 // b.seal only
                 if (AddItemToPool(1126, ++dropCount))
+                {
                     return;
+                }
             }
         }
-        // Todo: Avatarite and Geode drops during day/weather. Much higher chance during weather than day.
-        // Item element matches day/weather element, not mob crystal. Lv80+ xp mobs can drop Avatarite.
-        // Wiki's have conflicting info on mob lv required for Geodes. One says 50 the other 75. I think 50 is correct.
+
+        /* check for Avatarite/Geode Drops.
+            LV >= 50 = Geodes can drop IF matching weather or day.
+            Weather gets priority e.g. rainstorm on firesday would get Water Geode instead of fire
+            LV >= 80 = Avatrites can also drop, same rules. If one drops, the other does not.
+            unfortunately, the order of the items/weathers/days don't match.
+        */
+        if (GetMLevel() >= 50)
+        {
+            uint8 weather = PChar->loc.zone->GetWeather();
+            uint8 element = 0;
+
+            // Set element by weather
+            if (weather >= 4 && weather <= 19)
+            {
+                /*
+                element = zoneutils::GetWeatherElement(weather);
+                Can't use this because of the TODO in zoneutils about broken element order >.<
+                So we have this ugly switch until then.
+                */
+                switch (weather)
+                {
+                    case 4:
+                    case 5:
+                        element = ELEMENT_FIRE;
+                        break;
+                    case 6:
+                    case 7:
+                        element = ELEMENT_WATER;
+                        break;
+                    case 8:
+                    case 9:
+                        element = ELEMENT_EARTH;
+                        break;
+                    case 10:
+                    case 11:
+                        element = ELEMENT_WIND;
+                        break;
+                    case 12:
+                    case 13:
+                        element = ELEMENT_ICE;
+                        break;
+                    case 14:
+                    case 15:
+                        element = ELEMENT_THUNDER;
+                        break;
+                    case 16:
+                    case 17:
+                        element = ELEMENT_LIGHT;
+                        break;
+                    case 18:
+                    case 19:
+                        element = ELEMENT_DARK;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // Set element from day instead
+            else
+            {
+                element = battleutils::GetDayElement();
+            }
+
+            // Roll for Geode, dude!
+            if (xirand::GetRandomNumber(100) < 20)
+            {
+                switch (element)
+                {
+                    case ELEMENT_FIRE:
+                        AddItemToPool(3297, ++dropCount); // Flame Geode
+                        break;
+                    case ELEMENT_EARTH:
+                        AddItemToPool(3300, ++dropCount); // Soil Geode
+                        break;
+                    case ELEMENT_WATER:
+                        AddItemToPool(3302, ++dropCount); // Aqua Geode
+                        break;
+                    case ELEMENT_WIND:
+                        AddItemToPool(3299, ++dropCount); // Breeze Geode
+                        break;
+                    case ELEMENT_ICE:
+                        AddItemToPool(3298, ++dropCount); // Snow Geode
+                        break;
+                    case ELEMENT_THUNDER:
+                        AddItemToPool(3301, ++dropCount); // Thunder Geode
+                        break;
+                    case ELEMENT_LIGHT:
+                        AddItemToPool(3303, ++dropCount); // Light Geode
+                        break;
+                    case ELEMENT_DARK:
+                        AddItemToPool(3304, ++dropCount); // Shadow Geode
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // At LV 80 and above, you may get Avatarite if a Geode didn't drop
+            else if (GetMLevel() >= 80 && xirand::GetRandomNumber(100) < 20)
+            {
+                switch (element)
+                {
+                    case ELEMENT_FIRE:
+                        AddItemToPool(3520, ++dropCount); // Ifritite
+                        break;
+                    case ELEMENT_EARTH:
+                        AddItemToPool(3523, ++dropCount); // Titanite
+                        break;
+                    case ELEMENT_WATER:
+                        AddItemToPool(3525, ++dropCount); // Leviatite
+                        break;
+                    case ELEMENT_WIND:
+                        AddItemToPool(3522, ++dropCount); // Garudite
+                        break;
+                    case ELEMENT_ICE:
+                        AddItemToPool(3521, ++dropCount); // Shivite
+                        break;
+                    case ELEMENT_THUNDER:
+                        AddItemToPool(3524, ++dropCount); // Ramuite
+                        break;
+                    case ELEMENT_LIGHT:
+                        AddItemToPool(3526, ++dropCount); // Carbit
+                        break;
+                    case ELEMENT_DARK:
+                        AddItemToPool(3527, ++dropCount); // Fenrite
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         uint8 effect = 0; // Begin Adding Crystals
 
         if (m_Element > 0)
         {
-            uint8 regionID = PChar->loc.zone->GetRegionID();
+            REGION_TYPE regionID = PChar->loc.zone->GetRegionID();
             switch (regionID)
             {
                 // Sanction Regions
-                case REGION_WEST_AHT_URHGAN:
-                case REGION_MAMOOL_JA_SAVAGE:
-                case REGION_HALVUNG:
-                case REGION_ARRAPAGO:
+                case REGION_TYPE::WEST_AHT_URHGAN:
+                case REGION_TYPE::MAMOOL_JA_SAVAGE:
+                case REGION_TYPE::HALVUNG:
+                case REGION_TYPE::ARRAPAGO:
                     effect = 2;
                     break;
                 // Sigil Regions
-                case REGION_RONFAURE_FRONT:
-                case REGION_NORVALLEN_FRONT:
-                case REGION_GUSTABERG_FRONT:
-                case REGION_DERFLAND_FRONT:
-                case REGION_SARUTA_FRONT:
-                case REGION_ARAGONEAU_FRONT:
-                case REGION_FAUREGANDI_FRONT:
-                case REGION_VALDEAUNIA_FRONT:
+                case REGION_TYPE::RONFAURE_FRONT:
+                case REGION_TYPE::NORVALLEN_FRONT:
+                case REGION_TYPE::GUSTABERG_FRONT:
+                case REGION_TYPE::DERFLAND_FRONT:
+                case REGION_TYPE::SARUTA_FRONT:
+                case REGION_TYPE::ARAGONEAU_FRONT:
+                case REGION_TYPE::FAUREGANDI_FRONT:
+                case REGION_TYPE::VALDEAUNIA_FRONT:
                     effect = 3;
                     break;
                 // Signet Regions
@@ -1243,39 +1274,41 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             }
         }
         uint8 crystalRolls = 0;
-        PChar->ForParty(
-            [this, &crystalRolls, &effect](CBattleEntity* PMember)
+        // clang-format off
+        PChar->ForParty([this, &crystalRolls, &effect](CBattleEntity* PMember)
+        {
+            switch (effect)
             {
-                switch (effect)
-                {
-                    case 1:
-                        if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) && PMember->getZone() == getZone() &&
-                            distance(PMember->loc.p, loc.p) < 100)
-                        {
-                            crystalRolls++;
-                        }
-                        break;
-                    case 2:
-                        if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SANCTION) && PMember->getZone() == getZone() &&
-                            distance(PMember->loc.p, loc.p) < 100)
-                        {
-                            crystalRolls++;
-                        }
-                        break;
-                    case 3:
-                        if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SIGIL) && PMember->getZone() == getZone() &&
-                            distance(PMember->loc.p, loc.p) < 100)
-                        {
-                            crystalRolls++;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            });
+                case 1:
+                    if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) && PMember->getZone() == getZone() &&
+                        distance(PMember->loc.p, loc.p) < 100)
+                    {
+                        crystalRolls++;
+                    }
+                    break;
+                case 2:
+                    if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SANCTION) && PMember->getZone() == getZone() &&
+                        distance(PMember->loc.p, loc.p) < 100)
+                    {
+                        crystalRolls++;
+                    }
+                    break;
+                case 3:
+                    if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SIGIL) && PMember->getZone() == getZone() &&
+                        distance(PMember->loc.p, loc.p) < 100)
+                    {
+                        crystalRolls++;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+        // clang-forman on
+
         for (uint8 i = 0; i < crystalRolls; i++)
         {
-            if (tpzrand::GetRandomNumber(100) < 20 && AddItemToPool(4095 + m_Element, ++dropCount))
+            if (xirand::GetRandomNumber(100) < 20 && AddItemToPool(4095 + m_Element, ++dropCount))
             {
                 return;
             }
@@ -1283,28 +1316,23 @@ void CMobEntity::DropItems(CCharEntity* PChar)
     }
 }
 
-
 bool CMobEntity::CanAttack(CBattleEntity* PTarget, std::unique_ptr<CBasicPacket>& errMsg)
 {
-    auto skill_list_id {getMobMod(MOBMOD_ATTACK_SKILL_LIST)};
+    TracyZoneScoped;
+    auto skill_list_id{ getMobMod(MOBMOD_ATTACK_SKILL_LIST) };
     if (skill_list_id)
     {
-        auto attack_range {GetMeleeRange()};
-        auto skillList {battleutils::GetMobSkillList(skill_list_id)};
+        auto attack_range{ GetMeleeRange() };
+        auto skillList{ battleutils::GetMobSkillList(skill_list_id) };
         if (!skillList.empty())
         {
-            auto skill {battleutils::GetMobSkill(skillList.front())};
+            auto* skill{ battleutils::GetMobSkill(skillList.front()) };
             if (skill)
             {
                 attack_range = (uint8)skill->getDistance();
             }
         }
-        if ((distance(loc.p, PTarget->loc.p) - PTarget->m_ModelSize) > attack_range ||
-            !PAI->GetController()->IsAutoAttackEnabled())
-        {
-            return false;
-        }
-        return true;
+        return !((distance(loc.p, PTarget->loc.p) - PTarget->m_ModelRadius) > attack_range || !PAI->GetController()->IsAutoAttackEnabled());
     }
     else
     {
@@ -1314,26 +1342,32 @@ bool CMobEntity::CanAttack(CBattleEntity* PTarget, std::unique_ptr<CBasicPacket>
 
 void CMobEntity::OnEngage(CAttackState& state)
 {
+    TracyZoneScoped;
     CBattleEntity::OnEngage(state);
     luautils::OnMobEngaged(this, state.GetTarget());
     unsigned int range = this->getMobMod(MOBMOD_ALLI_HATE);
     if (range != 0)
     {
         CBaseEntity* PTarget = state.GetTarget();
-        CBaseEntity* PPet = nullptr;
+        CBaseEntity* PPet    = nullptr;
         if (PTarget->objtype == TYPE_PET)
         {
-            PPet = state.GetTarget();
+            PPet    = state.GetTarget();
             PTarget = ((CPetEntity*)PTarget)->PMaster;
         }
         if (PTarget->objtype == TYPE_PC)
         {
+            // clang-format off
             ((CCharEntity*)PTarget)->ForAlliance([this, PTarget, range](CBattleEntity* PMember)
             {
                 auto currentDistance = distance(PMember->loc.p, PTarget->loc.p);
                 if (currentDistance < range)
+                {
                     this->PEnmityContainer->AddBaseEnmity(PMember);
+                }
             });
+            // clang-format on
+
             this->PEnmityContainer->UpdateEnmity((PPet ? (CBattleEntity*)PPet : (CBattleEntity*)PTarget), 0, 1); // Set VE so target doesn't change
         }
     }
@@ -1343,28 +1377,33 @@ void CMobEntity::OnEngage(CAttackState& state)
 
 void CMobEntity::FadeOut()
 {
+    TracyZoneScoped;
     CBaseEntity::FadeOut();
     PEnmityContainer->Clear();
 }
 
 void CMobEntity::OnDeathTimer()
 {
+    TracyZoneScoped;
     if (!(m_Behaviour & BEHAVIOUR_RAISABLE))
+    {
         PAI->Despawn();
+    }
 }
 
-void CMobEntity::OnDespawn(CDespawnState&)
+void CMobEntity::OnDespawn(CDespawnState& /*unused*/)
 {
+    TracyZoneScoped;
     FadeOut();
     PAI->Internal_Respawn(std::chrono::milliseconds(m_RespawnTime));
     luautils::OnMobDespawn(this);
     //#event despawn
-    PAI->EventHandler.triggerListener("DESPAWN", this);
+    PAI->EventHandler.triggerListener("DESPAWN", CLuaBaseEntity(this));
 }
 
 void CMobEntity::Die()
 {
-    DoAutoTarget();
+    TracyZoneScoped;
     m_THLvl = PEnmityContainer->GetHighestTH();
     PEnmityContainer->Clear();
     PAI->ClearStateStack();
@@ -1374,18 +1413,27 @@ void CMobEntity::Die()
     }
     PAI->Internal_Die(15s);
     CBattleEntity::Die();
-    PAI->QueueAction(queueAction_t(std::chrono::milliseconds(m_DropItemTime), false, [this](CBaseEntity* PEntity) {
+
+    // clang-format off
+    PAI->QueueAction(queueAction_t(std::chrono::milliseconds(m_DropItemTime), false, [this](CBaseEntity* PEntity)
+    {
         if (static_cast<CMobEntity*>(PEntity)->isDead())
         {
             if (PLastAttacker)
+            {
                 loc.zone->PushPacket(this, CHAR_INRANGE, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_DEFEATS_TARG));
+            }
             else
+            {
                 loc.zone->PushPacket(this, CHAR_INRANGE, new CMessageBasicPacket(this, this, 0, 0, MSGBASIC_FALLS_TO_GROUND));
+            }
 
             DistributeRewards();
             m_OwnerID.clean();
         }
     }));
+    // clang-format on
+
     if (PMaster && PMaster->PPet == this && PMaster->objtype == TYPE_PC)
     {
         petutils::DetachPet(PMaster);
@@ -1394,6 +1442,7 @@ void CMobEntity::Die()
 
 void CMobEntity::OnDisengage(CAttackState& state)
 {
+    TracyZoneScoped;
     PAI->PathFind->Clear();
     PEnmityContainer->Clear();
 
@@ -1413,6 +1462,7 @@ void CMobEntity::OnDisengage(CAttackState& state)
 
 void CMobEntity::OnCastFinished(CMagicState& state, action_t& action)
 {
+    TracyZoneScoped;
     CBattleEntity::OnCastFinished(state, action);
 
     static_cast<CMobController*>(PAI->GetController())->TapDeaggroTime();
@@ -1420,8 +1470,8 @@ void CMobEntity::OnCastFinished(CMagicState& state, action_t& action)
 
 bool CMobEntity::OnAttack(CAttackState& state, action_t& action)
 {
+    TracyZoneScoped;
     static_cast<CMobController*>(PAI->GetController())->TapDeaggroTime();
-    auto PTarget = static_cast<CBattleEntity*>(state.GetTarget());
 
     if (getMobMod(MOBMOD_ATTACK_SKILL_LIST))
     {

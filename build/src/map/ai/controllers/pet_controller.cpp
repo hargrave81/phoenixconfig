@@ -22,20 +22,21 @@ This file is part of DarkStar-server source code.
 */
 
 #include "pet_controller.h"
-#include "../../mob_spell_container.h"
-#include "../ai_container.h"
-#include "../../status_effect_container.h"
-#include "../../entities/petentity.h"
-#include "../../utils/petutils.h"
-#include "../../../common/utils.h"
-#include "../../mob_modifier.h"
 #include "../../../common/showmsg.h"
+#include "../../../common/utils.h"
+#include "../../entities/petentity.h"
+#include "../../mob_modifier.h"
+#include "../../mob_spell_container.h"
+#include "../../status_effect_container.h"
+#include "../../utils/petutils.h"
+#include "../ai_container.h"
 
-CPetController::CPetController(CPetEntity* _PPet) :
-    CMobController(_PPet), PPet(_PPet)
+CPetController::CPetController(CPetEntity* _PPet)
+: CMobController(_PPet)
+, PPet(_PPet)
 {
     //#TODO: this probably will have to depend on pet type (automaton does WS on its own..)
-    SetWeaponSkillEnabled(false);      
+    SetWeaponSkillEnabled(false);
 }
 
 void CPetController::Tick(time_point tick)
@@ -53,7 +54,8 @@ void CPetController::Tick(time_point tick)
 
 void CPetController::DoRoamTick(time_point tick)
 {
-    if ((PPet->PMaster == nullptr || PPet->PMaster->isDead()) && PPet->isAlive()) {
+    if ((PPet->PMaster == nullptr || PPet->PMaster->isDead()) && PPet->isAlive())
+    {
         PPet->Die();
         return;
     }
@@ -66,13 +68,16 @@ void CPetController::DoRoamTick(time_point tick)
         return;
     }
 
-    //automaton, wyvern
-    if (PPet->getPetType() == PETTYPE_WYVERN || PPet->getPetType() == PETTYPE_AUTOMATON) {
-        if (PetIsHealing()) {
+    // automaton, wyvern
+    if (PPet->getPetType() == PET_TYPE::WYVERN || PPet->getPetType() == PET_TYPE::AUTOMATON)
+    {
+        if (PetIsHealing())
+        {
             return;
         }
     }
-    else if (PPet->isBstPet() && PPet->StatusEffectContainer->GetStatusEffect(EFFECT_HEALING)) {
+    else if (PPet->isBstPet() && PPet->StatusEffectContainer->GetStatusEffect(EFFECT_HEALING))
+    {
         return;
     }
 
@@ -81,7 +86,7 @@ void CPetController::DoRoamTick(time_point tick)
     if (currentDistance > PetRoamDistance)
     // Was 35.0f, but pets lag behind heavily due to bad pathing/navmesh so this should help
     {
-        if (currentDistance < 20.0f && PPet->PAI->PathFind->PathAround(PPet->PMaster->loc.p, 2.0f, PATHFLAG_RUN | PATHFLAG_WALLHACK))
+        if (currentDistance < 30.0f && PPet->PAI->PathFind->PathAround(PPet->PMaster->loc.p, 2.0f, PATHFLAG_RUN | PATHFLAG_WALLHACK))
         {
             PPet->PAI->PathFind->FollowPath();
         }
@@ -90,29 +95,31 @@ void CPetController::DoRoamTick(time_point tick)
             PPet->PAI->PathFind->WarpTo(PPet->PMaster->loc.p, PetRoamDistance);
         }
     }
-    duration d = std::chrono::duration_cast<std::chrono::milliseconds>(m_Tick - m_LastMagicTime);
-    int32 lastCast = (int32)(d.count() / 1000000);
-    if(lastCast < 0)
+    duration d        = std::chrono::duration_cast<std::chrono::milliseconds>(m_Tick - m_LastMagicTime);
+    int32    lastCast = (int32)(d.count() / 1000000);
+    if (lastCast < 0)
         lastCast = 0;
     bool casted = luautils::OnPetRoam(PPet, lastCast);
-    if(casted)
-        m_LastMagicTime = m_Tick;        
+    if (casted)
+        m_LastMagicTime = m_Tick;
 }
 
 bool CPetController::PetIsHealing()
 {
     bool isMasterHealing = (PPet->PMaster->animation == ANIMATION_HEALING);
-    bool isPetHealing = (PPet->animation == ANIMATION_HEALING);
+    bool isPetHealing    = (PPet->animation == ANIMATION_HEALING);
 
-    if (isMasterHealing && !isPetHealing && !PPet->StatusEffectContainer->HasPreventActionEffect()) {
-        //animation down
+    if (isMasterHealing && !isPetHealing && !PPet->StatusEffectContainer->HasPreventActionEffect())
+    {
+        // animation down
         PPet->animation = ANIMATION_HEALING;
         PPet->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING, 0, 0, map_config.healing_tick_delay, 0));
         PPet->updatemask |= UPDATE_HP;
         return true;
     }
-    else if (!isMasterHealing && isPetHealing) {
-        //animation up
+    else if (!isMasterHealing && isPetHealing)
+    {
+        // animation up
         PPet->animation = ANIMATION_NONE;
         PPet->StatusEffectContainer->DelStatusEffect(EFFECT_HEALING);
         PPet->updatemask |= UPDATE_HP;
@@ -129,9 +136,7 @@ bool CPetController::TryDeaggro()
     }
 
     // target is no longer valid, so wipe them from our enmity list
-    if (PTarget->isDead() ||
-        PTarget->isMounted() ||
-        PTarget->loc.zone->GetID() != PPet->loc.zone->GetID() ||
+    if (PTarget->isDead() || PTarget->isMounted() || PTarget->loc.zone->GetID() != PPet->loc.zone->GetID() ||
         PPet->StatusEffectContainer->GetConfrontationEffect() != PTarget->StatusEffectContainer->GetConfrontationEffect())
     {
         return true;
@@ -148,21 +153,21 @@ bool CPetController::Ability(uint16 targid, uint16 abilityid)
     return false;
 }
 bool CPetController::Engage(uint16 targid)
-{ 
+{
     auto ret = CController::Engage(targid);
     if (ret)
     {
-        m_firstSpell = true;        
-        int32 delay = 0;        
-        int32 newDelay = luautils::OnPetEngage(PPet, delay);
-        m_firstDelay = delay;        
+        m_firstSpell    = true;
+        int32 delay     = 0;
+        int32 newDelay  = luautils::OnPetEngage(PPet, delay);
+        m_firstDelay    = delay;
         m_LastMagicTime = m_Tick - std::chrono::milliseconds(newDelay);
     }
-    return ret;    
+    return ret;
 }
 
 void CPetController::DoCombatTick(time_point tick)
-{        
+{
     HandleEnmity();
     PTarget = static_cast<CBattleEntity*>(PPet->GetEntity(PPet->GetBattleTargetID()));
 
@@ -178,36 +183,37 @@ void CPetController::DoCombatTick(time_point tick)
 
     PPet->PAI->EventHandler.triggerListener("COMBAT_TICK", PPet);
     int32 newDelay = 0;
-    if (m_firstSpell == false || m_firstDelay == 0) {
+    if (m_firstSpell == false || m_firstDelay == 0)
+    {
         int32 delay = PPet->getBigMobMod(MOBMOD_MAGIC_COOL);
-        newDelay = luautils::OnPetFight(PPet, PTarget, delay);    
-        if(m_firstDelay == 0)
+        newDelay    = luautils::OnPetFight(PPet, PTarget, delay);
+        if (m_firstDelay == 0)
             m_firstDelay = newDelay;
-    } else {
+    }
+    else
+    {
         newDelay = luautils::OnPetFight(PPet, PTarget, m_firstDelay);
     }
-    
+
     // Try to spellcast (this is done first so things like Chainspell spam is prioritised over TP moves etc.
     if (IsSpecialSkillReady(currentDistance) && TrySpecialSkill())
     {
         return;
     }
-    else if (IsPetSpellReady(currentDistance,newDelay) && TryCastPetSpell())
-    {        
+    else if (IsPetSpellReady(currentDistance, newDelay) && TryCastPetSpell())
+    {
         return;
     }
-    else if (m_Tick >= m_LastMobSkillTime && tpzrand::GetRandomNumber(100) < PMob->TPUseChance() && MobSkill())
-    {        
+    else if (m_Tick >= m_LastMobSkillTime && xirand::GetRandomNumber(100) < PMob->TPUseChance() && MobSkill())
+    {
         return;
     }
 
     Move();
 }
 
-
 bool CPetController::IsPetSpellReady(float currentDistance, int32 delay)
 {
-
     int32 bonusTime = 0;
     if (currentDistance > 5)
     {
@@ -215,14 +221,13 @@ bool CPetController::IsPetSpellReady(float currentDistance, int32 delay)
         bonusTime = PPet->getBigMobMod(MOBMOD_STANDBACK_COOL);
     }
 
-    if (PPet->StatusEffectContainer->HasStatusEffect({EFFECT_CHAINSPELL,EFFECT_MANAFONT}))
+    if (PPet->StatusEffectContainer->HasStatusEffect({ EFFECT_CHAINSPELL, EFFECT_MANAFONT }))
     {
         return true;
-    }    
-    bool result = (m_Tick >= m_LastMagicTime + std::chrono::milliseconds(delay - bonusTime));    
+    }
+    bool result = (m_Tick >= m_LastMagicTime + std::chrono::milliseconds(delay - bonusTime));
     return result;
 }
-
 
 bool CPetController::TryCastPetSpell()
 {
@@ -233,29 +238,17 @@ bool CPetController::TryCastPetSpell()
 
     m_LastMagicTime = m_Tick;
 
-    if (PPet->m_HasSpellScript)
+   
+    // find random spell
+    std::optional<SpellID> chosenSpellId;
+
+    chosenSpellId = PPet->SpellContainer->GetSpell();
+
+    if (chosenSpellId)
     {
-        // skip logic and follow script
-        auto chosenSpellId = luautils::OnMonsterMagicPrepare(PPet, PTarget);
-        if (chosenSpellId)
-        {
-            CastSpell(chosenSpellId.value());
-            return true;
-        }
-    }
-    else
-    {
-        // find random spell
-        std::optional<SpellID> chosenSpellId;
-        
-        chosenSpellId = PPet->SpellContainer->GetSpell();
-        
-        if (chosenSpellId)
-        {
-            //#TODO: select target based on spell type
-            CastSpell(chosenSpellId.value());
-            return true;
-        }
+        //#TODO: select target based on spell type
+        CastSpell(chosenSpellId.value());
+        return true;
     }
     return false;
 }

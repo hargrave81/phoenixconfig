@@ -32,15 +32,20 @@ class CPetController : public CMobController
 public:
     CPetController(CPetEntity* PPet);
 
-    static constexpr float PetRoamDistance {2.1f};
-    virtual void DoRoamTick(time_point tick) override;
+    static constexpr float PetRoamDistance{ 2.1f };
+    virtual void           DoRoamTick(time_point tick) override;
+
 protected:
     bool PetIsHealing();
 
     virtual void Tick(time_point tick) override;
-    virtual void HandleEnmity() override {}
+    virtual void HandleEnmity() override
+    {
+    }
     virtual bool TryDeaggro() override;
-    virtual void TryLink() override {}
+    virtual void TryLink() override
+    {
+    }
     virtual bool Ability(uint16 targid, uint16 abilityid) override;
     virtual void DoCombatTick(time_point tick);
     virtual bool Engage(uint16 targid) override;
@@ -49,9 +54,8 @@ protected:
     bool IsPetSpellReady(float currentDistance, int32 delay);
 
 private:
-
     CPetEntity* const PPet;
-    int32 m_firstDelay{ 0 };
+    int32             m_firstDelay{ 0 };
 };
 
 #endif // _AI_CONTROLLER_H

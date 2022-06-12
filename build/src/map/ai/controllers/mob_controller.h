@@ -24,8 +24,8 @@ This file is part of DarkStar-server source code.
 #ifndef _MOB_CONTROLLER_H
 #define _MOB_CONTROLLER_H
 
-#include "controller.h"
 #include "../../entities/mobentity.h"
+#include "controller.h"
 
 class CMobController : public CController
 {
@@ -39,54 +39,58 @@ public:
     virtual void Reset() override;
 
     virtual bool MobSkill(uint16 targid, uint16 wsid);
-    virtual bool Ability(uint16 targid, uint16 abilityid) override { return false; }
+    virtual bool Ability(uint16 targid, uint16 abilityid) override
+    {
+        return false;
+    }
     bool MobSkill(int list = 0);
     bool TryCastSpell();
     bool TrySpecialSkill();
 
-    bool CanAggroTarget(CBattleEntity*);
-    void TapDeaggroTime();
-    void TapDeclaimTime();
+    bool         CanAggroTarget(CBattleEntity*);
+    void         TapDeaggroTime();
+    void         TapDeclaimTime();
     virtual bool Cast(uint16 targid, SpellID spellid) override;
-    time_point GetLastMagicTime() const { return m_LastMagicTime; }
+    time_point   GetLastMagicTime() const
+    {
+        return m_LastMagicTime;
+    }
 
 protected:
     virtual bool TryDeaggro();
 
-
     virtual void TryLink();
-    bool CanDetectTarget(CBattleEntity* PTarget, bool forceSight = false);
-    int32 GetFomorHate(CBattleEntity* PTarget);
-    bool CanPursueTarget(CBattleEntity* PTarget);
-    bool CheckHide(CBattleEntity* PTarget);
-    bool CheckDetection(CBattleEntity* PTarget);
-    bool CanSeePoint(position_t pos);
+    bool         CanDetectTarget(CBattleEntity* PTarget, bool forceSight = false);
+    bool         CanPursueTarget(CBattleEntity* PTarget);
+    bool         CheckHide(CBattleEntity* PTarget);
+    bool         CheckLock(CBattleEntity* PTarget);
+    bool         CheckDetection(CBattleEntity* PTarget);
+    bool         CanSeePoint(position_t pos);
     virtual bool CanCastSpells();
-    void CastSpell(SpellID spellid);
+    void         CastSpell(SpellID spellid);
     virtual void Move();
 
     virtual void DoCombatTick(time_point tick);
-    void FaceTarget(uint16 targid = 0);
+    void         FaceTarget(uint16 targid = 0);
     virtual void HandleEnmity();
 
     virtual void DoRoamTick(time_point tick);
-    void Wait(duration _duration);
-    void FollowRoamPath();
-    bool CanMoveForward(float currentDistance);
-    bool IsSpecialSkillReady(float currentDistance);
-    bool IsSpellReady(float currentDistance);
-    void DecayResist();
+    void         Wait(duration _duration);
+    void         FollowRoamPath();
+    bool         CanMoveForward(float currentDistance);
+    bool         IsSpecialSkillReady(float currentDistance);
+    bool         IsSpellReady(float currentDistance);
+    void         DecayResist();
 
-    CBattleEntity* PTarget {nullptr};
+    CBattleEntity* PTarget{ nullptr };
 
     // moved to protected so the pet can touch it too
-    time_point m_LastMagicTime; 
-    time_point m_LastMobSkillTime;
-    bool m_firstSpell{ true };
+    time_point        m_LastMagicTime;
+    time_point        m_LastMobSkillTime;
+    bool              m_firstSpell{ true };
     CMobEntity* const PMob;
 
 private:
-    
     time_point m_LastActionTime;
 
     time_point m_LastSpecialTime;
@@ -94,8 +98,8 @@ private:
     time_point m_DeclaimTime;
     time_point m_NeutralTime;
     time_point m_WaitTime;
-    
-    time_point m_LastRoamScript {time_point::min()};
+
+    time_point m_LastRoamScript{ time_point::min() };
 };
 
 #endif // _AI_CONTROLLER_H
