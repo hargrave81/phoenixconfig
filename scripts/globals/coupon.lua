@@ -24,6 +24,6 @@ function onCoupon(player,msgId)
     end    
     if player:hasKeyItem(3073) ~= true then
         player:addKeyItem(3073)
-        player:PrintToPlayer("Received a mount!")
+        player:PrintToPlayer("Received a mount! Go Riding!")
     end
 end
