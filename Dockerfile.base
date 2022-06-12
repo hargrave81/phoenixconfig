@@ -15,7 +15,13 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
     rm -rf /configuration/build && \
     rsync -avh /configuration/* /topaz/conf && \
     rm -rf /configuration
+
 RUN pip3 install -r /topaz/tools/requirements.txt
+
+RUN mkdir /topaz/build && \
+    cd /topaz/build && \
+    cmake .. && \
+    make -j $(nproc)
 
 RUN cd /topaz && \
     rm -rf /var/lib/apt/lists/* && \
