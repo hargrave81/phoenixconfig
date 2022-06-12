@@ -29,7 +29,7 @@ RUN cd /topaz && \
     rm -rf /topaz/sql && \
     git clone --depth=1 -b master https://github.com/LandSandBoat/xiNavmeshes.git /topaz/navmeshes
 
-RUN apt-get autoremove -y build-essential autoconf pkg-config software-properties-common
+RUN apt-get autoremove -y build-essential autoconf pkg-config
 
 # add topaz user and fix permissions
 RUN groupadd -r topaz && \
