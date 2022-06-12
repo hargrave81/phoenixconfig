@@ -6,8 +6,9 @@ require("scripts/globals/mobs");
 require("scripts/globals/keyitems");
 require("scripts/globals/status");
 -----------------------------------
+local entity = {}
 
-function onMobDeath(mob, player, isKiller)
+entity.onMobDeath = function(mob, player, isKiller)
     player:PrintToPlayer("You sense this monster is good for Thieves, Paladins, Dark Knights, Beast Masters, Samurais and Monks");
     local ID = zones[player:getZoneID()]    
     if player:getMainJob() == xi.job.THF and player:getMainLvl() > 45 then
