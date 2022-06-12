@@ -1,13 +1,10 @@
 FROM kuberegistry:32000/devagent
 
-ENV DS_BRANCH=release
+ENV DS_BRANCH=base
 
 ARG CACHEBUST=1 
 
-RUN git clone --depth=1 -b ${DS_BRANCH} http://github.com/hargrave81/lsb.git/ /topaz && \
-  cd /topaz && \
-  sh autogen.sh && \
-  ./configure --enable-debug=gdb  
+RUN git clone --depth=1 -b ${DS_BRANCH} https://github.com/hargrave81/LSB.git /topaz  
 
 RUN apt-get install rsync -y    
 
@@ -17,14 +14,13 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
     rsync -avh /configuration/build/* /topaz && \
     rm -rf /configuration/build && \
     rsync -avh /configuration/* /topaz/conf && \
-    rm -rf /configuration && \
-    cd /topaz && \
-    make -j8 && \    
+    rm -rf /configuration
+RUN pip3 install -r /topaz/tools/requirements.txt
+
+RUN cd /topaz && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /topaz/src && \
     rm -rf /topaz/sql && \
-    rm /topaz/*.o && \
-    rm -rf /topaz/win32 && \
     git clone --depth=1 -b master https://github.com/LandSandBoat/xiNavmeshes.git /topaz/navmeshes
 
 RUN apt-get autoremove -y build-essential autoconf pkg-config software-properties-common
