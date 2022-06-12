@@ -65,7 +65,7 @@ MND_BASED = 3;
 --      .agi_wsc - Same as above.
 function BluePhysicalSpell(caster, target, spell, params)
     -- store related values
-    local magicskill = caster:getSkillLevel(tpz.skill.BLUE_MAGIC); -- skill + merits + equip bonuses
+    local magicskill = caster:getSkillLevel(xi.skill.BLUE_MAGIC); -- skill + merits + equip bonuses
     -- TODO: Under Chain affinity?
     -- TODO: Under Efflux?
     -- TODO: Merits.
@@ -85,7 +85,7 @@ function BluePhysicalSpell(caster, target, spell, params)
 
     -- print("D val is ".. D);
 
-    local fStr = BluefSTR(caster:getStat(tpz.mod.STR) - target:getStat(tpz.mod.VIT));
+    local fStr = BluefSTR(caster:getStat(xi.mod.STR) - target:getStat(xi.mod.VIT));
     if (fStr > 27) then
         fStr = 27; -- TODO: Smite of Rage doesn't have this cap applied.
     end
@@ -99,10 +99,10 @@ function BluePhysicalSpell(caster, target, spell, params)
     local multiplier = params.multiplier;
 
     -- If under CA, replace multiplier with fTP(multiplier, tp150, tp300)
-    local chainAffinity = caster:getStatusEffect(tpz.effect.CHAIN_AFFINITY);
+    local chainAffinity = caster:getStatusEffect(xi.effect.CHAIN_AFFINITY);
     if chainAffinity ~= nil then
         -- Calculate the total TP available for the fTP multiplier.
-        local tp = caster:getTP() + caster:getMerit(tpz.merit.ENCHAINMENT);
+        local tp = caster:getTP() + caster:getMerit(xi.merit.ENCHAINMENT);
         if tp > 3000 then
             tp = 3000;
         end;
@@ -119,10 +119,10 @@ function BluePhysicalSpell(caster, target, spell, params)
     -- Get the possible pDIF range and hit rate --
     ----------------------------------------------
     if (params.offcratiomod == nil) then -- default to attack. Pretty much every physical spell will use this, Cannonball being the exception.
-        params.offcratiomod = caster:getStat(tpz.mod.ATT)
+        params.offcratiomod = caster:getStat(xi.mod.ATT)
     end;
     -- print(params.offcratiomod)
-    local cratio = BluecRatio(params.offcratiomod / target:getStat(tpz.mod.DEF), caster:getMainLvl(), target:getMainLvl());
+    local cratio = BluecRatio(params.offcratiomod / target:getStat(xi.mod.DEF), caster:getMainLvl(), target:getMainLvl());
     local hitrate = BlueGetHitRate(caster,target,true);
 
     -- print("Hit rate "..hitrate);
@@ -176,13 +176,13 @@ function BlueMagicalSpell(caster, target, spell, params, statMod)
 
     local ST = BlueGetWsc(caster, params); -- According to Wiki ST is the same as WSC, essentially Blue mage spells that are magical use the dmg formula of Magical type Weapon skills
 
-    if (caster:hasStatusEffect(tpz.effect.BURST_AFFINITY)) then
+    if (caster:hasStatusEffect(xi.effect.BURST_AFFINITY)) then
         ST = ST * 2;
     end
 
     local convergenceBonus = 1.0;
-    if (caster:hasStatusEffect(tpz.effect.CONVERGENCE)) then
-        convergenceEffect = getStatusEffect(tpz.effect.CONVERGENCE);
+    if (caster:hasStatusEffect(xi.effect.CONVERGENCE)) then
+        convergenceEffect = getStatusEffect(xi.effect.CONVERGENCE);
         local convLvl = convergenceEffect:getPower();
         if (convLvl == 1) then
             convergenceBonus = 1.05;
@@ -196,13 +196,13 @@ function BlueMagicalSpell(caster, target, spell, params, statMod)
     local statBonus = 0;
     local dStat = 0; -- Please make sure to add an additional stat check if there is to be a spell that uses neither INT, MND, or CHR. None currently exist.
     if (statMod == INT_BASED) then -- Stat mod is INT
-        dStat = caster:getStat(tpz.mod.INT) - target:getStat(tpz.mod.INT)
+        dStat = caster:getStat(xi.mod.INT) - target:getStat(xi.mod.INT)
         statBonus = (dStat)* params.tMultiplier;
     elseif (statMod == CHR_BASED) then -- Stat mod is CHR
-        dStat = caster:getStat(tpz.mod.CHR) - target:getStat(tpz.mod.CHR)
+        dStat = caster:getStat(xi.mod.CHR) - target:getStat(xi.mod.CHR)
         statBonus = (dStat)* params.tMultiplier;
     elseif (statMod == MND_BASED) then -- Stat mod is MND
-        dStat = caster:getStat(tpz.mod.MND) - target:getStat(tpz.mod.MND)
+        dStat = caster:getStat(xi.mod.MND) - target:getStat(xi.mod.MND)
         statBonus = (dStat)* params.tMultiplier;
     end
 
@@ -216,12 +216,12 @@ function BlueMagicalSpell(caster, target, spell, params, statMod)
 
     local rparams = {};
     rparams.diff = dStat;
-    rparams.skillType = tpz.skill.BLUE_MAGIC;
+    rparams.skillType = xi.skill.BLUE_MAGIC;
     magicAttack = math.floor(magicAttack * applyResistance(caster, target, spell, rparams));
 
     dmg = math.floor(addBonuses(caster, spell, target, magicAttack));
 
-    caster:delStatusEffectSilent(tpz.effect.BURST_AFFINITY);
+    caster:delStatusEffectSilent(xi.effect.BURST_AFFINITY);
 
     return dmg;
 end;
@@ -233,7 +233,7 @@ function BlueFinalAdjustments(caster, target, spell, dmg, params)
 
     dmg = dmg * BLUE_POWER
 
-    dmg = dmg - target:getMod(tpz.mod.PHALANX)
+    dmg = dmg - target:getMod(xi.mod.PHALANX)
     if (dmg < 0) then
         dmg = 0
     end
@@ -241,8 +241,8 @@ function BlueFinalAdjustments(caster, target, spell, dmg, params)
     -- handling stoneskin
     dmg = utils.stoneskin(target, dmg)
 
-    local damageType = params.dmgType or tpz.damageType.NONE
-    target:takeSpellDamage(caster, spell, dmg, tpz.attackType.PHYSICAL, damageType)
+    local damageType = params.dmgType or xi.damageType.NONE
+    target:takeSpellDamage(caster, spell, dmg, xi.attackType.PHYSICAL, damageType)
     target:updateEnmityFromDamage(caster,dmg)
     target:handleAfflatusMiseryDamage(dmg)
     -- TP has already been dealt with.
@@ -254,10 +254,10 @@ end
 ------------------------------
 
 function BlueGetWsc(attacker, params)
-    wsc = (attacker:getStat(tpz.mod.STR) * params.str_wsc + attacker:getStat(tpz.mod.DEX) * params.dex_wsc +
-         attacker:getStat(tpz.mod.VIT) * params.vit_wsc + attacker:getStat(tpz.mod.AGI) * params.agi_wsc +
-         attacker:getStat(tpz.mod.INT) * params.int_wsc + attacker:getStat(tpz.mod.MND) * params.mnd_wsc +
-         attacker:getStat(tpz.mod.CHR) * params.chr_wsc) * BlueGetAlpha(attacker:getMainLvl());
+    wsc = (attacker:getStat(xi.mod.STR) * params.str_wsc + attacker:getStat(xi.mod.DEX) * params.dex_wsc +
+         attacker:getStat(xi.mod.VIT) * params.vit_wsc + attacker:getStat(xi.mod.AGI) * params.agi_wsc +
+         attacker:getStat(xi.mod.INT) * params.int_wsc + attacker:getStat(xi.mod.MND) * params.mnd_wsc +
+         attacker:getStat(xi.mod.CHR) * params.chr_wsc) * BlueGetAlpha(attacker:getMainLvl());
     return wsc;
 end;
 
@@ -394,20 +394,20 @@ function getBlueEffectDuration(caster,resist,effect)
         resist = 4;
     end
 
-    if (effect == tpz.effect.BIND) then
+    if (effect == xi.effect.BIND) then
         duration = math.random(0,5) + resist * 5;
-    elseif (effect == tpz.effect.STUN) then
+    elseif (effect == xi.effect.STUN) then
         duration = math.random(2,3) + resist;
         -- printf("Duration of stun is %i",duration);
-    elseif (effect == tpz.effect.WEIGHT) then
+    elseif (effect == xi.effect.WEIGHT) then
         duration = math.random(20,24) + resist * 9; -- 20-24
-    elseif (effect == tpz.effect.PARALYSIS) then
+    elseif (effect == xi.effect.PARALYSIS) then
         duration = math.random(50,60) + resist * 15; -- 50- 60
-    elseif (effect == tpz.effect.SLOW) then
+    elseif (effect == xi.effect.SLOW) then
         duration = math.random(60,120) + resist * 15; -- 60- 120 -- Needs confirmation but capped max duration based on White Magic Spell Slow
-    elseif (effect == tpz.effect.SILENCE) then
+    elseif (effect == xi.effect.SILENCE) then
         duration = math.random(60,180) + resist * 15; -- 60- 180 -- Needs confirmation but capped max duration based on White Magic Spell Silence
-    elseif (effect == tpz.effect.POISON) then
+    elseif (effect == xi.effect.POISON) then
         duration = math.random(20,30) + resist * 9; -- 20-30 -- based on magic spell poison
     end
 

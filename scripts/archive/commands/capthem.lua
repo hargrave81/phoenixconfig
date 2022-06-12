@@ -17,190 +17,190 @@ function onTrigger(player,target)
         return
     end
     targ:PrintToPlayer("you are getting your skills capped!");
-    targ:capSkill( tpz.skill.EVASION );    
-    if targ:getMainJob() == tpz.job.BLM then
-        targ:capSkill( tpz.skill.STAFF );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.SCYTHE );
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.THROWING );
-        targ:capSkill( tpz.skill.ENFEEBLING_MAGIC );  
-        targ:capSkill( tpz.skill.ENHANCING_MAGIC );  
-        targ:capSkill( tpz.skill.ELEMENTAL_MAGIC );  
-        targ:capSkill( tpz.skill.DARK_MAGIC );          
-    elseif targ:getMainJob() == tpz.job.RDM then
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.ARCHERY );        
-        targ:capSkill( tpz.skill.THROWING );        
-        targ:capSkill( tpz.skill.SHIELD );        
-        targ:capSkill( tpz.skill.PARRY );        
-        targ:capSkill( tpz.skill.ENFEEBLING_MAGIC );  
-        targ:capSkill( tpz.skill.ENHANCING_MAGIC );  
-        targ:capSkill( tpz.skill.ELEMENTAL_MAGIC );  
-        targ:capSkill( tpz.skill.DARK_MAGIC );  
-        targ:capSkill( tpz.skill.HEALING_MAGIC ); 
-        targ:capSkill( tpz.skill.DIVINE_MAGIC );           
-    elseif targ:getMainJob() == tpz.job.WAR then
-        targ:capSkill( tpz.skill.MARKSMANSHIP );
-        targ:capSkill( tpz.skill.ARCHERY );
-        targ:capSkill( tpz.skill.THROWING );
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.HAND_TO_HAND );                
-        targ:capSkill( tpz.skill.GREAT_SWORD );        
-        targ:capSkill( tpz.skill.GREAT_AXE );        
-        targ:capSkill( tpz.skill.AXE );        
-        targ:capSkill( tpz.skill.POLEARM );        
-        targ:capSkill( tpz.skill.SCYTHE );                
-        targ:capSkill( tpz.skill.STAFF );        
-        targ:capSkill( tpz.skill.PARRY );        
-        targ:capSkill( tpz.skill.SHIELD );        
-    elseif targ:getMainJob() == tpz.job.WHM then
-        targ:capSkill( tpz.skill.STAFF );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.THROWING );        
-        targ:capSkill( tpz.skill.SHIELD );        
-        targ:capSkill( tpz.skill.ENFEEBLING_MAGIC );  
-        targ:capSkill( tpz.skill.ENHANCING_MAGIC );          
-        targ:capSkill( tpz.skill.HEALING_MAGIC );  
-        targ:capSkill( tpz.skill.DIVINE_MAGIC ); 
-    elseif targ:getMainJob() == tpz.job.NIN then
-        targ:capSkill( tpz.skill.KATANA );
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.ARCHERY );
-        targ:capSkill( tpz.skill.CLUB );
-        targ:capSkill( tpz.skill.HAND_TO_HAND );
-        targ:capSkill( tpz.skill.GREAT_KATANA );        
-        targ:capSkill( tpz.skill.MARKSMANSHIP );
-        targ:capSkill( tpz.skill.THROWING );
-        targ:capSkill( tpz.skill.PARRY );        
-        targ:capSkill( tpz.skill.NINJUTSU );
-    elseif targ:getMainJob() == tpz.job.THF then
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.HAND_TO_HAND );
-        targ:capSkill( tpz.skill.CLUB );
-        targ:capSkill( tpz.skill.ARCHERY );
-        targ:capSkill( tpz.skill.THROWING );
-        targ:capSkill( tpz.skill.MARKSMANSHIP );
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.PARRY );
-        targ:capSkill( tpz.skill.SHIELD );        
-    elseif targ:getMainJob() == tpz.job.SMN then
-        targ:capSkill( tpz.skill.STAFF );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.SUMMONING_MAGIC );  
-    elseif targ:getMainJob() == tpz.job.MNK then
-        targ:capSkill( tpz.skill.STAFF );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.HAND_TO_HAND );                
-        targ:capSkill( tpz.skill.THROWING );  
-        targ:capSkill( tpz.skill.GUARD );          
-    elseif targ:getMainJob() == tpz.job.DRK then
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.SWORD );        
-        targ:capSkill( tpz.skill.SCYTHE );        
-        targ:capSkill( tpz.skill.GREAT_SWORD );        
-        targ:capSkill( tpz.skill.AXE );        
-        targ:capSkill( tpz.skill.GREAT_AXE );        
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.MARKSMANSHIP );        
-        targ:capSkill( tpz.skill.DARK_MAGIC );  
-        targ:capSkill( tpz.skill.ELEMENTAL_MAGIC );  
-        targ:capSkill( tpz.skill.ENFEEBLING_MAGIC );  
-    elseif targ:getMainJob() == tpz.job.BST then
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.AXE );        
-        targ:capSkill( tpz.skill.SCYTHE );        
-        targ:capSkill( tpz.skill.SHIELD );        
-        targ:capSkill( tpz.skill.PARRY );                
-    elseif targ:getMainJob() == tpz.job.BRD then
-        targ:capSkill( tpz.skill.STAFF );
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.THROWING );        
-        targ:capSkill( tpz.skill.PARRY );        
-        targ:capSkill( tpz.skill.STRING_INSTRUMENT );  
-        targ:capSkill( tpz.skill.WIND_INSTRUMENT );  
-        targ:capSkill( tpz.skill.SINGING );  
-    elseif targ:getMainJob() == tpz.job.RNG then
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.AXE );        
-        targ:capSkill( tpz.skill.SWORD );        
-        targ:capSkill( tpz.skill.ARCHERY );        
-        targ:capSkill( tpz.skill.MARKSMANSHIP );        
-        targ:capSkill( tpz.skill.THROWING );          
-    elseif targ:getMainJob() == tpz.job.DRG then
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.STAFF );        
-        targ:capSkill( tpz.skill.POLEARM );        
-        targ:capSkill( tpz.skill.SWORD );        
-        targ:capSkill( tpz.skill.PARRY );                
-    elseif targ:getMainJob() == tpz.job.SAM then
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.POLEARM );        
-        targ:capSkill( tpz.skill.GREAT_KATANA );        
-        targ:capSkill( tpz.skill.ARCHERY );        
-        targ:capSkill( tpz.skill.THROWING );        
-        targ:capSkill( tpz.skill.PARRY );                
-    elseif targ:getMainJob() == tpz.job.BLU then
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.BLUE_MAGIC );
-        targ:capSkill( tpz.skill.PARRY );
-    elseif targ:getMainJob() == tpz.job.COR then
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.MARKSMANSHIP );  
-        targ:capSkill( tpz.skill.THROWING );  
-        targ:capSkill( tpz.skill.PARRY );  
-    elseif targ:getMainJob() == tpz.job.PUP then
-        targ:capSkill( tpz.skill.HAND_TO_HAND );
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.CLUB );       
-        targ:capSkill( tpz.skill.THROWING );       
-        targ:capSkill( tpz.skill.PARRY );       
-        targ:capSkill( tpz.skill.GUARD );       
-    elseif targ:getMainJob() == tpz.job.DNC then
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.HAND_TO_HAND );        
-        targ:capSkill( tpz.skill.SWORD );        
-        targ:capSkill( tpz.skill.THROWING );        
-        targ:capSkill( tpz.skill.PARRY );                
-    elseif targ:getMainJob() == tpz.job.SCH then
-        targ:capSkill( tpz.skill.STAFF );
-        targ:capSkill( tpz.skill.CLUB );        
-        targ:capSkill( tpz.skill.DAGGER );        
-        targ:capSkill( tpz.skill.THROWING );        
-        targ:capSkill( tpz.skill.DIVINE_MAGIC );   
-        targ:capSkill( tpz.skill.HEALING_MAGIC );   
-        targ:capSkill( tpz.skill.ENHANCING_MAGIC );   
-        targ:capSkill( tpz.skill.ENFEEBLING_MAGIC );   
-        targ:capSkill( tpz.skill.ELEMENTAL_MAGIC );   
-        targ:capSkill( tpz.skill.DARK_MAGIC );   
-    elseif targ:getMainJob() == tpz.job.PLD then                    
-        targ:capSkill( tpz.skill.SWORD );
-        targ:capSkill( tpz.skill.DAGGER );
-        targ:capSkill( tpz.skill.CLUB );                        
-        targ:capSkill( tpz.skill.GREAT_SWORD );                        
-        targ:capSkill( tpz.skill.POLEARM );
-        targ:capSkill( tpz.skill.STAFF );        
+    targ:capSkill( xi.skill.EVASION );    
+    if targ:getMainJob() == xi.job.BLM then
+        targ:capSkill( xi.skill.STAFF );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.SCYTHE );
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.THROWING );
+        targ:capSkill( xi.skill.ENFEEBLING_MAGIC );  
+        targ:capSkill( xi.skill.ENHANCING_MAGIC );  
+        targ:capSkill( xi.skill.ELEMENTAL_MAGIC );  
+        targ:capSkill( xi.skill.DARK_MAGIC );          
+    elseif targ:getMainJob() == xi.job.RDM then
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.ARCHERY );        
+        targ:capSkill( xi.skill.THROWING );        
+        targ:capSkill( xi.skill.SHIELD );        
+        targ:capSkill( xi.skill.PARRY );        
+        targ:capSkill( xi.skill.ENFEEBLING_MAGIC );  
+        targ:capSkill( xi.skill.ENHANCING_MAGIC );  
+        targ:capSkill( xi.skill.ELEMENTAL_MAGIC );  
+        targ:capSkill( xi.skill.DARK_MAGIC );  
+        targ:capSkill( xi.skill.HEALING_MAGIC ); 
+        targ:capSkill( xi.skill.DIVINE_MAGIC );           
+    elseif targ:getMainJob() == xi.job.WAR then
+        targ:capSkill( xi.skill.MARKSMANSHIP );
+        targ:capSkill( xi.skill.ARCHERY );
+        targ:capSkill( xi.skill.THROWING );
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.HAND_TO_HAND );                
+        targ:capSkill( xi.skill.GREAT_SWORD );        
+        targ:capSkill( xi.skill.GREAT_AXE );        
+        targ:capSkill( xi.skill.AXE );        
+        targ:capSkill( xi.skill.POLEARM );        
+        targ:capSkill( xi.skill.SCYTHE );                
+        targ:capSkill( xi.skill.STAFF );        
+        targ:capSkill( xi.skill.PARRY );        
+        targ:capSkill( xi.skill.SHIELD );        
+    elseif targ:getMainJob() == xi.job.WHM then
+        targ:capSkill( xi.skill.STAFF );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.THROWING );        
+        targ:capSkill( xi.skill.SHIELD );        
+        targ:capSkill( xi.skill.ENFEEBLING_MAGIC );  
+        targ:capSkill( xi.skill.ENHANCING_MAGIC );          
+        targ:capSkill( xi.skill.HEALING_MAGIC );  
+        targ:capSkill( xi.skill.DIVINE_MAGIC ); 
+    elseif targ:getMainJob() == xi.job.NIN then
+        targ:capSkill( xi.skill.KATANA );
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.ARCHERY );
+        targ:capSkill( xi.skill.CLUB );
+        targ:capSkill( xi.skill.HAND_TO_HAND );
+        targ:capSkill( xi.skill.GREAT_KATANA );        
+        targ:capSkill( xi.skill.MARKSMANSHIP );
+        targ:capSkill( xi.skill.THROWING );
+        targ:capSkill( xi.skill.PARRY );        
+        targ:capSkill( xi.skill.NINJUTSU );
+    elseif targ:getMainJob() == xi.job.THF then
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.HAND_TO_HAND );
+        targ:capSkill( xi.skill.CLUB );
+        targ:capSkill( xi.skill.ARCHERY );
+        targ:capSkill( xi.skill.THROWING );
+        targ:capSkill( xi.skill.MARKSMANSHIP );
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.PARRY );
+        targ:capSkill( xi.skill.SHIELD );        
+    elseif targ:getMainJob() == xi.job.SMN then
+        targ:capSkill( xi.skill.STAFF );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.SUMMONING_MAGIC );  
+    elseif targ:getMainJob() == xi.job.MNK then
+        targ:capSkill( xi.skill.STAFF );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.HAND_TO_HAND );                
+        targ:capSkill( xi.skill.THROWING );  
+        targ:capSkill( xi.skill.GUARD );          
+    elseif targ:getMainJob() == xi.job.DRK then
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.SWORD );        
+        targ:capSkill( xi.skill.SCYTHE );        
+        targ:capSkill( xi.skill.GREAT_SWORD );        
+        targ:capSkill( xi.skill.AXE );        
+        targ:capSkill( xi.skill.GREAT_AXE );        
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.MARKSMANSHIP );        
+        targ:capSkill( xi.skill.DARK_MAGIC );  
+        targ:capSkill( xi.skill.ELEMENTAL_MAGIC );  
+        targ:capSkill( xi.skill.ENFEEBLING_MAGIC );  
+    elseif targ:getMainJob() == xi.job.BST then
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.AXE );        
+        targ:capSkill( xi.skill.SCYTHE );        
+        targ:capSkill( xi.skill.SHIELD );        
+        targ:capSkill( xi.skill.PARRY );                
+    elseif targ:getMainJob() == xi.job.BRD then
+        targ:capSkill( xi.skill.STAFF );
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.THROWING );        
+        targ:capSkill( xi.skill.PARRY );        
+        targ:capSkill( xi.skill.STRING_INSTRUMENT );  
+        targ:capSkill( xi.skill.WIND_INSTRUMENT );  
+        targ:capSkill( xi.skill.SINGING );  
+    elseif targ:getMainJob() == xi.job.RNG then
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.AXE );        
+        targ:capSkill( xi.skill.SWORD );        
+        targ:capSkill( xi.skill.ARCHERY );        
+        targ:capSkill( xi.skill.MARKSMANSHIP );        
+        targ:capSkill( xi.skill.THROWING );          
+    elseif targ:getMainJob() == xi.job.DRG then
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.STAFF );        
+        targ:capSkill( xi.skill.POLEARM );        
+        targ:capSkill( xi.skill.SWORD );        
+        targ:capSkill( xi.skill.PARRY );                
+    elseif targ:getMainJob() == xi.job.SAM then
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.POLEARM );        
+        targ:capSkill( xi.skill.GREAT_KATANA );        
+        targ:capSkill( xi.skill.ARCHERY );        
+        targ:capSkill( xi.skill.THROWING );        
+        targ:capSkill( xi.skill.PARRY );                
+    elseif targ:getMainJob() == xi.job.BLU then
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.BLUE_MAGIC );
+        targ:capSkill( xi.skill.PARRY );
+    elseif targ:getMainJob() == xi.job.COR then
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.MARKSMANSHIP );  
+        targ:capSkill( xi.skill.THROWING );  
+        targ:capSkill( xi.skill.PARRY );  
+    elseif targ:getMainJob() == xi.job.PUP then
+        targ:capSkill( xi.skill.HAND_TO_HAND );
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.CLUB );       
+        targ:capSkill( xi.skill.THROWING );       
+        targ:capSkill( xi.skill.PARRY );       
+        targ:capSkill( xi.skill.GUARD );       
+    elseif targ:getMainJob() == xi.job.DNC then
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.HAND_TO_HAND );        
+        targ:capSkill( xi.skill.SWORD );        
+        targ:capSkill( xi.skill.THROWING );        
+        targ:capSkill( xi.skill.PARRY );                
+    elseif targ:getMainJob() == xi.job.SCH then
+        targ:capSkill( xi.skill.STAFF );
+        targ:capSkill( xi.skill.CLUB );        
+        targ:capSkill( xi.skill.DAGGER );        
+        targ:capSkill( xi.skill.THROWING );        
+        targ:capSkill( xi.skill.DIVINE_MAGIC );   
+        targ:capSkill( xi.skill.HEALING_MAGIC );   
+        targ:capSkill( xi.skill.ENHANCING_MAGIC );   
+        targ:capSkill( xi.skill.ENFEEBLING_MAGIC );   
+        targ:capSkill( xi.skill.ELEMENTAL_MAGIC );   
+        targ:capSkill( xi.skill.DARK_MAGIC );   
+    elseif targ:getMainJob() == xi.job.PLD then                    
+        targ:capSkill( xi.skill.SWORD );
+        targ:capSkill( xi.skill.DAGGER );
+        targ:capSkill( xi.skill.CLUB );                        
+        targ:capSkill( xi.skill.GREAT_SWORD );                        
+        targ:capSkill( xi.skill.POLEARM );
+        targ:capSkill( xi.skill.STAFF );        
 
-        targ:capSkill( tpz.skill.PARRY );        
-        targ:capSkill( tpz.skill.SHIELD );    
-        targ:capSkill( tpz.skill.DIVINE_MAGIC );   
-        targ:capSkill( tpz.skill.HEALING_MAGIC );    
-        targ:capSkill( tpz.skill.ENHANCING_MAGIC );    
+        targ:capSkill( xi.skill.PARRY );        
+        targ:capSkill( xi.skill.SHIELD );    
+        targ:capSkill( xi.skill.DIVINE_MAGIC );   
+        targ:capSkill( xi.skill.HEALING_MAGIC );    
+        targ:capSkill( xi.skill.ENHANCING_MAGIC );    
     end    
     
 end;

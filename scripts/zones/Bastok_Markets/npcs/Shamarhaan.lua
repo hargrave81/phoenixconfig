@@ -13,7 +13,7 @@ function onTrade(player,npc,trade)
 end;
 
 function onTrigger(player,npc)
-    local NoStringsAttached = player:getQuestStatus(AHT_URHGAN,tpz.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED);
+    local NoStringsAttached = player:getQuestStatus(AHT_URHGAN,xi.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED);
     local NoStringsAttachedProgress = player:getCharVar("NoStringsAttachedProgress");
 
     if (player:getMainLvl() >= ADVANCED_JOB_LEVEL and NoStringsAttached == QUEST_AVAILABLE) then
@@ -31,14 +31,14 @@ end;
 function onEventFinish(player,csid,option)
 
     if (csid == 434) then        
-        player:addQuest(AHT_URHGAN,tpz.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED);
+        player:addQuest(AHT_URHGAN,xi.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED);
         player:setCharVar("NoStringsAttachedProgress",6)
         player:setCharVar("CreationStarted_Day",0)
         player:setCharVar("CreationStarted_Year",0)
-        npcUtil.completeQuest(player, AHT_URHGAN,tpz.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED, {item=17859, title=tpz.title.PROUD_AUTOMATON_OWNER, var="NoStringsAttachedProgress"})
-        player:unlockJob(tpz.job.PUP)
+        npcUtil.completeQuest(player, AHT_URHGAN,xi.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED, {item=17859, title=xi.title.PROUD_AUTOMATON_OWNER, var="NoStringsAttachedProgress"})
+        player:unlockJob(xi.job.PUP)
         player:messageSpecial(ID.text.YOU_CAN_BECOME_PUP) -- "You can now become a puppetmaster."
-        player:setPetName(tpz.pet.type.AUTOMATON, option+118)
+        player:setPetName(xi.pet.type.AUTOMATON, option+118)
         player:unlockAttachment(8224) --Harlequin Frame
         player:unlockAttachment(8193) --Harlequin Head
     end;

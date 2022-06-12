@@ -22,8 +22,8 @@ function onInitialize(zone)
         GetMobByID(ID.mob.LEECH_KING):setRespawnTime(math.random(900, 14400))
     --end
 
-    tpz.treasure.initZone(zone)
-    tpz.helm.initZone(zone, tpz.helm.type.EXCAVATION)
+    xi.treasure.initZone(zone)
+    xi.helm.initZone(zone, xi.helm.type.EXCAVATION)
 end
 
 function onZoneIn(player, prevZone)
@@ -35,7 +35,7 @@ function onZoneIn(player, prevZone)
 end
 
 function onConquestUpdate(zone, updatetype)
-    tpz.conq.onConquestUpdate(zone, updatetype)
+    xi.conq.onConquestUpdate(zone, updatetype)
 end
 
 function onRegionEnter(player, region)

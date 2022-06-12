@@ -16,27 +16,27 @@ function onMobSpawn(pet)
     local mLvl = master:getMainLvl()
     local foodPower = 3 + (mLvl / 10)
     
-    local summoningSkill = master:getSkillLevel(tpz.skill.SUMMONING_MAGIC)
-    local boost = math.max(.5,summoningSkill / master:getMaxSkillLevel(master:getMainLvl(), tpz.job.SMN, tpz.skill.SUMMONING_MAGIC))
+    local summoningSkill = master:getSkillLevel(xi.skill.SUMMONING_MAGIC)
+    local boost = math.max(.5,summoningSkill / master:getMaxSkillLevel(master:getMainLvl(), xi.job.SMN, xi.skill.SUMMONING_MAGIC))
     
-    pet:addStatusEffect(tpz.effect.DEF_BOOST,foodPower*1.75*boost,0,9600,0,0)
-    pet:addStatusEffect(tpz.effect.STR_BOOST,foodPower*boost,0,9600,0,0)    
+    pet:addStatusEffect(xi.effect.DEF_BOOST,foodPower*1.75*boost,0,9600,0,0)
+    pet:addStatusEffect(xi.effect.STR_BOOST,foodPower*boost,0,9600,0,0)    
     
     if (pet:getSystem() == 11) then         -- elemental spirit        
-        pet:addStatusEffect(tpz.effect.INT_BOOST,(foodPower*1.4)*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.DEFENSE_BOOST,foodPower*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.MND_BOOST,foodPower*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.MAX_HP_BOOST,foodPower*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.INT_BOOST,(foodPower*1.4)*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.DEFENSE_BOOST,foodPower*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.MND_BOOST,foodPower*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.MAX_HP_BOOST,foodPower*boost,0,9600,0,0)
     else
         if pet:getFamily() == 379 or pet:getFamily() == 34 then
             foodPower = foodPower * .7
         end
-        pet:addStatusEffect(tpz.effect.MAX_HP_BOOST,foodPower*2.9*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.MND_BOOST,foodPower*2*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.INT_BOOST,foodPower*2*boost,0,9600,0,0)        
-        pet:addStatusEffect(tpz.effect.ATTACK_BOOST,foodPower*2*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.ACCURACY_BOOST,foodPower*1.5*boost,0,9600,0,0)
-        pet:addStatusEffect(tpz.effect.DEFENSE_BOOST,foodPower*2.5*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.MAX_HP_BOOST,foodPower*2.9*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.MND_BOOST,foodPower*2*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.INT_BOOST,foodPower*2*boost,0,9600,0,0)        
+        pet:addStatusEffect(xi.effect.ATTACK_BOOST,foodPower*2*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.ACCURACY_BOOST,foodPower*1.5*boost,0,9600,0,0)
+        pet:addStatusEffect(xi.effect.DEFENSE_BOOST,foodPower*2.5*boost,0,9600,0,0)
     end
     local diff = (pet:getMaxHP() - pet:getHP())
     pet:addHP(diff)
@@ -52,7 +52,7 @@ function onPetEngage(pet,delay)
         local smnSkill = getSummoningSkillOverCap(pet)
         fastCast  = getTimeCost(pet)
         fastCast  = fastCast + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)
-        if master:hasStatusEffect(tpz.effect.ASTRAL_FLOW) then
+        if master:hasStatusEffect(xi.effect.ASTRAL_FLOW) then
             delay = fastCast -- this will make the reduction the entire delay
         elseif smnSkill > 0 then            
             -- randomly cast on fight start
@@ -71,7 +71,7 @@ function onPetFight(pet,target,delay)
     if (pet:getSystem() == 11) then         -- elemental spirit
         delay = getTimeCost(pet) -- base 45s and adjusted based on skill        
         delay = delay + getGearMod(pet:getMaster()) + getWeatherMod(pet) + getDayMod(pet)        
-        if master:hasStatusEffect(tpz.effect.ASTRAL_FLOW) then
+        if master:hasStatusEffect(xi.effect.ASTRAL_FLOW) then
             delay = delay - 5000
         end
     end
@@ -138,20 +138,20 @@ function onPetRoam(pet, msSinceLastCast)
 end;
 
 function buffPlayer(player,pet,level)        
-    if not player:hasStatusEffect(tpz.effect.PROTECT) and level >= 7 then -- protect        
+    if not player:hasStatusEffect(xi.effect.PROTECT) and level >= 7 then -- protect        
         local sp = level >= 76 and 47 or level >= 63 and 46 or level >= 47 and 45 or level >= 27 and 44 or 43                
         pet:castSpell(sp, player)
         return true
     end
-    if not player:hasStatusEffect(tpz.effect.SHELL) and level >= 17 then -- shell        
+    if not player:hasStatusEffect(xi.effect.SHELL) and level >= 17 then -- shell        
         pet:castSpell(level >= 76 and 52 or level >= 68 and 51 or level >= 57 and 50 or level >= 37 and 49 or 48, player)
         return true
     end
-    if not player:hasStatusEffect(tpz.effect.HASTE) and level >= 40 then -- haste        
+    if not player:hasStatusEffect(xi.effect.HASTE) and level >= 40 then -- haste        
         pet:castSpell(57, player)
         return true
     end
-    if not player:hasStatusEffect(tpz.effect.REGEN) and level >= 21 then -- regen        
+    if not player:hasStatusEffect(xi.effect.REGEN) and level >= 21 then -- regen        
         pet:castSpell(level >= 86 and 477 or level >= 66 and 111 or level >= 44 and 110 or 108, player)
         return true
     end
@@ -160,7 +160,7 @@ end;
 
 function getGearMod(master)
     -- Summoner's spats
-    local leg = master:getEquipID(tpz.slot.LEGS);
+    local leg = master:getEquipID(xi.slot.LEGS);
     if leg == 15131 or leg == 15594 then
         return -5000
     end    
@@ -169,15 +169,15 @@ end;
 
 function getSummoningSkillOverCap(avatar)
     local summoner = avatar:getMaster()
-    local summoningSkill = summoner:getSkillLevel(tpz.skill.SUMMONING_MAGIC)
-    local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), tpz.job.SMN, tpz.skill.SUMMONING_MAGIC)
+    local summoningSkill = summoner:getSkillLevel(xi.skill.SUMMONING_MAGIC)
+    local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), xi.job.SMN, xi.skill.SUMMONING_MAGIC)
     return math.max(summoningSkill - maxSkill, 0)
 end;
 
 function getTimeCost(avatar)
     local summoner = avatar:getMaster()
-    local summoningSkill = summoner:getSkillLevel(tpz.skill.SUMMONING_MAGIC)
-    local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), tpz.job.SMN, tpz.skill.SUMMONING_MAGIC)
+    local summoningSkill = summoner:getSkillLevel(xi.skill.SUMMONING_MAGIC)
+    local maxSkill = summoner:getMaxSkillLevel(avatar:getMainLvl(), xi.job.SMN, xi.skill.SUMMONING_MAGIC)
     -- 45 s +/- 1 second for every 3 skill over or under cap
     return 35000 - ((summoningSkill - maxSkill)/3) * 1000
 end;
@@ -185,21 +185,21 @@ end;
 function getElement(avatar)
     --avatar:getPetElement()     this doesn't return anything but zer0
     if (avatar:getFamily() == 99) then             
-        return tpz.subEffect.WIND_DAMAGE
+        return xi.subEffect.WIND_DAMAGE
     elseif (avatar:getFamily() == 100) then
-        return tpz.subEffect.DARKNESS_DAMAGE             
+        return xi.subEffect.DARKNESS_DAMAGE             
     elseif (avatar:getFamily() == 101) then             
-        return tpz.subEffect.EARTH_DAMAGE
+        return xi.subEffect.EARTH_DAMAGE
     elseif (avatar:getFamily() == 102) then             
-        return tpz.subEffect.FIRE_DAMAGE
+        return xi.subEffect.FIRE_DAMAGE
     elseif (avatar:getFamily() == 103) then             
-        return tpz.subEffect.ICE_DAMAGE
+        return xi.subEffect.ICE_DAMAGE
     elseif (avatar:getFamily() == 104) then             
-        return tpz.subEffect.LIGHT_DAMAGE
+        return xi.subEffect.LIGHT_DAMAGE
     elseif (avatar:getFamily() == 105) then             
-        return tpz.subEffect.LIGHTNING_DAMAGE
+        return xi.subEffect.LIGHTNING_DAMAGE
     elseif (avatar:getFamily() == 106) then             
-        return tpz.subEffect.WATER_DAMAGE
+        return xi.subEffect.WATER_DAMAGE
     end
 end;
 
@@ -208,69 +208,69 @@ function getWeatherMod(avatar)
     local summoner = avatar:getMaster()
     local ms = -2000
     local sms = -6000 -- can increase this if you want stronger double weather effect    
-    if summoner:getWeather() == tpz.weather.SNOW and element == tpz.subEffect.ICE_DAMAGE then
+    if summoner:getWeather() == xi.weather.SNOW and element == xi.subEffect.ICE_DAMAGE then
       return ms
-    elseif summoner:getWeather() == tpz.weather.BLIZZARDS and (element == tpz.subEffect.ICE_DAMAGE or element == tpz.subEffect.FIRE_DAMAGE) then
+    elseif summoner:getWeather() == xi.weather.BLIZZARDS and (element == xi.subEffect.ICE_DAMAGE or element == xi.subEffect.FIRE_DAMAGE) then
       return sms
-    elseif summoner:getWeather() == tpz.weather.WIND and element == tpz.subEffect.WIND_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.WIND and element == xi.subEffect.WIND_DAMAGE then
       return ms
-    elseif summoner:getWeather() == tpz.weather.GALES and (element == tpz.subEffect.WIND_DAMAGE or element == tpz.subEffect.ICE_DAMAGE) then
+    elseif summoner:getWeather() == xi.weather.GALES and (element == xi.subEffect.WIND_DAMAGE or element == xi.subEffect.ICE_DAMAGE) then
       return sms
-    elseif summoner:getWeather() == tpz.weather.DUST_STORM and element == tpz.subEffect.EARTH_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.DUST_STORM and element == xi.subEffect.EARTH_DAMAGE then
         return ms
-    elseif summoner:getWeather() == tpz.weather.SAND_STORM and (element == tpz.subEffect.EARTH_DAMAGE or element == tpz.subEffect.WIND_DAMAGE) then
+    elseif summoner:getWeather() == xi.weather.SAND_STORM and (element == xi.subEffect.EARTH_DAMAGE or element == xi.subEffect.WIND_DAMAGE) then
         return sms
-    elseif summoner:getWeather() == tpz.weather.THUNDER and element == tpz.subEffect.LIGHTNING_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.THUNDER and element == xi.subEffect.LIGHTNING_DAMAGE then
         return ms
-    elseif summoner:getWeather() == tpz.weather.THUNDERSTORMS and (element == tpz.subEffect.LIGHTNING_DAMAGE or element == tpz.subEffect.EARTH_DAMAGE) then
+    elseif summoner:getWeather() == xi.weather.THUNDERSTORMS and (element == xi.subEffect.LIGHTNING_DAMAGE or element == xi.subEffect.EARTH_DAMAGE) then
         return sms
-    elseif summoner:getWeather() == tpz.weather.RAIN and element == tpz.subEffect.WATER_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.RAIN and element == xi.subEffect.WATER_DAMAGE then
         return ms
-    elseif summoner:getWeather() == tpz.weather.SQUALL and element == (tpz.subEffect.WATER_DAMAGE or element == tpz.subEffect.LIGHTNING_DAMAGE) then
+    elseif summoner:getWeather() == xi.weather.SQUALL and element == (xi.subEffect.WATER_DAMAGE or element == xi.subEffect.LIGHTNING_DAMAGE) then
         return sms
-    elseif summoner:getWeather() == tpz.weather.HOT_SPELL and element == tpz.subEffect.FIRE_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.HOT_SPELL and element == xi.subEffect.FIRE_DAMAGE then
         return ms
-    elseif summoner:getWeather() == tpz.weather.HEAT_WAVE and element == (tpz.subEffect.FIRE_DAMAGE or element == tpz.subEffect.WATER_DAMAGE) then
+    elseif summoner:getWeather() == xi.weather.HEAT_WAVE and element == (xi.subEffect.FIRE_DAMAGE or element == xi.subEffect.WATER_DAMAGE) then
         return sms
-    elseif summoner:getWeather() == tpz.weather.AURORAS and element == tpz.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.AURORAS and element == xi.subEffect.LIGHT_DAMAGE then
         return ms
-    elseif summoner:getWeather() == tpz.weather.STELLAR_GLARE and element == tpz.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.STELLAR_GLARE and element == xi.subEffect.LIGHT_DAMAGE then
         return sms
-    elseif summoner:getWeather() == tpz.weather.GLOOM and element == tpz.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.GLOOM and element == xi.subEffect.DARKNESS_DAMAGE then
         return ms
-    elseif summoner:getWeather() == tpz.weather.DARKNESS and element == tpz.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.DARKNESS and element == xi.subEffect.DARKNESS_DAMAGE then
         return sms
-    elseif summoner:getWeather() == tpz.weather.SNOW and element == tpz.subEffect.WIND_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.SNOW and element == xi.subEffect.WIND_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.BLIZZARDS and element == tpz.subEffect.WIND_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.BLIZZARDS and element == xi.subEffect.WIND_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.WIND and element == tpz.subEffect.EARTH_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.WIND and element == xi.subEffect.EARTH_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.GALES and element == tpz.subEffect.EARTH_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.GALES and element == xi.subEffect.EARTH_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.DUST_STORM and element == tpz.subEffect.LIGHTNING_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.DUST_STORM and element == xi.subEffect.LIGHTNING_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.SAND_STORM and element == tpz.subEffect.LIGHTNING_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.SAND_STORM and element == xi.subEffect.LIGHTNING_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.THUNDER and element == tpz.subEffect.WATER_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.THUNDER and element == xi.subEffect.WATER_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.THUNDERSTORMS and element == tpz.subEffect.WATER_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.THUNDERSTORMS and element == xi.subEffect.WATER_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.RAIN and element == tpz.subEffect.FIRE_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.RAIN and element == xi.subEffect.FIRE_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.SQUALL and element == tpz.subEffect.FIRE_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.SQUALL and element == xi.subEffect.FIRE_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.HOT_SPELL and element == tpz.subEffect.ICE_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.HOT_SPELL and element == xi.subEffect.ICE_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.HEAT_WAVE and element == tpz.subEffect.ICE_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.HEAT_WAVE and element == xi.subEffect.ICE_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.AURORAS and element == tpz.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.AURORAS and element == xi.subEffect.DARKNESS_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.STELLAR_GLARE and element == tpz.subEffect.DARKNESS_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.STELLAR_GLARE and element == xi.subEffect.DARKNESS_DAMAGE then
         return sms * - 1
-    elseif summoner:getWeather() == tpz.weather.GLOOM and element == tpz.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.GLOOM and element == xi.subEffect.LIGHT_DAMAGE then
         return ms * - 1
-    elseif summoner:getWeather() == tpz.weather.DARKNESS and element == tpz.subEffect.LIGHT_DAMAGE then
+    elseif summoner:getWeather() == xi.weather.DARKNESS and element == xi.subEffect.LIGHT_DAMAGE then
         return sms * - 1
     end
     return 0
@@ -280,37 +280,37 @@ function getDayMod(avatar)
     local element = getElement(avatar)
     local ms = -3000    
     local summoner = avatar:getMaster()    
-    if VanadielDayElement() == tpz.day.ICEDAY and element == tpz.subEffect.ICE_DAMAGE then
+    if VanadielDayElement() == xi.day.ICEDAY and element == xi.subEffect.ICE_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.ICEDAY and element == tpz.subEffect.WIND_DAMAGE then
+    elseif VanadielDayElement() == xi.day.ICEDAY and element == xi.subEffect.WIND_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.WINDSDAY and element == tpz.subEffect.WIND_DAMAGE then
+    elseif VanadielDayElement() == xi.day.WINDSDAY and element == xi.subEffect.WIND_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.WINDSDAY and element == tpz.subEffect.EARTH_DAMAGE then
+    elseif VanadielDayElement() == xi.day.WINDSDAY and element == xi.subEffect.EARTH_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.EARTHSDAY and element == tpz.subEffect.EARTH_DAMAGE then
+    elseif VanadielDayElement() == xi.day.EARTHSDAY and element == xi.subEffect.EARTH_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.EARTHSDAY and element == tpz.subEffect.LIGHTNING_DAMAGE then
+    elseif VanadielDayElement() == xi.day.EARTHSDAY and element == xi.subEffect.LIGHTNING_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.LIGHTNINGDAY and element == tpz.subEffect.LIGHTNING_DAMAGE then
+    elseif VanadielDayElement() == xi.day.LIGHTNINGDAY and element == xi.subEffect.LIGHTNING_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.LIGHTNINGDAY and element == tpz.subEffect.WATER_DAMAGE then
+    elseif VanadielDayElement() == xi.day.LIGHTNINGDAY and element == xi.subEffect.WATER_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.WATERSDAY and element == tpz.subEffect.WATER_DAMAGE then
+    elseif VanadielDayElement() == xi.day.WATERSDAY and element == xi.subEffect.WATER_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.WATERSDAY and element == tpz.subEffect.FIRE_DAMAGE then
+    elseif VanadielDayElement() == xi.day.WATERSDAY and element == xi.subEffect.FIRE_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.FIRESDAY and element == tpz.subEffect.FIRE_DAMAGE then
+    elseif VanadielDayElement() == xi.day.FIRESDAY and element == xi.subEffect.FIRE_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.FIRESDAY and element == tpz.subEffect.ICE_DAMAGE then
+    elseif VanadielDayElement() == xi.day.FIRESDAY and element == xi.subEffect.ICE_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.LIGHTSDAY and element == tpz.subEffect.LIGHT_DAMAGE then
+    elseif VanadielDayElement() == xi.day.LIGHTSDAY and element == xi.subEffect.LIGHT_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.LIGHTSDAY and element == tpz.subEffect.DARKNESS_DAMAGE then
+    elseif VanadielDayElement() == xi.day.LIGHTSDAY and element == xi.subEffect.DARKNESS_DAMAGE then
        return ms * - 1
-    elseif VanadielDayElement() == tpz.day.DARKSDAY and element == tpz.subEffect.DARKNESS_DAMAGE then
+    elseif VanadielDayElement() == xi.day.DARKSDAY and element == xi.subEffect.DARKNESS_DAMAGE then
        return ms
-    elseif VanadielDayElement() == tpz.day.DARKSDAY and element == tpz.subEffect.LIGHT_DAMAGE then
+    elseif VanadielDayElement() == xi.day.DARKSDAY and element == xi.subEffect.LIGHT_DAMAGE then
        return ms * - 1    
     end
     return 0

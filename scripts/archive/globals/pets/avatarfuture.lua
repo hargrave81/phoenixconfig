@@ -14,21 +14,21 @@ local spirits =
     -- TODO: In an ideal world, we'd just use the entity's element.
     -- But at the moment DSP has inconsistencies in how it orders magical
     -- elements, such that the element value in the entity's SQL record
-    -- doesn't correspond with the entry in tpz.magic.element.ELEMENT.
+    -- doesn't correspond with the entry in xi.magic.element.ELEMENT.
     -- We don't want to hinder our abstraction of a spirit, so all a spirit's
     -- internal references to elements are based on magical element.
 
     -- Therefore, we need to map the spirit to its element by family.
     -- Listng ordered by magical element; the ordering of spirit families
     -- should probably be fixed in the SQL DB as well.
-    [102] = tpz.pet.spirit.create(tpz.magic.element.FIRE),
-    [103] = tpz.pet.spirit.create(tpz.magic.element.ICE),
-    [99]  = tpz.pet.spirit.create(tpz.magic.element.WIND),
-    [101] = tpz.pet.spirit.create(tpz.magic.element.EARTH),
-    [105] = tpz.pet.spirit.create(tpz.magic.element.LIGHTNING),
-    [106] = tpz.pet.spirit.create(tpz.magic.element.WATER),
+    [102] = xi.pet.spirit.create(xi.magic.element.FIRE),
+    [103] = xi.pet.spirit.create(xi.magic.element.ICE),
+    [99]  = xi.pet.spirit.create(xi.magic.element.WIND),
+    [101] = xi.pet.spirit.create(xi.magic.element.EARTH),
+    [105] = xi.pet.spirit.create(xi.magic.element.LIGHTNING),
+    [106] = xi.pet.spirit.create(xi.magic.element.WATER),
     [104] = require("scripts/globals/pets/spirits/light_spirit"),
-    [100] = tpz.pet.spirit.create(tpz.magic.element.DARK)
+    [100] = xi.pet.spirit.create(xi.magic.element.DARK)
 }
 
 function onMobDeath(mob, player, isKiller)
@@ -38,11 +38,11 @@ end
 function onMobEngaged(pet)
     local master = pet:getMaster()    
     master:PrintToPlayer("Engaging")
-    if master:hasStatusEffect(tpz.effect.FIELD_SUPPORT_FOOD) then
+    if master:hasStatusEffect(xi.effect.FIELD_SUPPORT_FOOD) then
         local mLvl = master:getMainLvl()
         local foodPower = 3 + (mLvl / 10)
-        pet:addStatusEffect(tpz.effect.STR_BOOST,foodPower,0,3600,0,0)
-        pet:addStatusEffect(tpz.effect.INT_BOOST,foodPower,0,3600,0,0)
+        pet:addStatusEffect(xi.effect.STR_BOOST,foodPower,0,3600,0,0)
+        pet:addStatusEffect(xi.effect.INT_BOOST,foodPower,0,3600,0,0)
     end
     -- return incoming delay value to return to legacy/monster mode        
     local delay = spirits[pet:getFamily()].getEngageDelay(pet, delay)

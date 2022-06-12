@@ -14,8 +14,8 @@ local ID = require("scripts/zones/Lower_Jeuno/IDs")
 local POETIC_PARCHMENT = 634
 
 function onTrade(player,npc,trade)
-    local theOldMonument = player:getQuestStatus(JEUNO,tpz.quest.id.jeuno.THE_OLD_MONUMENT)
-    local aMinstrelInDespair = player:getQuestStatus(JEUNO,tpz.quest.id.jeuno.A_MINSTREL_IN_DESPAIR)
+    local theOldMonument = player:getQuestStatus(JEUNO,xi.quest.id.jeuno.THE_OLD_MONUMENT)
+    local aMinstrelInDespair = player:getQuestStatus(JEUNO,xi.quest.id.jeuno.A_MINSTREL_IN_DESPAIR)
 
     -- A MINSTREL IN DESPAIR (poetic parchment)
     if trade:hasItemQty(POETIC_PARCHMENT,1) and trade:getItemCount() == 1 and theOldMonument == QUEST_COMPLETED and aMinstrelInDespair == QUEST_AVAILABLE then
@@ -24,10 +24,10 @@ function onTrade(player,npc,trade)
 end
 
 function onTrigger(player,npc)
-    local theOldMonument = player:getQuestStatus(JEUNO,tpz.quest.id.jeuno.THE_OLD_MONUMENT)
-    local painfulMemory = player:getQuestStatus(JEUNO,tpz.quest.id.jeuno.PAINFUL_MEMORY)
-    local theRequiem = player:getQuestStatus(JEUNO,tpz.quest.id.jeuno.THE_REQUIEM)
-    local circleOfTime = player:getQuestStatus(JEUNO,tpz.quest.id.jeuno.THE_CIRCLE_OF_TIME)
+    local theOldMonument = player:getQuestStatus(JEUNO,xi.quest.id.jeuno.THE_OLD_MONUMENT)
+    local painfulMemory = player:getQuestStatus(JEUNO,xi.quest.id.jeuno.PAINFUL_MEMORY)
+    local theRequiem = player:getQuestStatus(JEUNO,xi.quest.id.jeuno.THE_REQUIEM)
+    local circleOfTime = player:getQuestStatus(JEUNO,xi.quest.id.jeuno.THE_CIRCLE_OF_TIME)
     local job = player:getMainJob()
     local level = player:getMainLvl()
 
@@ -36,14 +36,14 @@ function onTrigger(player,npc)
         player:startEvent(102)        
         player:addGil(GIL_RATE*3000);
         player:messageSpecial(ID.text.GIL_OBTAINED,GIL_RATE*3000);
-        player:addTitle(tpz.title.WANDERING_MINSTREL);
-        player:unlockJob(tpz.job.BRD); -- Bard
+        player:addTitle(xi.title.WANDERING_MINSTREL);
+        player:unlockJob(xi.job.BRD); -- Bard
         player:messageSpecial(ID.text.UNLOCK_BARD);  --You can now become a bard!
         player:setCharVar("PathOfTheBard_Event",0);
         player:addFame(JEUNO,30);
-        player:completeQuest(JEUNO,tpz.quest.id.jeuno.PATH_OF_THE_BARD);
+        player:completeQuest(JEUNO,xi.quest.id.jeuno.PATH_OF_THE_BARD);
     -- PAINFUL MEMORY (Bard AF1)
-    elseif painfulMemory == QUEST_AVAILABLE and job == tpz.job.BRD and level >= AF1_QUEST_LEVEL then
+    elseif painfulMemory == QUEST_AVAILABLE and job == xi.job.BRD and level >= AF1_QUEST_LEVEL then
         if player:getCharVar("PainfulMemoryCS") == 0 then
             player:startEvent(138) -- Long dialog for "Painful Memory"
         else
@@ -53,7 +53,7 @@ function onTrigger(player,npc)
         player:startEvent(136) -- During Quest "Painful Memory"
 
     -- CIRCLE OF TIME (Bard AF3)
-    elseif theRequiem == QUEST_COMPLETED and circleOfTime == QUEST_AVAILABLE and job == tpz.job.BRD and level >= AF3_QUEST_LEVEL then
+    elseif theRequiem == QUEST_COMPLETED and circleOfTime == QUEST_AVAILABLE and job == xi.job.BRD and level >= AF3_QUEST_LEVEL then
         player:startEvent(139) -- Start "The Circle of Time"
     elseif circleOfTime == QUEST_ACCEPTED then
         player:messageSpecial(ID.text.MERTAIRE_RING)
@@ -80,7 +80,7 @@ function onEventFinish(player,csid,option)
         player:addGil(GIL_RATE*2100)
         player:messageSpecial(ID.text.GIL_OBTAINED, GIL_RATE*2100)
         player:tradeComplete()
-        player:completeQuest(JEUNO,tpz.quest.id.jeuno.A_MINSTREL_IN_DESPAIR)
+        player:completeQuest(JEUNO,xi.quest.id.jeuno.A_MINSTREL_IN_DESPAIR)
         player:addFame(JEUNO, 30)
 
         -- Placing this here allows the player to get additional poetic
@@ -91,14 +91,14 @@ function onEventFinish(player,csid,option)
     elseif csid == 138 and option == 0 then
         player:setCharVar("PainfulMemoryCS",1) -- player declined quest
     elseif (csid == 137 or csid == 138) and option == 1 then
-        player:addQuest(JEUNO,tpz.quest.id.jeuno.PAINFUL_MEMORY)
+        player:addQuest(JEUNO,xi.quest.id.jeuno.PAINFUL_MEMORY)
         player:setCharVar("PainfulMemoryCS",0)
-        player:addKeyItem(tpz.ki.MERTAIRES_BRACELET)
-        player:messageSpecial(ID.text.KEYITEM_OBTAINED,tpz.ki.MERTAIRES_BRACELET)
+        player:addKeyItem(xi.ki.MERTAIRES_BRACELET)
+        player:messageSpecial(ID.text.KEYITEM_OBTAINED,xi.ki.MERTAIRES_BRACELET)
 
     -- CIRCLE OF TIME (Bard AF3)
     elseif csid == 139 then
-        player:addQuest(JEUNO,tpz.quest.id.jeuno.THE_CIRCLE_OF_TIME)
+        player:addQuest(JEUNO,xi.quest.id.jeuno.THE_CIRCLE_OF_TIME)
         player:setCharVar("circleTime",1)
     end
 end

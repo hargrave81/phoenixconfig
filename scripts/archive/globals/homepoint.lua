@@ -3,7 +3,7 @@ require("scripts/globals/teleports")
 ------------------------------------
 
 dsp = dsp or {}
-tpz.homepoint = tpz.homepoint or {}
+xi.homepoint = xi.homepoint or {}
 
 local HPs =
 {
@@ -144,7 +144,7 @@ local selection =
     SHOW_MENU        = 8
 }
 
-local travelType = tpz.teleport.type.HOMEPOINT
+local travelType = xi.teleport.type.HOMEPOINT
 
 local function getCost (from, to, key)
 
@@ -159,7 +159,7 @@ end
 local function goToHP(player, choice, index)
 
     local origin = player:getLocalVar("originIndex")
-    local hasKI  = player:hasKeyItem(tpz.ki.RHAPSODY_IN_WHITE)
+    local hasKI  = player:hasKeyItem(xi.ki.RHAPSODY_IN_WHITE)
 
     if choice == selection.SAME_ZONE then
         -- For zones like Sky and Uleguerand Range, this will force gil deletion
@@ -172,7 +172,7 @@ local function goToHP(player, choice, index)
 
 end
 
-tpz.homepoint.onTrigger = function(player, csid, index)
+xi.homepoint.onTrigger = function(player, csid, index)
     
     if HOMEPOINT_HEAL == 1 then -- Settings.lua Homepoint Heal enabled
         player:addHP(player:getMaxHP())
@@ -200,7 +200,7 @@ tpz.homepoint.onTrigger = function(player, csid, index)
 
 end
 
-tpz.homepoint.onEventUpdate = function(player, csid, option)
+xi.homepoint.onEventUpdate = function(player, csid, option)
 
     local choice = bit.band(option, 0xFF)
     local favs = player:getTeleportMenu(travelType)
@@ -250,7 +250,7 @@ tpz.homepoint.onEventUpdate = function(player, csid, option)
     end
 end
 
-tpz.homepoint.onEventFinish = function(player, csid, option, event)
+xi.homepoint.onEventFinish = function(player, csid, option, event)
 
     if csid == event then
         choice = bit.band(option, 0xFF)

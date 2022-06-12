@@ -12,9 +12,9 @@ end
 
 function onSpellCast(caster, target, spell)
     -- Pull base stats.
-    local dINT = caster:getStat(tpz.mod.INT) - target:getStat(tpz.mod.INT)
+    local dINT = caster:getStat(xi.mod.INT) - target:getStat(xi.mod.INT)
 
-    local currentResist = target:getMod(tpz.mod.GRAVITYRES)
+    local currentResist = target:getMod(xi.mod.GRAVITYRES)
     if currentResist == nil then
         currentResist = 0
     end
@@ -26,20 +26,20 @@ function onSpellCast(caster, target, spell)
 
     local params = {}
     params.diff = dINT
-    params.skillType = tpz.skill.ENFEEBLING_MAGIC
+    params.skillType = xi.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = tpz.effect.WEIGHT
+    params.effect = xi.effect.WEIGHT
     local resist = applyResistanceEffect(caster, target, spell, params)
 
     if resist >= 0.5 then --Do it!
         if target:addStatusEffect(params.effect, power, 0, duration * resist) then
-            spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(tpz.mod.GRAVITYRES, currentResist + 18)
+            spell:setMsg(xi.msg.basic.MAGIC_ENFEEB_IS)
+            target:setMod(xi.mod.GRAVITYRES, currentResist + 18)
         else
-            spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT)
+            spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
         end
     else
-        spell:setMsg(tpz.msg.basic.MAGIC_RESIST_2)
+        spell:setMsg(xi.msg.basic.MAGIC_RESIST_2)
     end
 
     return params.effect

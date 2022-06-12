@@ -14,13 +14,13 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
-    local merits = caster:getMerit(tpz.merit.BLIND_II)
+    local merits = caster:getMerit(xi.merit.BLIND_II)
 
     -- Pull base stats.
-    local dINT = caster:getStat(tpz.mod.INT) - target:getStat(tpz.mod.MND) -- blind uses caster INT vs target MND
+    local dINT = caster:getStat(xi.mod.INT) - target:getStat(xi.mod.MND) -- blind uses caster INT vs target MND
 
 
-    local currentResist = target:getMod(tpz.mod.BLINDRES)
+    local currentResist = target:getMod(xi.mod.BLINDRES)
     if currentResist == nil then
         currentResist = 0
     end
@@ -41,20 +41,20 @@ function onSpellCast(caster, target, spell)
 
     local params = {}
     params.diff = dINT
-    params.skillType = tpz.skill.ENFEEBLING_MAGIC
+    params.skillType = xi.skill.ENFEEBLING_MAGIC
     params.bonus = merits * 2
-    params.effect = tpz.effect.BLINDNESS
+    params.effect = xi.effect.BLINDNESS
     local resist = applyResistanceEffect(caster, target, spell, params)
 
     if resist >= 0.5 then --Do it!
         if target:addStatusEffect(params.effect, potency, 0, duration * resist) then
-            spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(tpz.mod.BLINDRES, currentResist + 15)
+            spell:setMsg(xi.msg.basic.MAGIC_ENFEEB_IS)
+            target:setMod(xi.mod.BLINDRES, currentResist + 15)
         else
-            spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT)
+            spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
         end
     else
-        spell:setMsg(tpz.msg.basic.MAGIC_RESIST)
+        spell:setMsg(xi.msg.basic.MAGIC_RESIST)
     end
 
     return params.effect

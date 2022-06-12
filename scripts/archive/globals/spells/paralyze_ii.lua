@@ -15,15 +15,15 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
-    local merits = caster:getMerit(tpz.merit.PARALYZE_II)
+    local merits = caster:getMerit(xi.merit.PARALYZE_II)
 
-    local currentResist = target:getMod(tpz.mod.PARALYZERES)
+    local currentResist = target:getMod(xi.mod.PARALYZERES)
     if currentResist == nil then
         currentResist = 0
     end
 
     -- Pull base stats
-    local dMND = caster:getStat(tpz.mod.MND) - target:getStat(tpz.mod.MND)
+    local dMND = caster:getStat(xi.mod.MND) - target:getStat(xi.mod.MND)
 
     -- Base potency
     local potency = utils.clamp(math.floor(dMND / 4) + 20, 10, 30)
@@ -37,20 +37,20 @@ function onSpellCast(caster, target, spell)
     local duration = calculateDuration(120, spell:getSkillType(), spell:getSpellGroup(), caster, target)
     local params = {}
     params.diff = dMND
-    params.skillType = tpz.skill.ENFEEBLING_MAGIC
+    params.skillType = xi.skill.ENFEEBLING_MAGIC
     params.bonus = merits * 2
-    params.effect = tpz.effect.PARALYSIS
+    params.effect = xi.effect.PARALYSIS
     local resist = applyResistanceEffect(caster, target, spell, params)
 
     if resist >= 0.5 then
         if target:addStatusEffect(params.effect, potency, 0, duration * resist) then
-            spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(tpz.mod.PARALYZERES, currentResist + 12)
+            spell:setMsg(xi.msg.basic.MAGIC_ENFEEB_IS)
+            target:setMod(xi.mod.PARALYZERES, currentResist + 12)
         else
-            spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT)
+            spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
         end
     else
-        spell:setMsg(tpz.msg.basic.MAGIC_RESIST)
+        spell:setMsg(xi.msg.basic.MAGIC_RESIST)
     end
 
     return params.effect

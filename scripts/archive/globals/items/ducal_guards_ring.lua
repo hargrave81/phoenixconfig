@@ -13,5 +13,5 @@ function onItemCheck(target)
 end
 
 function onItemUse(target)
-    target:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.MAAT,0,1)
+    target:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.MAAT,0,1)
 end

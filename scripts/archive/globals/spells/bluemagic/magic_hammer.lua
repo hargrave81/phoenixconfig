@@ -33,13 +33,13 @@ function onSpellCast(caster,target,spell)
     local dmg = 0
     local multi = 1.75
 
-    if (caster:hasStatusEffect(tpz.effect.AZURE_LORE)) then
+    if (caster:hasStatusEffect(xi.effect.AZURE_LORE)) then
         multi = multi + 0.50
     end
 
     local params = {}
     -- This data should match information on http://wiki.ffxiclopedia.org/wiki/Calculating_Blue_Magic_Damage
-    params.damageType = tpz.damageType.LIGHT
+    params.damageType = xi.damageType.LIGHT
     params.multiplier = multi
     params.tMultiplier = 1.0
     params.duppercap = 42
@@ -52,7 +52,7 @@ function onSpellCast(caster,target,spell)
     params.chr_wsc = 0.0
 
     if (target:isUndead()) then
-        spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT) -- No effect
+        spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- No effect
     else
         dmg = BlueMagicalSpell(caster, target, spell, params, MND_BASED)
         dmg = BlueFinalAdjustments(caster, target, spell, dmg, params)

@@ -40,74 +40,74 @@ function onTrigger(player,destination)
             local mea = getBytePos(destination,23);
             local dem = getBytePos(destination,81);
             if yhoat == 10 or deststr == "yhoat" then
-                if (player:hasKeyItem(tpz.ki.YHOATOR_GATE_CRYSTAL) == true) then
-                    player:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.YHOAT,0,4.7)
+                if (player:hasKeyItem(xi.ki.YHOATOR_GATE_CRYSTAL) == true) then
+                    player:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.YHOAT,0,4.7)
                     player:PrintToPlayer("Sending you to Yhoat ...")
-                    player:setMsg(tpz.msg.basic.MAGIC_TELEPORT)
+                    player:setMsg(xi.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
-                    player:setMsg(tpz.msg.basic.NO_EFFECT)
+                    player:setMsg(xi.msg.basic.NO_EFFECT)
                 end                                
                 return;
             end
 
             if vahzl == 10 or deststr == "vhazl" then
-                if (player:hasKeyItem(tpz.ki.VAHZL_GATE_CRYSTAL) == true) then
-                    player:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.VAHZL,0,4.7)
+                if (player:hasKeyItem(xi.ki.VAHZL_GATE_CRYSTAL) == true) then
+                    player:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.VAHZL,0,4.7)
                     player:PrintToPlayer("Sending you to Vhazl ...")
-                    player:setMsg(tpz.msg.basic.MAGIC_TELEPORT)
+                    player:setMsg(xi.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
-                    player:setMsg(tpz.msg.basic.NO_EFFECT)
+                    player:setMsg(xi.msg.basic.NO_EFFECT)
                 end                                
                 return;
             end
 
             if altep == 10 or deststr == "altep" then
-                if (player:hasKeyItem(tpz.ki.ALTEPA_GATE_CRYSTAL) == true) then
-                    player:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.ALTEP,0,4.7)
+                if (player:hasKeyItem(xi.ki.ALTEPA_GATE_CRYSTAL) == true) then
+                    player:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.ALTEP,0,4.7)
                     player:PrintToPlayer("Sending you to Altep ...")
-                    player:setMsg(tpz.msg.basic.MAGIC_TELEPORT)
+                    player:setMsg(xi.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
-                    player:setMsg(tpz.msg.basic.NO_EFFECT)
+                    player:setMsg(xi.msg.basic.NO_EFFECT)
                 end                                
                 return;
             end
 
             if holla == 10 or deststr == "holla" then
-                if (player:hasKeyItem(tpz.ki.HOLLA_GATE_CRYSTAL) == true) then
-                    player:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.HOLLA,0,4.7)
+                if (player:hasKeyItem(xi.ki.HOLLA_GATE_CRYSTAL) == true) then
+                    player:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.HOLLA,0,4.7)
                     player:PrintToPlayer("Sending you to Holla ...")
-                    player:setMsg(tpz.msg.basic.MAGIC_TELEPORT)
+                    player:setMsg(xi.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
-                    player:setMsg(tpz.msg.basic.NO_EFFECT)
+                    player:setMsg(xi.msg.basic.NO_EFFECT)
                 end                                
                 return;
             end
 
 
             if mea == 10 or deststr == "mea" then
-                if (player:hasKeyItem(tpz.ki.MEA_GATE_CRYSTAL) == true) then
-                    player:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.MEA,0,4.7)
+                if (player:hasKeyItem(xi.ki.MEA_GATE_CRYSTAL) == true) then
+                    player:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.MEA,0,4.7)
                     player:PrintToPlayer("Sending you to Mea ...")
-                    player:setMsg(tpz.msg.basic.MAGIC_TELEPORT)
+                    player:setMsg(xi.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
-                    player:setMsg(tpz.msg.basic.NO_EFFECT)
+                    player:setMsg(xi.msg.basic.NO_EFFECT)
                 end                                
                 return;
             end
 
             if dem == 10 or deststr == "dem" then
-                if (player:hasKeyItem(tpz.ki.DEM_GATE_CRYSTAL) == true) then
-                    player:addStatusEffectEx(tpz.effect.TELEPORT,0,tpz.teleport.id.DEM,0,4.7)
+                if (player:hasKeyItem(xi.ki.DEM_GATE_CRYSTAL) == true) then
+                    player:addStatusEffectEx(xi.effect.TELEPORT,0,xi.teleport.id.DEM,0,4.7)
                     player:PrintToPlayer("Sending you to Dem ...")
-                    player:setMsg(tpz.msg.basic.MAGIC_TELEPORT)
+                    player:setMsg(xi.msg.basic.MAGIC_TELEPORT)
                 else
                     player:PrintToPlayer("You lack the crystal")
-                    player:setMsg(tpz.msg.basic.NO_EFFECT)
+                    player:setMsg(xi.msg.basic.NO_EFFECT)
                 end                                
                 return;
             end

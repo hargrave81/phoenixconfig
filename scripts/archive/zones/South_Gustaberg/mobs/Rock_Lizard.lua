@@ -9,9 +9,9 @@ require("scripts/globals/mobs")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
-    tpz.regime.checkRegime(player, mob, 80, 1, tpz.regime.type.FIELDS)
+    xi.regime.checkRegime(player, mob, 80, 1, xi.regime.type.FIELDS)
 end
 
 function onMobDespawn(mob)
-    tpz.mob.phOnDespawn(mob, ID.mob.LEAPING_LIZZY_PH, 5, 1800) -- 30m respawn
+    xi.mob.phOnDespawn(mob, ID.mob.LEAPING_LIZZY_PH, 5, 1800) -- 30m respawn
 end

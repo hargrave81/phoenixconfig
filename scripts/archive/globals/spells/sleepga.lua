@@ -11,20 +11,20 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
-    local dINT = caster:getStat(tpz.mod.INT) - target:getStat(tpz.mod.INT)
+    local dINT = caster:getStat(xi.mod.INT) - target:getStat(xi.mod.INT)
 
     local duration = calculateDuration(60, spell:getSkillType(), spell:getSpellGroup(), caster, target)
 
-    local currentResist = target:getMod(tpz.mod.SLEEPRES)
+    local currentResist = target:getMod(xi.mod.SLEEPRES)
     if currentResist == nil then
         currentResist = 0
     end
 
     local params = {}
     params.diff = dINT
-    params.skillType = tpz.skill.ENFEEBLING_MAGIC
+    params.skillType = xi.skill.ENFEEBLING_MAGIC
     params.bonus = 0
-    params.effect = tpz.effect.SLEEP_I
+    params.effect = xi.effect.SLEEP_I
     local resist = applyResistanceEffect(caster, target, spell, params)
 
     if (caster:isMob()) then
@@ -40,13 +40,13 @@ function onSpellCast(caster, target, spell)
     
     if resist >= 0.5 then
         if target:addStatusEffect(params.effect, 1, 0, duration * resist) then
-            spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB_IS)
-            target:setMod(tpz.mod.SLEEPRES, currentResist + 13)
+            spell:setMsg(xi.msg.basic.MAGIC_ENFEEB_IS)
+            target:setMod(xi.mod.SLEEPRES, currentResist + 13)
         else
-            spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT) -- No effect
+            spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- No effect
         end
     else
-        spell:setMsg(tpz.msg.basic.MAGIC_RESIST)
+        spell:setMsg(xi.msg.basic.MAGIC_RESIST)
     end
 
     return params.effect

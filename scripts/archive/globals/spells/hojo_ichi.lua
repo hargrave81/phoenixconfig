@@ -13,9 +13,9 @@ function onMagicCastingCheck(caster, target, spell)
 end
 
 function onSpellCast(caster, target, spell)
-    local dINT = caster:getStat(tpz.mod.INT) - target:getStat(tpz.mod.INT)
+    local dINT = caster:getStat(xi.mod.INT) - target:getStat(xi.mod.INT)
     
-    local currentResist = target:getMod(tpz.mod.SLOWRES)
+    local currentResist = target:getMod(xi.mod.SLOWRES)
     if currentResist == nil then
         currentResist = 0
     end
@@ -25,27 +25,27 @@ function onSpellCast(caster, target, spell)
     --Duration and Resistance calculation
     local duration = 180
     local params = {}
-    params.attribute = tpz.mod.INT
-    params.skillType = tpz.skill.NINJUTSU
+    params.attribute = xi.mod.INT
+    params.skillType = xi.skill.NINJUTSU
     params.bonus = 0
     duration = duration * applyResistance(caster, target, spell, params)
     --Calculates the resist chance from Resist Blind trait
-    if math.random(0,100) >= target:getMod(tpz.mod.SLOWRES) then
+    if math.random(0,100) >= target:getMod(xi.mod.SLOWRES) then
         -- Spell succeeds if a 1 or 1/2 resist check is achieved
         if duration >= 150 then
-            if target:addStatusEffect(tpz.effect.SLOW, power, 0, duration) then
-                spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB_IS)
-                target:setMod(tpz.mod.SLOWRES, currentResist + 4)
+            if target:addStatusEffect(xi.effect.SLOW, power, 0, duration) then
+                spell:setMsg(xi.msg.basic.MAGIC_ENFEEB_IS)
+                target:setMod(xi.mod.SLOWRES, currentResist + 4)
             else
-                spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT)
+                spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
             end
 
         else
-            spell:setMsg(tpz.msg.basic.MAGIC_RESIST)
+            spell:setMsg(xi.msg.basic.MAGIC_RESIST)
         end
     else
-        spell:setMsg(tpz.msg.basic.MAGIC_RESIST_2)
+        spell:setMsg(xi.msg.basic.MAGIC_RESIST_2)
     end
 
-    return tpz.effect.SLOW
+    return xi.effect.SLOW
 end

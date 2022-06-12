@@ -13,27 +13,27 @@ function onMagicCastingCheck(caster,target,spell)
 end
 
 function onSpellCast(caster,target,spell)
-    local effect = tpz.effect.PARALYSIS
+    local effect = xi.effect.PARALYSIS
 
-    local currentResist = target:getMod(tpz.mod.PARALYZERES)
+    local currentResist = target:getMod(xi.mod.PARALYZERES)
     if currentResist == nil then
         currentResist = 0
     end
 
     -- Base Stats
-    local dINT = (caster:getStat(tpz.mod.INT) - target:getStat(tpz.mod.INT))
+    local dINT = (caster:getStat(xi.mod.INT) - target:getStat(xi.mod.INT))
     --Duration Calculation
     local duration = 180
     local params = {}
-    params.attribute = tpz.mod.INT
-    params.skillType = tpz.skill.NINJUTSU
+    params.attribute = xi.mod.INT
+    params.skillType = xi.skill.NINJUTSU
     params.bonus = 0
     duration = duration * applyResistance(caster, target, spell, params)
     --Paralyze base power is 20 and is not affected by resistaces.
     local power = 20
 
     --Calculates resist chanve from Reist Blind
-    if (math.random(0,100) >= target:getMod(tpz.mod.PARALYZERES)) then
+    if (math.random(0,100) >= target:getMod(xi.mod.PARALYZERES)) then
         if (duration >= 80) then
             -- Erases a weaker blind and applies the stronger one
             local paralysis = target:getStatusEffect(effect)
@@ -41,22 +41,22 @@ function onSpellCast(caster,target,spell)
                 if (paralysis:getPower() < power) then
                     target:delStatusEffect(effect)
                     target:addStatusEffect(effect,power,0,duration)
-                    spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB)
-                    target:setMod(tpz.mod.PARALYZERES, currentResist + 5)
+                    spell:setMsg(xi.msg.basic.MAGIC_ENFEEB)
+                    target:setMod(xi.mod.PARALYZERES, currentResist + 5)
                 else
                     -- no effect
-                    spell:setMsg(tpz.msg.basic.MAGIC_NO_EFFECT)
+                    spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
                 end
             else
                 target:addStatusEffect(effect,power,0,duration)
-                spell:setMsg(tpz.msg.basic.MAGIC_ENFEEB)
-                target:setMod(tpz.mod.PARALYZERES, currentResist + 5)
+                spell:setMsg(xi.msg.basic.MAGIC_ENFEEB)
+                target:setMod(xi.mod.PARALYZERES, currentResist + 5)
             end
         else
-            spell:setMsg(tpz.msg.basic.MAGIC_RESIST)
+            spell:setMsg(xi.msg.basic.MAGIC_RESIST)
         end
     else
-        spell:setMsg(tpz.msg.basic.MAGIC_RESIST_2)
+        spell:setMsg(xi.msg.basic.MAGIC_RESIST_2)
     end
     return effect
 end
