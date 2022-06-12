@@ -22,7 +22,6 @@ This file is part of DarkStar-server source code.
 */
 
 #include "pet_controller.h"
-#include "../../../common/showmsg.h"
 #include "../../../common/utils.h"
 #include "../../entities/petentity.h"
 #include "../../mob_modifier.h"
