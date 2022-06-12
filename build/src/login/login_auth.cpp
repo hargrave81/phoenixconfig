@@ -211,6 +211,10 @@ int32 login_parse(int32 fd)
                     ShowInfo("login_parse: <%s> was connected", escaped_name, status);
                     return 0;
                 }
+                else
+                {
+                    ShowInfo("login_parse: <%s> was not located with password <%s>", escaped_name, escaped_pass);
+                }
 
                 sessions[fd]->wdata.resize(1);
                 ref<uint8>(sessions[fd]->wdata.data(), 0) = LOGIN_ERROR;
