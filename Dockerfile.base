@@ -7,13 +7,13 @@ ARG CACHEBUST=1
 RUN git clone --depth=1 -b ${DS_BRANCH} https://github.com/hargrave81/AirSkyBoat.git /server  
 
 RUN apt-get install rsync -y    
-
-RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration
-RUN rsync -avh /configuration/scripts/* /server/scripts && \
+RUN ls /server
+RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
+    rsync -avh /configuration/scripts/* /server/scripts && \
     rm -rf /configuration/scripts && \
     rsync -avh /configuration/build/* /server && \
-    rm -rf /configuration/build
-RUN rsync -avh /configuration/settings/* /server && \
+    rm -rf /configuration/build && \
+    rsync -avh /configuration/settings/* /server/settings && \
     rm -rf /configuration
 
 RUN pip3 install -r /server/tools/requirements.txt
