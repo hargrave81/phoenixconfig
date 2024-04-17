@@ -1493,10 +1493,12 @@ bool CMobController::IsSpellReady(float currentDistance)
 
 void CMobController::DecayResist()
 {
+    /*
     int16 baseValue = 0;
+    
     Mod   elMod[8]  = { Mod::FIRE_RES, Mod::ICE_RES, Mod::WIND_RES, Mod::EARTH_RES,
                      Mod::THUNDER_RES, Mod::WATER_RES, Mod::LIGHT_RES, Mod::DARK_RES };
-
+    
     Mod stMod[11] = { Mod::SLEEPRES, Mod::POISONRES, Mod::PARALYZERES, Mod::BLINDRES,
                       Mod::SILENCERES, Mod::BINDRES, Mod::GRAVITYRES, Mod::SLOWRES,
                       Mod::STUNRES, Mod::CHARMRES, Mod::LULLABYRES };
@@ -1523,4 +1525,5 @@ void CMobController::DecayResist()
                 _target->setModifier(stMod[i], _target->getMod(stMod[i]) - 1);
         }
     }
+    */
 }
