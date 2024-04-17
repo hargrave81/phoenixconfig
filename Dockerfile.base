@@ -1,40 +1,40 @@
-FROM kuberegistry:32000/devagent
+FROM  10.0.0.104:5000/devagent
 
-ENV DS_BRANCH=base
+ENV DS_BRANCH=staging
 
 ARG CACHEBUST=1 
 
-RUN git clone --depth=1 -b ${DS_BRANCH} https://github.com/hargrave81/LSB.git /topaz  
+RUN git clone --depth=1 -b ${DS_BRANCH} https://github.com/hargrave81/AirSkyBoat.git /server  
 
 RUN apt-get install rsync -y    
 
 RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
-    rsync -avh /configuration/scripts/* /topaz/scripts && \
+    rsync -avh /configuration/scripts/* /server/scripts && \
     rm -rf /configuration/scripts && \
-    rsync -avh /configuration/build/* /topaz && \
+    rsync -avh /configuration/build/* /server && \
     rm -rf /configuration/build && \
-    rsync -avh /configuration/* /topaz/conf && \
+    rsync -avh /configuration/* /server/conf && \
     rm -rf /configuration
 
-RUN pip3 install -r /topaz/tools/requirements.txt
+RUN pip3 install -r /server/tools/requirements.txt
 
-RUN mkdir /topaz/build && \
-    cd /topaz/build && \
+RUN mkdir /server/build && \
+    cd /server/build && \
     cmake .. && \
     make -j $(nproc)
 
-RUN cd /topaz && \
+RUN cd /server && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -rf /topaz/src && \
-    rm -rf /topaz/sql && \
-    git clone --depth=1 -b master https://github.com/LandSandBoat/xiNavmeshes.git /topaz/navmeshes
+    rm -rf /server/src && \
+    rm -rf /server/sql && \
+    git clone --depth=1 -b ${DS_BRANCH} https://github.com/AirSkyBoat/xiNavmeshes.git /server/navmeshes
 
 RUN apt-get autoremove -y build-essential autoconf pkg-config
 
 # add topaz user and fix permissions
-RUN groupadd -r topaz && \
-  useradd -g topaz -ms /bin/bash topaz && \
-  chown -R topaz:topaz /topaz
+RUN groupadd -r ffxi && \
+  useradd -g ffxi -ms /bin/bash ffxi && \
+  chown -R ffxi:ffxi /server
 
 COPY docker-supervisord.conf etc/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/

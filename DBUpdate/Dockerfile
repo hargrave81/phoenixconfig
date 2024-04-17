@@ -1,12 +1,12 @@
-FROM mysql:5.7
+FROM mariadb
 
-ENV DS_BRANCH=release
+ENV DS_BRANCH=staging
   
 RUN apt-get update && \
-  apt-get install -y git rsync && \
-  mkdir /sqlupdate && \
+  apt-get install -y git rsync
+RUN mkdir /sqlupdate && \
   mkdir /sqlupdate/extra \
-  apt install git-all
+  apt-get git-all
 
 COPY updateserver.sh /sqlupdate
 

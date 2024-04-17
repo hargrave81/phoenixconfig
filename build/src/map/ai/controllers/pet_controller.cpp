@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
 Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -16,12 +16,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 
-This file is part of DarkStar-server source code.
-
 ===========================================================================
 */
 
 #include "pet_controller.h"
+
 #include "../../../common/utils.h"
 #include "../../entities/petentity.h"
 #include "../../mob_modifier.h"
@@ -41,28 +40,27 @@ CPetController::CPetController(CPetEntity* _PPet)
 void CPetController::Tick(time_point tick)
 {
     TracyZoneScoped;
-    TracyZoneIString(PPet->GetName());
+    TracyZoneString(PPet->GetName());
 
-    if (PPet->isCharmed && tick > PPet->charmTime)
+    if (PPet->shouldDespawn(tick))
     {
-        petutils::DespawnPet(PPet->PMaster);
+        petutils::DetachPet(PPet->PMaster, PPet->isCharmed && tick > PPet->charmTime);
         return;
     }
+
     CMobController::Tick(tick);
 }
 
 void CPetController::DoRoamTick(time_point tick)
 {
-    if ((PPet->PMaster == nullptr || PPet->PMaster->isDead()) && PPet->isAlive())
+    if ((PPet->PMaster == nullptr || PPet->PMaster->id == 0 || PPet->PMaster->name == "" || PPet->PMaster->isDead()) && PPet->isAlive() && PPet->objtype != TYPE_MOB)
     {
         PPet->Die();
         return;
     }
 
-    // Pet is unable to move due to hard CC(Sleep, stun, terror, etc)
-    if (PPet->StatusEffectContainer->HasStatusEffect(EFFECT_SLEEP) || PPet->StatusEffectContainer->HasStatusEffect(EFFECT_LULLABY) ||
-        PPet->StatusEffectContainer->HasStatusEffect(EFFECT_TERROR) || PPet->StatusEffectContainer->HasStatusEffect(EFFECT_PETRIFICATION) ||
-        PPet->StatusEffectContainer->HasStatusEffect(EFFECT_STUN) || PPet->StatusEffectContainer->HasStatusEffect(EFFECT_BIND))
+    // if pet can't follow then don't
+    if (!PPet->PAI->CanFollowPath())
     {
         return;
     }
@@ -83,11 +81,10 @@ void CPetController::DoRoamTick(time_point tick)
     float currentDistance = distance(PPet->loc.p, PPet->PMaster->loc.p);
 
     if (currentDistance > PetRoamDistance)
-    // Was 35.0f, but pets lag behind heavily due to bad pathing/navmesh so this should help
     {
-        if (currentDistance < 30.0f && PPet->PAI->PathFind->PathAround(PPet->PMaster->loc.p, 2.0f, PATHFLAG_RUN | PATHFLAG_WALLHACK))
+        if (currentDistance < 30.0f && PPet->PAI->PathFind->PathAround(PPet->PMaster->loc.p, 2.0f, PATHFLAG_RUN))
         {
-            PPet->PAI->PathFind->FollowPath();
+            PPet->PAI->PathFind->FollowPath(m_Tick);
         }
         else if (PPet->GetSpeed() > 0)
         {
@@ -112,7 +109,7 @@ bool CPetController::PetIsHealing()
     {
         // animation down
         PPet->animation = ANIMATION_HEALING;
-        PPet->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING, 0, 0, map_config.healing_tick_delay, 0));
+        PPet->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING, 0, 0, settings::get<uint8>("map.HEALING_TICK_DELAY"), 0));
         PPet->updatemask |= UPDATE_HP;
         return true;
     }
@@ -136,7 +133,8 @@ bool CPetController::TryDeaggro()
 
     // target is no longer valid, so wipe them from our enmity list
     if (PTarget->isDead() || PTarget->isMounted() || PTarget->loc.zone->GetID() != PPet->loc.zone->GetID() ||
-        PPet->StatusEffectContainer->GetConfrontationEffect() != PTarget->StatusEffectContainer->GetConfrontationEffect())
+        PPet->StatusEffectContainer->GetConfrontationEffect() != PTarget->StatusEffectContainer->GetConfrontationEffect() ||
+        PPet->getBattleID() != PTarget->getBattleID())
     {
         return true;
     }
@@ -151,6 +149,20 @@ bool CPetController::Ability(uint16 targid, uint16 abilityid)
     }
     return false;
 }
+
+bool CPetController::PetSkill(uint16 targid, uint16 abilityid)
+{
+    TracyZoneScoped;
+    if (POwner)
+    {
+        FaceTarget(targid);
+        PPet->PAI->EventHandler.triggerListener("WEAPONSKILL_BEFORE_USE", PPet, abilityid);
+        return POwner->PAI->Internal_PetSkill(targid, abilityid);
+    }
+
+    return false;
+}
+
 bool CPetController::Engage(uint16 targid)
 {
     auto ret = CController::Engage(targid);

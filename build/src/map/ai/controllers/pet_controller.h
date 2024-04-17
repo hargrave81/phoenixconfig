@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
 Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -16,8 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 
-This file is part of DarkStar-server source code.
-
 ===========================================================================
 */
 
@@ -34,6 +32,7 @@ public:
 
     static constexpr float PetRoamDistance{ 2.1f };
     virtual void           DoRoamTick(time_point tick) override;
+    bool                   PetSkill(uint16 targid, uint16 abilityid);
 
 protected:
     bool PetIsHealing();
@@ -42,7 +41,6 @@ protected:
     virtual void HandleEnmity() override
     {
     }
-    virtual bool TryDeaggro() override;
     virtual void TryLink() override
     {
     }
@@ -50,12 +48,12 @@ protected:
     virtual void DoCombatTick(time_point tick);
     virtual bool Engage(uint16 targid) override;
 
+    bool TryDeaggro() override;
     bool TryCastPetSpell();
     bool IsPetSpellReady(float currentDistance, int32 delay);
-
 private:
     CPetEntity* const PPet;
-    int32             m_firstDelay{ 0 };
+     int32             m_firstDelay{ 0 };
 };
 
 #endif // _AI_CONTROLLER_H

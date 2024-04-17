@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
 Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -16,16 +16,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 
-This file is part of DarkStar-server source code.
-
 ===========================================================================
 */
 
 #ifndef _MOB_CONTROLLER_H
 #define _MOB_CONTROLLER_H
 
-#include "../../entities/mobentity.h"
 #include "controller.h"
+#include "entities/mobentity.h"
 
 class CMobController : public CController
 {
@@ -65,10 +63,11 @@ protected:
     bool         CheckHide(CBattleEntity* PTarget);
     bool         CheckLock(CBattleEntity* PTarget);
     bool         CheckDetection(CBattleEntity* PTarget);
-    bool         CanSeePoint(position_t pos);
     virtual bool CanCastSpells();
     void         CastSpell(SpellID spellid);
+    bool         IsStuck();
     virtual void Move();
+    virtual void UpdateLastKnownPosition();
 
     virtual void DoCombatTick(time_point tick);
     void         FaceTarget(uint16 targid = 0);
@@ -88,9 +87,15 @@ protected:
     time_point        m_LastMagicTime;
     time_point        m_LastMobSkillTime;
     bool              m_firstSpell{ true };
+
     CMobEntity* const PMob;
 
 private:
+    
+    bool       m_Stuck = false;
+    position_t m_LastPos;
+    position_t m_LastTargetPos;
+
     time_point m_LastActionTime;
 
     time_point m_LastSpecialTime;
@@ -98,6 +103,8 @@ private:
     time_point m_DeclaimTime;
     time_point m_NeutralTime;
     time_point m_WaitTime;
+    time_point m_ResetTick;
+    time_point m_StuckTick;
 
     time_point m_LastRoamScript{ time_point::min() };
 };

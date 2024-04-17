@@ -8,10 +8,10 @@ DB_MODE=${DB_MODE:-ALL}
 
 git --version
 
-git clone --depth=1 -b ${DS_BRANCH,} https://github.com/hargrave81/topaz.git/ /topaz
+git clone --depth=1 -b ${DS_BRANCH} https://github.com/hargrave81/AirSkyBoat.git/ /server
 git clone --depth=1 -b master https://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
     rsync -avh /configuration/sql/* /sqlupdate/extra && \
-    rsync -avh /topaz/sql/* /sqlupdate
+    rsync -avh /server/sql/* /sqlupdate
 
 RED='\033[0;31m'
 NC='\033[0m'
@@ -21,7 +21,7 @@ if [ $DB_MODE = "NEW" ]; then
    for filename in /sqlupdate/*.sql; 
     do
         echo -e "inserting file ${RED}$filename${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "$filename"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "$filename"
     done
 else
     rm -rf /configuration && \
@@ -60,39 +60,39 @@ else
         for filename in /sqlupdate/*.sql; 
         do
             echo -e "inserting file ${RED}$filename${NC}"
-            mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "$filename"
+            mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "$filename"
         done
     else
         echo -e "inserting file ${RED}item_basic${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_basic.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_basic.sql"
         echo -e "inserting file ${RED}item_mods${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_mods.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_mods.sql"
         echo -e "inserting file ${RED}item_equipment${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_equipment.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_equipment.sql"
         echo -e "inserting file ${RED}item_weapon${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_weapon.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/item_weapon.sql"
         echo -e "inserting file ${RED}mob_droplist${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_droplist.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_droplist.sql"
         echo -e "inserting file ${RED}mob_groups${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_groups.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_groups.sql"
         echo -e "inserting file ${RED}mob_pools${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_pools.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_pools.sql"
         echo -e "inserting file ${RED}mob_spawn_points${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_spawn_points.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_spawn_points.sql"
         echo -e "inserting file ${RED}nm_spawn_points${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/nm_spawn_points.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/nm_spawn_points.sql"
         echo -e "inserting file ${RED}mob_family_system${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_family_system.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_family_system.sql"
         echo -e "inserting file ${RED}npc_list${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/npc_list.sql"
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/npc_list.sql"
         echo -e "inserting file ${RED}mob_family_mods${NC}"
-        mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_family_mods.sql"        
+        mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "/sqlupdate/mob_family_mods.sql"        
     fi
 fi
 for filename in /sqlupdate/extra/*.sql; 
    do
     echo -e "inserting file ${RED}$filename${NC}"
-    mysql topazdb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "$filename"
+    mysql xidb -h $MYSQL_HOST -u $MYSQL_LOGIN -p$MYSQL_PASSWORD -P $MYSQL_PORT < "$filename"
  done
 
  echo "update complete"

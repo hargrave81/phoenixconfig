@@ -1,5 +1,5 @@
-docker build -f Dockerfile.base -t kuberegistry:32000/phoenixbase --no-cache --build-arg CACHEBUST=$(date) .
-docker build . -t kuberegistry:32000/phoenix --no-cache
+docker build -f Dockerfile.base -t  10.0.0.104:5000/phoenixbase --no-cache --build-arg CACHEBUST=$(date) .
+docker build . -t 10.0.0.104:5000/phoenix --no-cache
 
-docker push kuberegistry:32000/phoenixbase
-docker push kuberegistry:32000/phoenix
+docker push  10.0.0.104:5000/phoenixbase
+docker push  10.0.0.104:5000/phoenix
