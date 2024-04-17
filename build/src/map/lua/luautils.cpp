@@ -3480,7 +3480,7 @@ namespace luautils
         return 0;
     }
 
-************************************************************************
+/************************************************************************
      *                                                                       *
      *  Occurs when pet is roaming, and ms since last spell cast             *
      *  Return true if lua script casts another spell or not to reset timer  *
@@ -3495,7 +3495,7 @@ namespace luautils
         sol::function onPetRoam = getEntityCachedFunction(PPet, "OnPetRoam");
         if (!onPetRoam.valid())
         {
-            return -1;
+            return false;
         }
 
         auto result = onPetRoam(CLuaBaseEntity(PPet), msSinceLastCast);
@@ -3503,7 +3503,7 @@ namespace luautils
         {
             sol::error err = result;
             ShowError("luautils::onPetRoam: %s", err.what());
-            return -1;
+            return false;
         }
 
         return result.get_type(0) == sol::type::boolean ? result.get<bool>(0) : false;        
