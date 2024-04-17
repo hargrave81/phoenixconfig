@@ -201,8 +201,6 @@ void CEnmityContainer::UpdateEnmity(CBattleEntity* PEntity, int32 CE, int32 VE, 
             }
         }
 
-        int16 maxTH = CE + VE > 0 ? PEntity->getMod(Mod::TREASURE_HUNTER) : 0;
-
         if (initial)
         {
             CE += 200;
