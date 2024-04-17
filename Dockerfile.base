@@ -28,7 +28,7 @@ RUN cd /server && \
     rm -rf /server/src && \
     rm -rf /server/sql && \
     git clone --depth=1 -b master https://github.com/AirSkyBoat/xiNavmeshes.git /server/navmeshes && \
-    git clone --depth=1 -b master https://github.com/AirSkyBoat/losMeshes.git /server/losmeshes
+    git clone --depth=1 -b main https://github.com/LandSandBoat/losMeshes.git /server/losmeshes
 
 RUN apt-get autoremove -y build-essential autoconf pkg-config
 

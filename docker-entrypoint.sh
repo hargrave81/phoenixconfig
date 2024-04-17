@@ -15,35 +15,38 @@ LOGIN_SERVER=${LOGIN_SERVER:-0.0.0.0}
 
 ## modify configuration
 function modConfig() {
-    local db_files=(login.conf map.conf search_server.conf)
-
-    for f in ${db_files[@]}
-    do
-        if [[ -f /topaz/conf/$f ]]; then
-            sed -i "s/^\(mysql_host:\s*\).*\$/\1$MYSQL_HOST/" /topaz/conf/$f
-            sed -i "s/^\(mysql_port:\s*\).*\$/\1$MYSQL_PORT/" /topaz/conf/$f
-            sed -i "s/^\(mysql_login:\s*\).*\$/\1$MYSQL_LOGIN/" /topaz/conf/$f
-            sed -i "s/^\(mysql_password:\s*\).*\$/\1$MYSQL_PASSWORD/" /topaz/conf/$f
-            sed -i "s/^\(mysql_database:\s*\).*\$/\1$MYSQL_DATABASE/" /topaz/conf/$f            
-            sed -i "s/^\(msg_server_ip:\s*\).*\$/\1$MSG_SERVER/" /topaz/conf/$f
-            sed -i "s/^\(login_data_ip:\s*\).*\$/\1$LOGIN_SERVER/" /topaz/conf/$f
-            sed -i "s/^\(login_view_ip:\s*\).*\$/\1$LOGIN_SERVER/" /topaz/conf/$f
-            sed -i "s/^\(login_auth_ip:\s*\).*\$/\1$LOGIN_SERVER/" /topaz/conf/$f
-            sed -i "s/^\(map_port:\s*\).*\$/\1$GAME_PORT/" /topaz/conf/$f
-        fi
-    done
-
-    sed -i "s/^\(servername:\s*\).*\$/\1$SERVERNAME/" /topaz/conf/login.conf    
+    
+    sed -i "s/%mysql_host%/$MYSQL_HOST/g" /server/settings/network.lua
+    sed -i "s/%mysql_port%/$MYSQL_PORT/g" /server/settings/network.lua
+    sed -i "s/%mysql_login%/$MYSQL_LOGIN/g" /server/settings/network.lua
+    sed -i "s/%mysql_password%/$MYSQL_PASSWORD/g" /server/settings/network.lua
+    sed -i "s/%mysql_database%/$MYSQL_DATABASE/g" /server/settings/network.lua         
+    sed -i "s/%msg_server_ip%/$MSG_SERVER/g" /server/settings/network.lua
+    sed -i "s/%login_data_ip%/$LOGIN_DATA_SERVER/g" /server/settings/network.lua
+    sed -i "s/%login_view_ip%/$LOGIN_VIEW_SERVER/g" /server/settings/network.lua
+    sed -i "s/%login_auth_ip%/$LOGIN_AUTH_SERVER/g" /server/settings/network.lua
+    sed -i "s/%login_conf_ip%/$LOGIN_CONF_SERVER/g" /server/settings/network.lua            
+    sed -i "s/%zmq_ip%/$ZMQ_SERVER/g" /server/settings/network.lua
+    sed -i "s/%map_port%/$GAME_PORT/g" /server/settings/network.lua
+   
 }
 
 modConfig
 
+cat /server/settings/network.lua
+
 if [ $APP = "LOGIN" ]; then
-  exec /topaz/xi_connect
+  # Update databse
+  echo "updating database"
+  python3 /server/tools/dbtool.py update
+  sleep 5
+  nohup /server/xi_connect &
+  sleep 5
+  exec /server/xi_world
 elif [ $APP = "AUCTION" ]; then 
-  exec /topaz/xi_search
+  exec /server/xi_search
 elif [ $APP = "GAME" ]; then
-  exec /topaz/xi_map
+  exec /server/xi_map
 else
   exec /usr/local/bin/supervisord
 fi

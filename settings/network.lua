@@ -11,31 +11,31 @@ xi.settings = xi.settings or {}
 
 xi.settings.network =
 {
-    SQL_HOST     = "10.0.0.30",
-    SQL_PORT     = 3306,
-    SQL_LOGIN    = "ffxi",
-    SQL_PASSWORD = "SquareEnix81",
-    SQL_DATABASE = "xidb",
+    SQL_HOST     = "%mysql_host%",
+    SQL_PORT     = %mysql_port%,
+    SQL_LOGIN    = "%mysql_login%",
+    SQL_PASSWORD = "%mysql_password%",
+    SQL_DATABASE = "%mysql_database%",
 
-    LOGIN_DATA_IP   = "0.0.0.0",
+    LOGIN_DATA_IP   = "%login_data_ip%",
     LOGIN_DATA_PORT = 54230,
-    LOGIN_VIEW_IP   = "0.0.0.0",
+    LOGIN_VIEW_IP   = "%login_view_ip%",
     LOGIN_VIEW_PORT = 54001,
-    LOGIN_AUTH_IP   = "0.0.0.0",
+    LOGIN_AUTH_IP   = "%login_auth_ip%",
     LOGIN_AUTH_PORT = 54231,
-    LOGIN_CONF_IP   = "0.0.0.0",
+    LOGIN_CONF_IP   = "%login_conf_ip%",
     LOGIN_CONF_PORT = 51220,
 
-    MAP_PORT = 54230,
+    MAP_PORT = %map_port%,
 
     SEARCH_PORT = 54002,
 
-    ENABLE_HTTP = false,
+    ENABLE_HTTP = true,
     HTTP_HOST   = "localhost",
     HTTP_PORT   = 8088,
 
     -- Central message server settings (ensure these are the same on both all map servers and the central (lobby) server
-    ZMQ_IP   = "127.0.0.1",
+    ZMQ_IP   = "%zmq_ip%",
     ZMQ_PORT = 54003,
 
     -- ===========================
