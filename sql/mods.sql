@@ -9,16 +9,16 @@ WHERE zoneip = '127.0.0.1';
 --
 -- Updating data of table item_mods
 --
-UPDATE item_mods SET value = 3 WHERE itemId = 12637 AND modId = 1; -- custom galka start gear mod
-UPDATE item_mods SET value = 4 WHERE itemId = 13495 AND modId = 1; -- custom sandorian ring
-UPDATE item_mods SET value = 2 WHERE itemId = 13495 AND modId = 8; -- custom sandorian ring
-UPDATE item_mods SET value = 2 WHERE itemId = 13495 AND modId = 13; -- custom sandorian ring
-UPDATE item_mods SET value = 6 WHERE itemId = 13496 AND modId = 5; -- custom windurstian ring
-UPDATE item_mods SET value = 2 WHERE itemId = 13496 AND modId = 11; -- custom windurstian ring
-UPDATE item_mods SET value = 2 WHERE itemId = 13496 AND modId = 12; -- custom windurstian ring
-UPDATE item_mods SET value = 6 WHERE itemId = 13497 AND modId = 2; -- custom bastokan ring
-UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 9; -- custom bastokan ring
-UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 10; -- custom bastokan ring
+UPDATE item_mods SET value = 3 WHERE itemId = 12637 AND modId = 1; -- custom galka start gear mod DEF+3
+UPDATE item_mods SET value = 4 WHERE itemId = 13495 AND modId = 1; -- custom sandorian ring       DEF+4
+UPDATE item_mods SET value = 2 WHERE itemId = 13495 AND modId = 8; -- custom sandorian ring       STR+2
+UPDATE item_mods SET value = 2 WHERE itemId = 13495 AND modId = 13; -- custom sandorian ring      MND+2
+UPDATE item_mods SET value = 6 WHERE itemId = 13496 AND modId = 5; -- custom windurstian ring     MP+6
+UPDATE item_mods SET value = 2 WHERE itemId = 13496 AND modId = 11; -- custom windurstian ring    AGI+2
+UPDATE item_mods SET value = 2 WHERE itemId = 13496 AND modId = 12; -- custom windurstian ring    INT+2
+UPDATE item_mods SET value = 6 WHERE itemId = 13497 AND modId = 2; -- custom bastokan ring        HP+6
+UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 9; -- custom bastokan ring        DEX+2
+UPDATE item_mods SET value = 2 WHERE itemId = 13497 AND modId = 10; -- custom bastokan ring       VIT+2
 UPDATE item_weapon SET DMG = 8, DELAY = 222 WHERE itemId = 20674; -- aern sword
 UPDATE item_weapon SET DMG = 4, DELAY = 150 WHERE itemId = 20573; -- aern dagger
 UPDATE item_weapon SET DMG = 4, DELAY = 555 WHERE itemId = 20514; -- aphelion knuckles
@@ -36,46 +36,46 @@ UPDATE traits SET content_tag = NULL WHERE traitid = 18 and job = 19;
 -- Inserting data into table item_mods
 --
 INSERT INTO item_mods(itemId, modId, value) VALUES
-(12631, 25, 5), -- custom hume tunic
-(12631, 29, 5), -- custom hume tunic
-(12631, 64, 5), -- custom hume tunic
-(12631, 165, 5), -- custom hume tunic
-(12632, 25, 5), -- custom hume vest
-(12632, 29, 5), -- custom hume vest
-(12632, 64, 5), -- custom hume vest
-(12632, 165, 5), -- custom hume vest
-(12633, 48, 10), -- custom elvaan jerkin
-(12633, 73, 10), -- custom elvaan jerkin
-(12633, 384, 200), -- custom elvaan jerkin
-(12634, 48, 10), -- custom elvaan bodice
-(12634, 73, 10), -- custom elvaan bodice
-(12634, 384, 200), -- custom elvaan bodice
-(12635, 30, 10), -- custom taru kaftan
-(12635, 65, 10), -- custom taru kaftan
-(12635, 71, 10), -- custom taru kaftan
-(12636, 24, 7), -- custom mithran separates
-(12636, 26, 7), -- custom mithran separates
-(12636, 259, 5), -- custom mithran separates
-(12636, 897, 3), -- custom mithran separates
-(12637, 25, 5), -- custom galkan surcoat
-(12637, 27, 1), -- custom galkan surcoat
-(12637, 49, 5), -- custom galkan surcoat
-(12637, 50, 5), -- custom galkan surcoat
-(12637, 51, 5), -- custom galkan surcoat
-(12637, 52, 5), -- custom galkan surcoat
-(12637, 97, 2), -- custom galkan surcoat
-(13216, 170, 2), -- custom gold moogle belt
-(13216, 384, 400), -- custom gold moogle belt
+(12631, 25, 5), -- custom hume tunic ACC+5
+(12631, 29, 5), -- custom hume tunic MDEF+5
+(12631, 64, 5), -- custom hume tunic CBT Skillup +5
+(12631, 165, 2), -- custom hume tunic CritHit+2 [hidden]
+(12632, 25, 5), -- custom hume vest ACC+5
+(12632, 29, 5), -- custom hume vest MDEF+5
+(12632, 64, 5), -- custom hume vest Cbt Skillup +5
+(12632, 165, 2), -- custom hume vest CritHit+2 [hidden]
+(12633, 48, 10), -- custom elvaan jerkin WeaponSkillACC +10
+(12633, 73, 10), -- custom elvaan jerkin StoreTP +10
+(12633, 384, 200), -- custom elvaan jerkin Haste +2%
+(12634, 48, 10), -- custom elvaan bodice WeaponSKillAcc +10
+(12634, 73, 10), -- custom elvaan bodice StoreTP +10
+(12634, 384, 200), -- custom elvaan bodice Haste +2%
+(12635, 30, 5), -- custom taru kaftan MagAcc +5
+(12635, 65, 5), -- custom taru kaftan MagSkillUp +5
+(12635, 71, 3), -- custom taru kaftan MPHeal +3
+(12636, 24, 4), -- custom mithran separates RangedATK +4
+(12636, 26, 4), -- custom mithran separates RangedAcc +4
+(12636, 259, 5), -- custom mithran separates DualWield +5
+(12636, 897, 3), -- custom mithran separates GilFinder+3 [Hidden]
+(12637, 25, 5), -- custom galkan surcoat Acc+5
+(12637, 27, 1), -- custom galkan surcoat Enmity+1
+(12637, 49, 100), -- custom galkan surcoat SlashDmg -1%
+(12637, 50, 100), -- custom galkan surcoat PerceDmg -1%
+(12637, 51, 100), -- custom galkan surcoat ImpactDmg -1%
+(12637, 52, 100), -- custom galkan surcoat H2HDmg -1%
+(12637, 97, 2), -- custom galkan surcoat Boost .2% [Hidden]
+(13216, 170, 2), -- custom gold moogle belt Fast Cast 2%
+(13216, 384, 100), -- custom gold moogle belt Haste 1%
 (13495, 303, 2), -- custom sandorian ring TH2
 (13496, 303, 2), -- custom windurstian ring TH2
 (13497, 303, 2), -- custom bastokan ring TH2
-(14062, 346, 2), -- custom carbuncle mitts
-(15456, 259, 5), -- custom dash sash
-(17049, 30, 3), -- custom maple wand
-(15198, 64, 6), -- Sprout Beret Combat skill up
-(15198, 65, 6), -- Sprout Beret Magic skill up
-(15198, 945, 30), -- Increase blue spell learning
-(15198, 1, 1); -- Sprout Beret DEF
+(14062, 346, 2), -- custom carbuncle mitts -2 MP/Tick
+(15456, 259, 5), -- custom dash sash -5 Dual Weild Delay
+(17049, 30, 3), -- custom maple wand MACC +3%
+(15198, 64, 6), -- Sprout Beret Combat skill up +6
+(15198, 65, 6), -- Sprout Beret Magic skill up +6
+(15198, 945, 30), -- Sprout Beret Increase blue spell learning
+(15198, 1, 1); -- Sprout Beret DEF 1
 
 
 
