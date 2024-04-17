@@ -13,7 +13,7 @@ RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git
     rm -rf /configuration/scripts && \
     rsync -avh /configuration/build/* /server && \
     rm -rf /configuration/build && \
-    rsync -avh /configuration/config /server/settings && \
+    rsync -avh /configuration/settings/* /server && \
     rm -rf /configuration
 
 RUN pip3 install -r /server/tools/requirements.txt
