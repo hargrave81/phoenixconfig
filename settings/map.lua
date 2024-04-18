@@ -92,14 +92,14 @@ xi.settings.map =
     ALL_JOBS_WIDESCAN = false,
 
     -- Modifier to apply to player speed. 0 is the retail accurate default. Negative numbers will reduce it.
-    SPEED_MOD = 10,
+    SPEED_MOD = 5,
 
     -- Modifier to apply to mount speed. 0 is the retail accurate default. Negative numbers will reduce it.
     -- Note retail treats the mounted speed as double what it actually is.
-    MOUNT_SPEED_MOD = 50,
+    MOUNT_SPEED_MOD = 15,
 
     -- Modifier to apply to agro'd monster speed. 0 is the retail accurate default. Negative numbers will reduce it.
-    MOB_SPEED_MOD = 9,
+    MOB_SPEED_MOD = 4,
 
     -- Allows you to manipulate the constant multiplier in the skill-up rate formulas, having a potent effect on skill-up rates.
     SKILLUP_CHANCE_MULTIPLIER = 1.25,

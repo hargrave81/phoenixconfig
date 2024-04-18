@@ -38,7 +38,7 @@ xi.settings.login =
     CHARACTER_CREATION = true,
     
     -- Number of simultaneous game sessions per IP (0 for no limit)
-    LOGIN_LIMIT = 1,
+    LOGIN_LIMIT = 6,
 
     -- Expansion display on the client's login screen. This does NOT effect in game content whatsoever!
     RISE_OF_ZILART          = true,
@@ -57,7 +57,7 @@ xi.settings.login =
     -- Mog wardrobes are per character, so anything custom will not be able to reflect per-account login screen.
     SECURE_TOKEN   = false, -- 2FA not supported yet
     MOG_WARDROBE_3 = true,
-    MOG_WARDROBE_4 = true,
+    MOG_WARDROBE_4 = false,
     MOG_WARDROBE_5 = false,
     MOG_WARDROBE_6 = false,
     MOG_WARDROBE_7 = false,
