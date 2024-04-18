@@ -33,11 +33,11 @@ spec:
             cpu: "0.25"
         env:
         - name: MYSQL_HOST
-          value: "ffxidb-service"
+          value: "10.0.0.30"
         - name: MYSQL_PORT
           value: "3306"
         - name: MYSQL_DATABASE
-          value: "topazdb"
+          value: "xidb"
         - name: MYSQL_LOGIN
           value: "ffxi"
         - name: MYSQL_PASSWORD
@@ -51,6 +51,8 @@ spec:
         - name: APP
           value: "GAME"
       restartPolicy: Always
+      imagePullSecrets:
+      - name: regcred
 ---
 apiVersion: v1
 kind: Service

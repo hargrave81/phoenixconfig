@@ -1,3 +1,3 @@
-docker build . -t kuberegistry:32000/phoenix --no-cache
+docker build . -t 10.0.0.104:5000/phoenix --no-cache
 
-docker push kuberegistry:32000/phoenix
+docker push 10.0.0.104:5000/phoenix

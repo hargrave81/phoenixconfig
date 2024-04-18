@@ -1,4 +1,4 @@
-FROM  10.0.0.104:5000/phoenixbase
+FROM  registry.imgdelivered.com/phoenixbase
 
 ENV DS_BRANCH=staging
 
@@ -8,13 +8,13 @@ RUN chmod a+x /usr/local/bin/docker-entrypoint.sh
 
 USER root
 
-RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \    
+RUN git clone --depth=1 -b master http://github.com/Hargrave81/phoenixconfig.git/ /configuration && \
     rsync -avh /configuration/scripts/* /server/scripts && \
-    rm -rf /configuration/scripts && \    
-    rsync -avh /configuration/* /server/conf && \                
-    rm -rf /configuration && \    
+    rm -rf /configuration/scripts && \
+    rsync -avh /configuration/settings/* /server/settings && \        
+    rm -rf /configuration && \
     echo "done" && \
-    chown -R ffxi:ffxi /server/conf
+    chown -R ffxi:ffxi /server/settings
 
 RUN apt-get update && apt-get install telnet -y
 
