@@ -19,18 +19,18 @@ spec:
     spec:      
       containers:
       - name: ffxigame
-        image: kuberegistry:32000/phoenix:latest
+        image: registry.imgdelivered.com/phoenix:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 54230
           protocol: UDP
         resources:
           limits:
-            memory: "2000M"
-            cpu: "1"
+            memory: "4000M"
+            cpu: "4"
           requests:
-            memory: "200M"
-            cpu: "0.25"
+            memory: "500M"
+            cpu: "1"
         env:
         - name: MYSQL_HOST
           value: "10.0.0.30"
@@ -48,6 +48,16 @@ spec:
           value: "ffxilogin-service"
         - name: GAME_PORT
           value: "54230"
+        - name: LOGIN_DATA_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_AUTH_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_VIEW_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_CONF_SERVER
+          value: "ffxilogin-service"
+        - name: ZMQ_SERVER
+          value: "ffxilogin-service"
         - name: APP
           value: "GAME"
       restartPolicy: Always
@@ -57,8 +67,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    metallb.universe.tf/address-pool: ffximap
   name: ffxigamea-service
 spec:
   selector:

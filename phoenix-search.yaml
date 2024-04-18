@@ -16,7 +16,7 @@ spec:
     spec:      
       containers:      
       - name: ffxisearch
-        image: kuberegistry:32000/phoenix:latest
+        image: registry.imgdelivered.com/phoenix:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 54002
@@ -41,6 +41,14 @@ spec:
         - name: SERVERNAME
           value: "PhoenixReborn"
         - name: MSG_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_DATA_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_AUTH_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_VIEW_SERVER
+          value: "ffxilogin-service"
+        - name: LOGIN_CONF_SERVER
           value: "ffxilogin-service"
         - name: APP
           value: "AUCTION"

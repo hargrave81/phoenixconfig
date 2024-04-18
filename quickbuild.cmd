@@ -1,3 +1,4 @@
-docker build . -t 10.0.0.104:5000/phoenix --no-cache
+docker build . -t registry.imgdelivered.com/phoenix:latest --no-cache
 
-docker push 10.0.0.104:5000/phoenix
+
+docker push  registry.imgdelivered.com/phoenix:latest

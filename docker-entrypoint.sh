@@ -17,6 +17,8 @@ APP=${APP:-GAME}
 MSG_SERVER=${MSG_SERVER:-0.0.0.0}
 LOGIN_SERVER=${LOGIN_SERVER:-0.0.0.0}
 
+echo FFXI Loader v1.0.0
+
 ## modify configuration
 function modConfig() {
     
@@ -37,14 +39,14 @@ function modConfig() {
 
 modConfig
 
-cat /server/settings/network.lua
-
 if [ $APP = "LOGIN" ]; then
   # Update databse
   echo "updating database"
   python3 /server/tools/dbtool.py update
   sleep 5
   nohup /server/xi_connect &
+  sleep 5
+  nohup /server/xi_search &
   sleep 5
   exec /server/xi_world
 elif [ $APP = "AUCTION" ]; then 

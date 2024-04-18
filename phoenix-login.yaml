@@ -16,13 +16,15 @@ spec:
     spec:      
       containers:
       - name: ffxilogin
-        image: kuberegistry:32000/phoenix:latest
+        image: registry.imgdelivered.com/phoenix:v1a
         imagePullPolicy: Always
         ports:
         - containerPort: 54230
         - containerPort: 54231
         - containerPort: 54001
-        - containerPort: 54003
+        - containerPort: 54003        
+        - containerPort: 54002
+        - containerPort: 51220
         resources:
           limits:
             memory: "2000M"
@@ -45,6 +47,14 @@ spec:
           value: "PhoenixReborn"
         - name: MSG_SERVER
           value: "0.0.0.0"
+        - name: LOGIN_DATA_SERVER
+          value: "0.0.0.0"
+        - name: LOGIN_AUTH_SERVER
+          value: "0.0.0.0"
+        - name: LOGIN_VIEW_SERVER
+          value: "0.0.0.0"
+        - name: LOGIN_CONF_SERVER
+          value: "0.0.0.0"
         - name: APP
           value: "LOGIN"
       restartPolicy: Always
@@ -54,8 +64,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: ffxishare
   name: ffxilogin-service
 spec:
   selector:

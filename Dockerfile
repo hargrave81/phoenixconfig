@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install telnet -y
 
 
 USER ffxi
-EXPOSE 54230 54230/udp 54231 54001 54002 54003
+EXPOSE 54230 54230/udp 54231 54001 54002 54003 51220
 WORKDIR /server
 
 CMD ["docker-entrypoint.sh"]
