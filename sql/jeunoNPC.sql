@@ -9,14 +9,14 @@
 --u 17772723  shinkan B
 --u 17772724  shinkan C
 --u 17772771  ajahkeem
---  17772670  moogle
+ #  17772670  moogle
 
 
---  17780776  raji
---  17780777  shomera
---  17780928  rakuru-rakc
---  17780772  runga-kopunga
---  17780783  odasel
+ #  17780776  raji
+ #  17780777  shomera
+ #  17780928  rakuru-rakc
+ #  17780772  runga-kopunga
+ #  17780783  odasel
 */
 
 
@@ -75,204 +75,201 @@ UPDATE npc_list SET pos_x = -238.72, pos_y = 58,pos_z = 35.72, pos_rot = 64, fla
 
 
 /* Mob Groups id, poolid, zoneid, respawntime (360/960), sapwntype, dropid, HP,MP, minlv,maxlv, allegence */
-INSERT INTO mob_groups VALUES
-(15008,6506,123,'Rhapsodic_Raaz',9000,0,4853,6000,1000,61,64,0); -- kazam
-
-INSERT INTO mob_spawn_points VALUES 
-(17281550,'Rhapsodic_Raaz','Rhapsodic Razz',15008,-233.2,.205,400.4,90);
-
 
 INSERT INTO mob_pools VALUES 
-(6506,'Rhapsodic_Raaz','Rhapsodic_Razz',470,0x00007E0800000000000000000000000000000000,
-1,4,1,390,130,0,1,0,0,0,7,0,1,129,4,0,0,2,0,470);
-
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,15292,20); -- pentitents rope
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,11624,30); -- solon torque
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,15348,5);  -- mountain gaiters
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,28085,20);  -- neits slops
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,28222,20);  -- neits pigaches
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,18257,200);  -- bibiki shell
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,13128,80);  -- spectacles
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,17718,100);  -- leech scimitar
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,1296,100);  -- yowie skin
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,1276,100);  -- tarasque skin
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,1295,400);  -- twincoon
-INSERT INTO mob_droplist VALUES
-(4853,0,0,1000,1295,400);  -- twincoon
-
+(10020,'Rhapsodic_Raaz','Rhapsodic_Razz',458,0x00007E0800000000000000000000000000000000,
+1,4,0,300,130,0,1,0,0,2,0,0,7,129,0,0,0,2,0,458,458,164);
 
 
 INSERT INTO mob_groups VALUES
-(15009,6507,52,'Mamuuja',9000,0,4854,15000,3000,72,73,0); -- bhaflau thickets
+(15020,10020,123,'Rhapsodic_Raaz',9000,0,4853,6000,1000,61,64,0,null);  # kazam
 
 INSERT INTO mob_spawn_points VALUES 
-(16990586,'Mamuuja','Mamuuja',15009,-167.8, -15.5, -591.7,90);
+(19000020,0,'Rhapsodic_Raaz','Terror Razz',15020,-233.2,.205,400.4,90);
+
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,15292,20); # pentitents rope
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,11624,30); # solon torque
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,15348,5);  # mountain gaiters
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,28085,20);  # neits slops
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,28222,20);  # neits pigaches
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,18257,200);  # bibiki shell
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,13128,80);  # spectacles
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,17718,100);  # leech scimitar
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,1296,100);  # yowie skin
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,1276,100);  # tarasque skin
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,1295,400);  # twincoon
+INSERT INTO mob_droplist VALUES
+(4853,0,0,1000,1295,400);  # twincoon
+
+
 
 INSERT INTO mob_pools VALUES 
-(6507,'Mamuuja','Mamuuja',470,0x00007E0800000000000000000000000000000000,
-1,4,1,330,150,0,1,0,0,0,7,0,1,129,4,0,0,2,0,470);
-
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,14527,40); -- yigit gomlek
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,15690,50); -- yigiy crackows
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,14935,50);  -- yigit gages
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,15606,50);  -- yigit seraweels
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,16064,50);  -- yigit turban
-
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,15688,50);  -- amir boots
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,15604,50);  -- amir dirs
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,14933,50);  -- amir kolluks
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,14525,40);  -- amir korazin
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,16062,50);  -- amir puggaree
-
-
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,15695,50);  -- pahluwan cracows
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,14940,50);  -- pahluwan dastanas
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,14530,40);  -- pahluwan  khazagand
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,16069,50);  -- pahluwan qalansuwa
-INSERT INTO mob_droplist VALUES
-(4854,0,0,1000,15609,50);  -- pahluwan  seraweels
-
-
-
-
-
-
-
+(10021,'Yacumama','Yacumama',218,0x00007E0800000000000000000000000000000000,
+1,4,1,330,150,0,1,0,0,2,162,0,0,0,8,0,0,0,0,218,218,530);
 
 INSERT INTO mob_groups VALUES
-(15010,6508,153,'Hidhaegg',9000,0,4855,15000,3000,63,65,0); -- the Boyahda Tree
+(15021,10021,52,'Yacumama',9000,0,4854,15000,3000,72,73,0,null);  # bhaflau thickets
 
 INSERT INTO mob_spawn_points VALUES 
-(17404353,'Hidhaegg','Hidhaegg',15010,160.58,8.76,-3.53,90);
+(19000021,0,'Yacumama','Yacumama',15020,-167.8, -15.5, -591.7,90);
+
+
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,14527,40);  # yigit gomlek
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,15690,50);  # yigiy crackows
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,14935,50);   # yigit gages
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,15606,50);   # yigit seraweels
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,16064,50);   # yigit turban
+
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,15688,50);   # amir boots
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,15604,50);   # amir dirs
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,14933,50);   # amir kolluks
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,14525,40);   # amir korazin
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,16062,50);   # amir puggaree
+
+
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,15695,50);   # pahluwan cracows
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,14940,50);   # pahluwan dastanas
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,14530,40);   # pahluwan  khazagand
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,16069,50);   # pahluwan qalansuwa
+INSERT INTO mob_droplist VALUES
+(4854,0,0,1000,15609,50);   # pahluwan  seraweels
+
+
+
+
+
+
 
 INSERT INTO mob_pools VALUES 
-(6508,'Hidhaegg','Hidhaegg',470,0x00007E0800000000000000000000000000000000,
-1,4,1,360,130,0,1,0,0,0,7,0,1,129,4,0,0,2,0,470);
-
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,14589,50); -- fourth brunne
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,14591,50); -- cobra robe
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,14590,50);  -- cobra harness
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,14588,50);  -- iron ram hauberk
-
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15012,100);  -- cobra gloves
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15011,100);  -- cobra mittens
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15010,100);  -- fourth hentzes
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15009,100);  -- iron ram dastanas
-
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16317,80);  -- cobra subligar
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16318,80);  -- cobra trews
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16316,80);  -- fourth schoss
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16315,80);  -- iron ram hose
-
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15751,90);  -- cobra pigaches
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15757,90);  -- cobra leggins
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15756,90);  -- fourth schuhs
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,15755,90);  -- iron ram greaves
-
-
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16147,50);  -- fourth haube
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16149,50);  -- cobra clouche
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16148,50);  -- cobra cap
-INSERT INTO mob_droplist VALUES
-(4855,0,0,1000,16146,50);  -- iron ram sallet
-
+(10022,'Hidhaegg','Hidhaegg',263,0x00007E0800000000000000000000000000000000,
+1,4,1,360,130,1040,1,0,0,2,0,32,0,131,4,0,0,0,0,263,263,554);
 
 INSERT INTO mob_groups VALUES
-(15011,6509,114,'Rhapsodic_Raaz',9000,0,4856,23000,5000,56,58,0); -- East Altepa
+(15022,10022,153,'Hidhaegg',9000,0,4855,15000,3000,63,65,0,null);  # the Boyahda Tree
 
 INSERT INTO mob_spawn_points VALUES 
-(17244587,'Rhapsodic_Raaz','Rhapsodic Raaz',15011,-36.6,-8,198.4,90);
+(19000022,0,'Hidhaegg','Hidhaegg',15022,160.58,8.76,-3.53,90);
+
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,14589,50);  # fourth brunne
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,14591,50);  # cobra robe
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,14590,50);   # cobra harness
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,14588,50);   # iron ram hauberk
+
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15012,100);   # cobra gloves
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15011,100);   # cobra mittens
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15010,100);   # fourth hentzes
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15009,100);   # iron ram dastanas
+
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16317,80);   # cobra subligar
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16318,80);   # cobra trews
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16316,80);   # fourth schoss
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16315,80);   # iron ram hose
+
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15751,90);   # cobra pigaches
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15757,90);   # cobra leggins
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15756,90);   # fourth schuhs
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,15755,90);   # iron ram greaves
+
+
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16147,50);   # fourth haube
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16149,50);   # cobra clouche
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16148,50);   # cobra cap
+INSERT INTO mob_droplist VALUES
+(4855,0,0,1000,16146,50);   # iron ram sallet
+
+
 
 INSERT INTO mob_pools VALUES 
-(6509,'Rhapsodic_Raaz','Rhapsodic_Raaz',470,0x00007E0800000000000000000000000000000000,
-1,4,1,400,130,0,1,0,0,0,7,0,1,129,4,0,0,2,0,470);
+(10023,'Rhapsodic_Raaz','Rhapsodic_Razz',458,0x0000140A00000000000000000000000000000000,
+1,4,0,300,130,0,1,0,0,2,0,0,7,129,0,0,0,2,0,458,458,164);
+
+INSERT INTO mob_groups VALUES
+(15023,10023,114,'Rhapsodic_Raaz',9000,0,4856,23000,5000,56,58,0,null);  # East Altepa
+
+INSERT INTO mob_spawn_points VALUES 
+(19000023,0,'Rhapsodic_Raaz','Seasand Raaz',15023,-36.6,-8,198.4,90);
 
 
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,4175,100); -- vile elixer +1
+(4856,0,0,1000,4175,100);  # vile elixer +1
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,1262,20); -- dark ore
+(4856,0,0,1000,1262,20);  # dark ore
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,4751,30); -- erase
+(4856,0,0,1000,4751,30);  # erase
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,4714,30); -- phalanx
+(4856,0,0,1000,4714,30);  # phalanx
 INSERT INTO mob_droplist VALUES
-(4856,0,0,1000,837,150); -- malboro fiber
+(4856,0,0,1000,837,150);  # malboro fiber
 
 
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14401,50); -- duende cotehardie
+(4857,0,0,1000,14401,50);  # duende cotehardie
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14402,50); -- nokizaru Gi
+(4857,0,0,1000,14402,50);  # nokizaru Gi
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14403,50);  -- rapparee harness
+(4857,0,0,1000,14403,50);   # rapparee harness
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14404,50);  -- shm hara ate
+(4857,0,0,1000,14404,50);   # shm hara ate
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14405,50);  -- wayvern mail
+(4857,0,0,1000,14405,50);   # wayvern mail
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14406,50);  -- shikaree aketon
+(4857,0,0,1000,14406,50);   # shikaree aketon
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14407,50);  -- cerise doublet
+(4857,0,0,1000,14407,50);   # cerise doublet
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14408,50);  -- glamor jupon
+(4857,0,0,1000,14408,50);   # glamor jupon
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14409,50);  -- gloom breastplate
+(4857,0,0,1000,14409,50);   # gloom breastplate
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14410,50);  -- nimbus doublet
+(4857,0,0,1000,14410,50);   # nimbus doublet
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14411,50);  -- aikido gi
+(4857,0,0,1000,14411,50);   # aikido gi
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14412,50);  -- parade cuirass
+(4857,0,0,1000,14412,50);   # parade cuirass
 INSERT INTO mob_droplist VALUES
-(4857,0,0,1000,14413,50);  -- gaudy harness
+(4857,0,0,1000,14413,50);   # gaudy harness
 
-
-
-INSERT INTO mob_droplist VALUES (156,0,0,1000,836,50); -- add damascene cloth to  aquarius
-INSERT INTO mob_droplist VALUES (156,0,0,1000,836,300);
-INSERT INTO mob_droplist VALUES (156,0,0,1000,836,150);
